@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite errors="0" failures="0" hostname="Sappo" name="org.ks.math.VectorTest" tests="3" time="0.086" timestamp="2011-11-10T21:19:59">
+  <properties />
+  <testcase classname="org.ks.math.VectorTest" name="testAdd" time="0.0050" />
+  <testcase classname="org.ks.math.VectorTest" name="testMultipyLambda" time="0.0" />
+  <testcase classname="org.ks.math.VectorTest" name="testMultiply" time="0.0" />
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
