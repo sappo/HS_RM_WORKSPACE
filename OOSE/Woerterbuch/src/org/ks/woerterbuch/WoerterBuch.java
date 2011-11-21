@@ -1,5 +1,7 @@
 package org.ks.woerterbuch;
 
+import javax.naming.LimitExceededException;
+
 /**
  *
  * @author Kevin Sapper 2011
@@ -14,16 +16,12 @@ public class WoerterBuch {
 
   private final int capacity;
 
-  private final String DELIMITER = ";";
-
-  private final String EMPTY = "";
-
   public WoerterBuch(int capacity) {
     if (capacity < 0) {
-      this.capacity = 0;
-    } else {
-      this.capacity = capacity;
+      throw new IllegalArgumentException("Capacity cannot be negative!");
     }
+    this.capacity = capacity;
+
     entryCount = 0;
     keySet = new String[this.capacity];
     entrySet = new String[this.capacity];
@@ -34,8 +32,11 @@ public class WoerterBuch {
    * @param key
    * @param entry
    */
-  public void put(String key, String entry) {
+  public void put(String key, String entry) throws LimitExceededException {
     // check if there's capacity left
+    if(entryCount == capacity) {
+      throw new LimitExceededException("Woerterbuch limit reached!");
+    }
     if (entryCount < capacity) {
       keySet[entryCount] = key;
       entrySet[entryCount] = entry;
