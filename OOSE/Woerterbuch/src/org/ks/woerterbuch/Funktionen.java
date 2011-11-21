@@ -1,8 +1,5 @@
 package org.ks.woerterbuch;
 
-import java.util.Arrays;
-import sun.org.mozilla.javascript.internal.ast.ForInLoop;
-
 /**
  *
  * @author Kevin Sapper 2011
