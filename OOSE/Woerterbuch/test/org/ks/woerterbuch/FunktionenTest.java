@@ -1,4 +1,4 @@
-package org.ks.stringtest;
+package org.ks.woerterbuch;
 
 import junit.framework.Assert;
 import org.junit.After;

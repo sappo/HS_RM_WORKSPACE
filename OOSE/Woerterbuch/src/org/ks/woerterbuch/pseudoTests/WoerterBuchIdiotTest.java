@@ -1,6 +1,6 @@
-package org.ks.stringtest.pseudoTests;
+package org.ks.woerterbuch.pseudoTests;
 
-import org.ks.stringtest.WoerterBuch;
+import org.ks.woerterbuch.WoerterBuch;
 
 public class WoerterBuchIdiotTest {
 	public static void testeGibEintrag(WoerterBuch wb, String schluessel, String eintrag) {

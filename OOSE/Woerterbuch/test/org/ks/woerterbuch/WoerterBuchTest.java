@@ -1,6 +1,7 @@
-package org.ks.stringtest;
+package org.ks.woerterbuch;
 
 
+import org.ks.woerterbuch.WoerterBuch;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;

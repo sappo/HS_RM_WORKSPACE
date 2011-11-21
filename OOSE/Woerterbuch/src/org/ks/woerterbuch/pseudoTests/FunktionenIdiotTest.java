@@ -1,6 +1,6 @@
-package org.ks.stringtest.pseudoTests;
+package org.ks.woerterbuch.pseudoTests;
 
-import org.ks.stringtest.Funktionen;
+import org.ks.woerterbuch.Funktionen;
 
 public class FunktionenIdiotTest {
 
