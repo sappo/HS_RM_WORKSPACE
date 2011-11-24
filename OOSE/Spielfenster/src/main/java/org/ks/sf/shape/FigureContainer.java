@@ -1,5 +1,6 @@
 package org.ks.sf.shape;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.SizeLimitExceededException;
@@ -63,6 +64,25 @@ public class FigureContainer {
    */
   public Figure elementAt(int index) throws ArrayIndexOutOfBoundsException {
     return figureContainer.get(index);
+  }
+  
+  /**
+   * Move all figures in the container.
+   */
+  public void bewege() {
+    for (Figure figure : figureContainer) {
+      figure.bewege();
+    }
+  }
+  
+  /**
+   * Paint all figures in the container.
+   * @param g Graphics object to paint
+   */
+  public void zeichne(Graphics g) {
+    for (Figure figure : figureContainer) {
+      figure.zeichne(g);
+    }
   }
 
   /** 

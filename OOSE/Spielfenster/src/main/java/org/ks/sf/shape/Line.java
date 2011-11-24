@@ -12,6 +12,11 @@ public class Line extends Figure {
     this.v = v;
   }
 
+  public Line(Vector fusspunkt, Vector geschwindigkeit, Vector v) {
+    super(fusspunkt, geschwindigkeit);
+    this.v = v;
+  }
+
   public void zeichne(Graphics g) {
     int x1 = (int) getFusspunkt().getX();
     int y1 = (int) getFusspunkt().getY();
@@ -28,6 +33,7 @@ public class Line extends Figure {
 
   @Override
   public String toString() {
-    return "Line<(" + getFusspunkt().getX() + "," + getFusspunkt().getY() + ")," + "(" + v.getX() + "," + v.getY() + ")" + ">";
+    return "Line<(" + getFusspunkt().getX() + "," + getFusspunkt().getY() + ")," + "(" + v.
+            getX() + "," + v.getY() + ")" + ">";
   }
 }

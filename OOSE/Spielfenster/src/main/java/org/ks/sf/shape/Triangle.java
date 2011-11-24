@@ -19,6 +19,12 @@ public class Triangle extends Figure {
     this.w = w;
   }
 
+  public Triangle(Vector fusspunkt, Vector geschwindigkeit, Vector v, Vector w) {
+    super(fusspunkt, geschwindigkeit);
+    this.v = v;
+    this.w = w;
+  }
+
   @Override
   public void zeichne(Graphics g) {
     Vector fusspunktVSumme = getFusspunkt().add(v);

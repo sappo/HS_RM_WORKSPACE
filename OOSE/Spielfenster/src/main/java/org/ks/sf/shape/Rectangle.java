@@ -16,15 +16,21 @@ public class Rectangle extends Figure {
     this.v = v;
   }
 
+  public Rectangle(Vector fusspunkt, Vector geschwindigkeit, Vector v) {
+    super(fusspunkt, geschwindigkeit);
+    this.v = v;
+  }
+
   @Override
   public void zeichne(Graphics g) {
     Vector fusspunktVSumme = v.add(getFusspunkt());
     g.drawRect((int) getFusspunkt().getX(), (int) getFusspunkt().getY(),
             (int) fusspunktVSumme.getX(), (int) fusspunktVSumme.getY());
   }
-  
+
   @Override
   public String toString() {
-    return "Rectangle<(" + getFusspunkt().getX() + "," + getFusspunkt().getY() + ")," + "(" + v.getX() + "," + v.getY() + ")" + ">";
+    return "Rectangle<(" + getFusspunkt().getX() + "," + getFusspunkt().getY() + ")," + "(" + v.
+            getX() + "," + v.getY() + ")" + ">";
   }
 }
