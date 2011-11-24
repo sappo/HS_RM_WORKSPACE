@@ -1,16 +1,16 @@
 package org.ks.sf.math;
 
 /**
- * Utility class for vector opperations.
+ * Utility class for vector operations.
  * @author Kevin Sapper 2011
  */
-public class Vektor {
+public class Vector {
 
   private double x;
 
   private double y;
 
-  public Vektor(double x, double y) {
+  public Vector(double x, double y) {
     this.x = x;
     this.y = y;
   }
@@ -21,10 +21,10 @@ public class Vektor {
    * <code>this.x + that.x</code><br/>
    * <code>this.y + that.y</code>
    * @param that the vector to add to this.
-   * @return a new vector with the sum of boths.
+   * @return a new vector with the sum of both.
    */
-  public Vektor add(Vektor that) {
-    return new Vektor(this.x + that.x, this.y + that.y);
+  public Vector add(Vector that) {
+    return new Vector(this.x + that.x, this.y + that.y);
   }
 
    /**
@@ -32,11 +32,11 @@ public class Vektor {
    * 
    * <code>this.x * that.x</code>
    * <code>this.y * that.y</code>
-   * @param that the vector to mutlipy with this.
-   * @return a new vector with the result of the multipication.
+   * @param that the vector to multiply with this.
+   * @return a new vector with the result of the multiplication.
    */
-  public Vektor mult(double lambda) {
-    return new Vektor(this.x * lambda, this.y * lambda);
+  public Vector mult(double lambda) {
+    return new Vector(this.x * lambda, this.y * lambda);
   }
 
     /**
@@ -44,10 +44,10 @@ public class Vektor {
    * 
    * <code>this.x * that.x</code> +
    * <code>this.y * that.y</code>
-   * @param that the vector to mutlipy with this.
+   * @param that the vector to multiply with this.
    * @return the sum of both vector multiplications
    */
-  public double mult(Vektor that) {
+  public double mult(Vector that) {
     return (this.x * that.x) + (this.y * that.y);
   }
 

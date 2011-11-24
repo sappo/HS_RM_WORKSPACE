@@ -2,15 +2,15 @@ package org.ks.sf.draw;
 
 import java.awt.*;
 import javax.swing.*;
-import org.ks.sf.math.Vektor;
-import org.ks.sf.shape.Dreieck;
-import org.ks.sf.shape.Figur;
-import org.ks.sf.shape.Linie;
-import org.ks.sf.shape.Rechteck;
+import org.ks.sf.math.Vector;
+import org.ks.sf.shape.Triangle;
+import org.ks.sf.shape.Figure;
+import org.ks.sf.shape.Line;
+import org.ks.sf.shape.Rectangle;
 
 public class SpielFenster extends JFrame {
 
-  private Figur[] figuren;
+  private Figure[] figuren;
 
   private int anzahlFiguren;
 
@@ -31,7 +31,7 @@ public class SpielFenster extends JFrame {
     if (kapazitaet < 0) {
       kapazitaet = 0;
     }
-    figuren = new Figur[kapazitaet];
+    figuren = new Figure[kapazitaet];
     anzahlFiguren = 0;
 
     add(meinPanel);
@@ -39,7 +39,7 @@ public class SpielFenster extends JFrame {
     setVisible(true);
   }
 
-  public void fuegeEin(Figur figur) {
+  public void fuegeEin(Figure figur) {
     if (anzahlFiguren == figuren.length) {
       return;
     }
@@ -50,17 +50,17 @@ public class SpielFenster extends JFrame {
 
   public static void main(String[] args) {
     SpielFenster sf = new SpielFenster(20);
-    sf.fuegeEin(new Linie(new Vektor(100.0, 100.0), new Vektor(100.0, 0.0)));
-    sf.fuegeEin(new Linie(new Vektor(200.0, 100.0), new Vektor(0.0, 200.0)));
-    sf.fuegeEin(new Linie(new Vektor(200.0, 300.0), new Vektor(-50.0, 25.0)));
-    sf.fuegeEin(new Linie(new Vektor(150.0, 325.0), new Vektor(-50.0, -25.0)));
+    sf.fuegeEin(new Line(new Vector(100.0, 100.0), new Vector(100.0, 0.0)));
+    sf.fuegeEin(new Line(new Vector(200.0, 100.0), new Vector(0.0, 200.0)));
+    sf.fuegeEin(new Line(new Vector(200.0, 300.0), new Vector(-50.0, 25.0)));
+    sf.fuegeEin(new Line(new Vector(150.0, 325.0), new Vector(-50.0, -25.0)));
     
-    sf.fuegeEin(new Linie(new Vektor(285.5, 212.5), new Vektor(-37.5, 112.5)));
-    sf.fuegeEin(new Linie(new Vektor(360.5, 212.5), new Vektor(37.5, 112.5)));
+    sf.fuegeEin(new Line(new Vector(285.5, 212.5), new Vector(-37.5, 112.5)));
+    sf.fuegeEin(new Line(new Vector(360.5, 212.5), new Vector(37.5, 112.5)));
 
-    sf.fuegeEin(new Dreieck(new Vektor(285.5, 212.5), new Vektor(37.5, -112.5),
-            new Vektor(75.0, 0.0)));
+    sf.fuegeEin(new Triangle(new Vector(285.5, 212.5), new Vector(37.5, -112.5),
+            new Vector(75.0, 0.0)));
 
-    sf.fuegeEin(new Rechteck(new Vektor(75.0, 75.0), new Vektor(500.0, 200.0)));
+    sf.fuegeEin(new Rectangle(new Vector(75.0, 75.0), new Vector(500.0, 200.0)));
   }
 }

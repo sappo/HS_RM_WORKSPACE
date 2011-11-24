@@ -1,17 +1,17 @@
 package org.ks.sf.shape;
 
 import java.awt.Graphics;
-import org.ks.sf.math.Vektor;
+import org.ks.sf.math.Vector;
 
-public abstract class Figur {
+public abstract class Figure {
 
-  private Vektor fusspunkt;
+  private Vector fusspunkt;
 
-  public Figur(Vektor fusspunkt) {
+  public Figure(Vector fusspunkt) {
     this.fusspunkt = fusspunkt;
   }
 
-  public Vektor getFusspunkt() {
+  public Vector getFusspunkt() {
     return fusspunkt;
   }
 

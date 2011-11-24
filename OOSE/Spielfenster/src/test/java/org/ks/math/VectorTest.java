@@ -1,6 +1,6 @@
 package org.ks.math;
 
-import org.ks.sf.math.Vektor;
+import org.ks.sf.math.Vector;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,16 +11,16 @@ import org.junit.Test;
  */
 public class VectorTest {
 
-  Vektor v;
+  Vector v;
 
-  Vektor w;
+  Vector w;
 
   double lambda;
 
   @Before
   public void setup() {
-    v = new Vektor(1.0, 2.0);
-    w = new Vektor(3.0, 4.0);
+    v = new Vector(1.0, 2.0);
+    w = new Vector(3.0, 4.0);
     lambda = 5.0;
   }
 
@@ -28,7 +28,7 @@ public class VectorTest {
   public void testAdd() {
     double expectedVectorX = 4.0;
     double expectedVectorY = 6.0;
-    Vektor actualVector;
+    Vector actualVector;
 
     actualVector = v.add(w);
     Assert.assertEquals(expectedVectorX, actualVector.getX());
@@ -39,7 +39,7 @@ public class VectorTest {
   public void testMultipyLambda() {
     double expectedVectorX = 5.0;
     double expectedVectorY = 10.0;
-    Vektor actualVector;
+    Vector actualVector;
 
     actualVector = v.mult(lambda);
     Assert.assertEquals(expectedVectorX, actualVector.getX());
