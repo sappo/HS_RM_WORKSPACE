@@ -5,10 +5,8 @@ import org.ks.woerterbuch.WoerterBuch;
 
 public class WoerterBuchIdiotTest {
 
-  public static void testeGibEintrag(WoerterBuch wb, String schluessel,
-          String eintrag) {
-    System.out.println(
-            "gibEintrag(" + schluessel + "): " + wb.get(schluessel) + " [" + eintrag + "]");
+  public static void testeGibEintrag(WoerterBuch wb, String schluessel, String eintrag) {
+    System.out.println("gibEintrag(" + schluessel + "): " + wb.get(schluessel) + " [" + eintrag + "]");
   }
 
   public static void main(String[] args) {
@@ -59,7 +57,7 @@ public class WoerterBuchIdiotTest {
     }
     System.out.print("toString(): " + wb3.toString());
     System.out.print(
-            " [(extends->erweitert), (package->Paket), (private->privat)");
+                                                                                        " [(extends->erweitert), (package->Paket), (private->privat)");
     System.out.println(", (protected->geschuetzt), (public->oeffentlich)]");
     testeGibEintrag(wb3, "public", "oeffentlich");
     testeGibEintrag(wb3, "protected", "geschuetzt");
