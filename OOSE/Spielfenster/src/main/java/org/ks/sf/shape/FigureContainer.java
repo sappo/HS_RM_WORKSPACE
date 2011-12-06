@@ -13,7 +13,7 @@ import javax.naming.SizeLimitExceededException;
  */
 public class FigureContainer {
 
-  private List<Figure> figureContainer;
+  private List<AbstractFigure> figureContainer;
 
   private int capacity;
 
@@ -22,7 +22,7 @@ public class FigureContainer {
    * @throws IllegalArgumentException if capacity is negative.
    */
   public FigureContainer(int capacity) throws IllegalArgumentException {
-    this.figureContainer = new ArrayList<Figure>(capacity);
+    this.figureContainer = new ArrayList<AbstractFigure>(capacity);
     this.capacity = capacity;
   }
 
@@ -31,7 +31,7 @@ public class FigureContainer {
    * @throws IllegalArgumentException if figure is null
    * @throws SizeLimitExceededException if capacity is reached.
    */
-  public void add(Figure figure) throws IllegalArgumentException {
+  public void add(AbstractFigure figure) throws IllegalArgumentException {
     if (figure == null) {
       throw new IllegalArgumentException("Cannot add a empty figure.");
     }
@@ -62,7 +62,7 @@ public class FigureContainer {
    * @return the figure associated with the index
    * @throws ArrayIndexOutOfBoundsException if the index doesn't exist.
    */
-  public Figure elementAt(int index) throws ArrayIndexOutOfBoundsException {
+  public AbstractFigure elementAt(int index) throws ArrayIndexOutOfBoundsException {
     return figureContainer.get(index);
   }
   
@@ -70,8 +70,8 @@ public class FigureContainer {
    * Move all figures in the container.
    */
   public void bewege() {
-    for (Figure figure : figureContainer) {
-      figure.bewege();
+    for (AbstractFigure figure : figureContainer) {
+      figure.move();
     }
   }
   
@@ -80,8 +80,8 @@ public class FigureContainer {
    * @param g Graphics object to paint
    */
   public void zeichne(Graphics g) {
-    for (Figure figure : figureContainer) {
-      figure.zeichne(g);
+    for (AbstractFigure figure : figureContainer) {
+      figure.draw(g);
     }
   }
 
@@ -92,7 +92,7 @@ public class FigureContainer {
   @Override
   public String toString() {
     StringBuilder content = new StringBuilder("FigureContainer{");
-    for (Figure figure : figureContainer) {
+    for (AbstractFigure figure : figureContainer) {
       content.append(figure.toString()).append(";");
     }
     content.append("}");

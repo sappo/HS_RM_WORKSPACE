@@ -3,32 +3,23 @@ package org.ks.sf.shape;
 import java.awt.Graphics;
 import org.ks.sf.math.Vector;
 
-public abstract class Figure {
+/**
+ *
+ * @author Kevin Sapper 2011
+ */
+public interface Figure {
 
-  private Vector fusspunkt;
+    void draw(Graphics g);
 
-  private Vector geschwindigkeit;
-
-  public Figure(Vector fusspunkt) {
-    this.fusspunkt = fusspunkt;
-  }
-
-  public Figure(Vector fusspunkt, Vector geschwindigkeit) {
-    this.fusspunkt = fusspunkt;
-    this.geschwindigkeit = geschwindigkeit;
-  }
-
-  public Vector getFusspunkt() {
-    return fusspunkt;
-  }
-
-  public Vector getGeschwindigkeit() {
-    return geschwindigkeit;
-  }
-
-  public void bewege() {
-    fusspunkt = fusspunkt.add(geschwindigkeit);
-  }
-
-  public abstract void zeichne(Graphics g);
+    void move();
+    
+    void turn();
+    
+    boolean isTouchingBorder(Figure f);
+    
+    Vector getBasePoint();
+    
+    Vector getAcceleration();
+    
+    double getMass();
 }

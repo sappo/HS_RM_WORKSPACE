@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import org.ks.sf.math.Vector;
-import org.ks.sf.shape.Figure;
+import org.ks.sf.shape.AbstractFigure;
 import org.ks.sf.shape.FigureContainer;
 import org.ks.sf.shape.Line;
 import org.ks.sf.shape.Rectangle;
@@ -50,7 +50,7 @@ public class SpielFenster extends JFrame {
     repaint();
   }
 
-  public void fuegeEin(Figure figur) {
+  public void fuegeEin(AbstractFigure figur) {
     figures.add(figur);
     meinPanel.repaint();
   }

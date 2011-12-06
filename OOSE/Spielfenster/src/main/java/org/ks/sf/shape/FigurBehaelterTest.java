@@ -5,9 +5,9 @@ import org.ks.sf.math.Vector;
 public class FigurBehaelterTest {
 
   public static void main(String[] args) {
-    Figure f1 = new Line(new Vector(1.0, 1.0), new Vector(0.5, 0.5));
-    Figure f2 = new Rectangle(new Vector(2.0, 2.0), new Vector(0.5, 0.5));
-    Figure f3 = new Triangle(new Vector(3.0, 3.0), new Vector(0.0, 0.5), new Vector(0.5, 0.0));
+    AbstractFigure f1 = new Line(new Vector(1.0, 1.0), new Vector(0.5, 0.5));
+    AbstractFigure f2 = new Rectangle(new Vector(2.0, 2.0), new Vector(0.5, 0.5));
+    AbstractFigure f3 = new Triangle(new Vector(3.0, 3.0), new Vector(0.0, 0.5), new Vector(0.5, 0.0));
 
     System.out.println("+-----+");
     System.out.println("| fb1 |");
@@ -76,7 +76,7 @@ public class FigurBehaelterTest {
     System.out.println("elementAt(5): " + fb3.elementAt(5) + " [Dreieck<(3.0,3.0),(0.0,0.5),(0.5,0.0)>]");
     System.out.print("elementAt(6): ");
     try {
-      Figure f = fb3.elementAt(fb3.size());
+      AbstractFigure f = fb3.elementAt(fb3.size());
       System.out.println("Keine Exception [ArrayIndexOutOfBoundsException]");
     } catch (ArrayIndexOutOfBoundsException e) {
       System.out.println("ArrayIndexOutOfBoundsException [ArrayIndexOutOfBoundsException]");
