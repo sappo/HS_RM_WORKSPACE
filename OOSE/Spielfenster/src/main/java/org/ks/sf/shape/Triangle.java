@@ -1,6 +1,9 @@
 package org.ks.sf.shape;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.ks.sf.math.Vector;
 
 /**
@@ -30,7 +33,27 @@ public class Triangle extends AbstractFigure {
     }
 
     private Rectangle initBoundingBox() {
-        return new Rectangle(getBasePoint(), lineB.add(lineC));
+        Vector pointB = getBasePoint().add(lineC);
+        Vector pointC = getBasePoint().add(lineB);
+
+        List<Double> xCoordinates = new ArrayList<Double>();
+        xCoordinates.add(getBasePoint().getX());
+        xCoordinates.add(pointB.getX());
+        xCoordinates.add(pointC.getX());
+        Collections.sort(xCoordinates);
+
+        List<Double> yCoordinates = new ArrayList<Double>();
+        yCoordinates.add(getBasePoint().getY());
+        yCoordinates.add(pointB.getY());
+        yCoordinates.add(pointC.getY());
+        Collections.sort(yCoordinates);
+
+        Vector rectPointA = new Vector(xCoordinates.get(0), yCoordinates.get(
+                0));
+        Vector rectPointC = new Vector(xCoordinates.get(2), yCoordinates.get(
+                2));
+        
+        return new Rectangle(rectPointA, rectPointC.subtract(rectPointA));
     }
 
     @Override
