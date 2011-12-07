@@ -42,7 +42,7 @@ public abstract class AbstractFigure implements Figure {
     }
 
     @Override
-    public abstract boolean isTouchingBorder(Figure f);
+    public abstract boolean isTouches(Figure f);
 
     @Override
     public abstract void draw(Graphics g);

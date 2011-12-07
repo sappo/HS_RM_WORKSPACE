@@ -28,6 +28,18 @@ public class Vector {
     public Vector add(Vector that) {
         return new Vector(this.x + that.x, this.y + that.y);
     }
+    
+        /**
+     * <p>Subtracts up two vectors<p/>
+     * 
+     * <code>this.x - that.x</code><br/>
+     * <code>this.y - that.y</code>
+     * @param that the vector to add to this.
+     * @return a new vector with the sum of both.
+     */
+    public Vector subtract(Vector that) {
+        return new Vector(this.x - that.x, this.y - that.y);
+    }
 
     /**
      * <p>Multiplies this vectors with lambda<p/>
@@ -60,6 +72,10 @@ public class Vector {
      */
     public Vector inverse(Vector basePoint) {
         return new Vector(basePoint.getX() - this.getX(), basePoint.getY() - this.getY());
+    }
+    
+    public double getLength() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
     public double getX() {

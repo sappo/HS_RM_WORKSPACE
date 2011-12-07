@@ -9,41 +9,58 @@ import org.ks.sf.math.Vector;
  */
 public class Line extends AbstractFigure {
 
-    private Vector v;
+    private final Vector line;
 
-    public Line(Vector basepoint, Vector v) {
+    private final Rectangle boundingBox;
+
+    public Line(Vector basepoint, Vector line) {
         super(basepoint);
-        this.v = v;
+        this.line = line;
+        boundingBox = intiBoundingBox();
     }
 
-    public Line(Vector basePoint, Vector acceleration, Vector v) {
+    public Line(Vector basePoint, Vector acceleration, Vector line) {
         super(basePoint, acceleration);
-        this.v = v;
+        this.line = line;
+        boundingBox = intiBoundingBox();
+    }
+
+    private Rectangle intiBoundingBox() {
+        return new Rectangle(getBasePoint(), line);
     }
 
     @Override
     public void draw(Graphics g) {
         int x1 = (int) getBasePoint().getX();
         int y1 = (int) getBasePoint().getY();
-        Vector spitze = getBasePoint().add(v);
-        int x2 = (int) spitze.getX();
-        int y2 = (int) spitze.getY();
+        Vector pointB = getBasePoint().add(line);
+        int x2 = (int) pointB.getX();
+        int y2 = (int) pointB.getY();
         g.drawLine(x1, y1, x2, y2);
     }
 
     @Override
     public String toString() {
-        return "Line<(" + getBasePoint().getX() + "," + getBasePoint().getY() + ")," + "(" + v.
-                getX() + "," + v.getY() + ")" + ">";
+        return "Line<(" + getBasePoint().getX() + "," + getBasePoint().getY() + ")," + "(" + line.
+                getX() + "," + line.getY() + ")" + ">";
     }
 
     @Override
-    public boolean isTouchingBorder(Figure f) {
+    public boolean isTouches(Figure f) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public double getMass() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return 1 * line.getLength();
+    }
+
+    public Vector getLine() {
+        return line;
+    }
+
+    @Override
+    public Rectangle getBoundingBox() {
+        return boundingBox;
     }
 }

@@ -3,28 +3,30 @@ package org.ks.math.shape;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.ks.sf.math.Vector;
-import org.ks.sf.shape.Rectangle;
+import org.ks.sf.shape.Line;
 
 /**
  *
- * @author Kevin Sapper 2011
+ * @author Kevin Sapper
  */
-public class RectangleTest {
+public class LineTest {
 
     @Test
     public void testMass() {
-        Vector basePoint = new Vector(2, 2);
-        Vector v = new Vector(2, 2);
-        Rectangle rectangle = new Rectangle(basePoint, v);
-        Assert.assertEquals(8.0, rectangle.getMass());
+        Vector basePoint = new Vector(1, 1);
+        Vector lineVector = new Vector(4, 3);
+        
+        Line line = new Line(basePoint, lineVector);
+        
+        Assert.assertEquals(5.0, line.getMass());
     }
 
     @Test
     public void testBoundingBox() {
         Vector basePoint = new Vector(1, 1);
-        Vector diagonal = new Vector(5, 5);
+        Vector lineVector = new Vector(5, 5);
 
-        Rectangle line = new Rectangle(basePoint, diagonal);
+        Line line = new Line(basePoint, lineVector);
 
         Vector expectedBasePoint = new Vector(1, 1);
         Vector expectedDiagonal = new Vector(5, 5);

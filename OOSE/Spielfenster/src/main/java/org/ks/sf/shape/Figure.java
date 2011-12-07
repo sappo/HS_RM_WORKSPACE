@@ -15,11 +15,13 @@ public interface Figure {
     
     void turn();
     
-    boolean isTouchingBorder(Figure f);
+    boolean isTouches(Figure f);
     
     Vector getBasePoint();
     
     Vector getAcceleration();
     
     double getMass();
+    
+    Rectangle getBoundingBox();
 }

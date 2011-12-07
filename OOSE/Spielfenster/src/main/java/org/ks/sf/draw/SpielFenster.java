@@ -25,7 +25,7 @@ public class SpielFenster extends JFrame {
     }
 
     protected void paintComponent(Graphics g) {
-      figures.zeichne(g);
+      figures.draw(g);
     }
   };
 
@@ -46,7 +46,7 @@ public class SpielFenster extends JFrame {
   }
 
   public void tick() {
-    figures.bewege();
+    figures.move();
     repaint();
   }
 
