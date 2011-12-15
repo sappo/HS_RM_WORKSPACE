@@ -14,7 +14,7 @@ import org.ks.sf.math.Vector;
  */
 public class FigureContainer implements Figure {
 
-    private List<AbstractFigure> figureContainer;
+    private List<Figure> figureContainer;
 
     private int capacity;
 
@@ -23,7 +23,7 @@ public class FigureContainer implements Figure {
      * @throws IllegalArgumentException if capacity is negative.
      */
     public FigureContainer(int capacity) throws IllegalArgumentException {
-        this.figureContainer = new ArrayList<AbstractFigure>(capacity);
+        this.figureContainer = new ArrayList<Figure>(capacity);
         this.capacity = capacity;
     }
 
@@ -32,7 +32,7 @@ public class FigureContainer implements Figure {
      * @throws IllegalArgumentException if figure is null
      * @throws SizeLimitExceededException if capacity is reached.
      */
-    public void add(AbstractFigure figure) throws IllegalArgumentException {
+    public void add(Figure figure) throws IllegalArgumentException {
         if (figure == null) {
             throw new IllegalArgumentException("Cannot add a empty figure.");
         }
@@ -63,7 +63,7 @@ public class FigureContainer implements Figure {
      * @return the figure associated with the index
      * @throws ArrayIndexOutOfBoundsException if the index doesn't exist.
      */
-    public AbstractFigure elementAt(int index) throws ArrayIndexOutOfBoundsException {
+    public Figure elementAt(int index) throws ArrayIndexOutOfBoundsException {
         return figureContainer.get(index);
     }
 
@@ -71,7 +71,7 @@ public class FigureContainer implements Figure {
      * Move all figures in the container.
      */
     public void move() {
-        for (AbstractFigure figure : figureContainer) {
+        for (Figure figure : figureContainer) {
             figure.move();
         }
     }
@@ -81,16 +81,16 @@ public class FigureContainer implements Figure {
      * @param g Graphics object to paint
      */
     public void draw(Graphics g) {
-        for (AbstractFigure figure : figureContainer) {
+        for (Figure figure : figureContainer) {
             figure.draw(g);
         }
     }
 
     @Override
     public void turn() {
-        for (AbstractFigure figureX : figureContainer) {
-            for (AbstractFigure figureY : figureContainer) {
-                if (figureX.isTouches(figureY)) {
+        for (Figure figureX : figureContainer) {
+            for (Figure figureY : figureContainer) {
+                if (figureX.intersects(figureY)) {
                     figureX.turn();
                 }
             }
@@ -101,7 +101,7 @@ public class FigureContainer implements Figure {
     @Override
     public double getMass() {
         double mass = 0;
-        for (AbstractFigure figure : figureContainer) {
+        for (Figure figure : figureContainer) {
             mass += figure.getMass();
         }
         return mass;
@@ -109,7 +109,7 @@ public class FigureContainer implements Figure {
 
 
     @Override
-    public boolean isTouches(Figure f) {
+    public boolean intersects(Figure f) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -130,7 +130,7 @@ public class FigureContainer implements Figure {
     @Override
     public String toString() {
         StringBuilder content = new StringBuilder("FigureContainer{");
-        for (AbstractFigure figure : figureContainer) {
+        for (Figure figure : figureContainer) {
             content.append(figure.toString()).append(";");
         }
         content.append("}");
@@ -138,7 +138,7 @@ public class FigureContainer implements Figure {
     }
 
     @Override
-    public Rectangle getBoundingBox() {
+    public BoundingBox getBoundingBox() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

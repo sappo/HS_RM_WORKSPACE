@@ -10,6 +10,10 @@ import org.ks.sf.math.Vector;
 public class Rectangle extends AbstractFigure {
 
     private final Vector diagonal;
+    
+    private BoundingBox boundingBox;
+    
+    private boolean dirty = true;
 
     public Rectangle(Vector basePoint, Vector diagonal) {
         super(basePoint);
@@ -23,20 +27,14 @@ public class Rectangle extends AbstractFigure {
 
     @Override
     public void draw(Graphics g) {
-        Vector fusspunktVSumme = diagonal.add(getBasePoint());
         g.drawRect((int) getBasePoint().getX(), (int) getBasePoint().getY(),
-                (int) fusspunktVSumme.getX(), (int) fusspunktVSumme.getY());
+                (int) diagonal.getX(), (int) diagonal.getY());
     }
 
     @Override
     public String toString() {
         return "Rectangle<(" + getBasePoint().getX() + "," + getBasePoint().getY() + ")," + "(" + diagonal.
                 getX() + "," + diagonal.getY() + ")" + ">";
-    }
-
-    @Override
-    public boolean isTouches(Figure f) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -60,8 +58,19 @@ public class Rectangle extends AbstractFigure {
     }
 
     @Override
-    public Rectangle getBoundingBox() {
-        return this;
+    public BoundingBox getBoundingBox() {
+        if(dirty) {
+            boundingBox = new BoundingBox(getBasePoint(), diagonal);
+            dirty = false;
+        }
+        return boundingBox;
     }
+
+    @Override
+    public void move() {
+        dirty = true;
+        super.move();
+    }
+    
     
 }

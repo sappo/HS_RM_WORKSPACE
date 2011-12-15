@@ -9,24 +9,24 @@ import org.ks.sf.math.Vector;
  */
 public class Line extends AbstractFigure {
 
-    private final Vector line;
+    private Vector line;
 
-    private final Rectangle boundingBox;
+    private BoundingBox boundingBox;
+
+    private boolean dirty = true;
 
     public Line(Vector basepoint, Vector line) {
         super(basepoint);
         this.line = line;
-        boundingBox = intiBoundingBox();
     }
 
     public Line(Vector basePoint, Vector acceleration, Vector line) {
         super(basePoint, acceleration);
         this.line = line;
-        boundingBox = intiBoundingBox();
     }
 
-    private Rectangle intiBoundingBox() {
-        return new Rectangle(getBasePoint(), line);
+    private BoundingBox calculateBoundingBox() {
+        return new BoundingBox(getBasePoint(), line);
     }
 
     @Override
@@ -46,11 +46,6 @@ public class Line extends AbstractFigure {
     }
 
     @Override
-    public boolean isTouches(Figure f) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public double getMass() {
         return 1 * line.getLength();
     }
@@ -60,7 +55,17 @@ public class Line extends AbstractFigure {
     }
 
     @Override
-    public Rectangle getBoundingBox() {
+    public BoundingBox getBoundingBox() {
+        if (dirty) {
+            boundingBox = calculateBoundingBox();
+            dirty = false;
+        }
         return boundingBox;
+    }
+
+    @Override
+    public void move() {
+        dirty = true;
+        super.move();
     }
 }

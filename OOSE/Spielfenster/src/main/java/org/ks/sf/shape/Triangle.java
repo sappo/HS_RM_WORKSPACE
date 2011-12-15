@@ -12,27 +12,27 @@ import org.ks.sf.math.Vector;
  */
 public class Triangle extends AbstractFigure {
 
-    private final Vector lineB;
+    private Vector lineB;
 
-    private final Vector lineC;
+    private Vector lineC;
 
-    private final Rectangle boundingBox;
+    private BoundingBox boundingBox;
+    
+    private boolean dirty = true;
 
     public Triangle(Vector basePoint, Vector v, Vector w) {
         super(basePoint);
         this.lineB = v;
         this.lineC = w;
-        this.boundingBox = initBoundingBox();
     }
 
     public Triangle(Vector basePoint, Vector acceleration, Vector v, Vector w) {
         super(basePoint, acceleration);
         this.lineB = v;
         this.lineC = w;
-        this.boundingBox = initBoundingBox();
     }
 
-    private Rectangle initBoundingBox() {
+    private BoundingBox calculateBoundingBox() {
         Vector pointB = getBasePoint().add(lineC);
         Vector pointC = getBasePoint().add(lineB);
 
@@ -53,7 +53,7 @@ public class Triangle extends AbstractFigure {
         Vector rectPointC = new Vector(xCoordinates.get(2), yCoordinates.get(
                 2));
         
-        return new Rectangle(rectPointA, rectPointC.subtract(rectPointA));
+        return new BoundingBox(rectPointA, rectPointC.subtract(rectPointA));
     }
 
     @Override
@@ -79,11 +79,6 @@ public class Triangle extends AbstractFigure {
     }
 
     @Override
-    public boolean isTouches(Figure f) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public double getMass() {
         return 1 * getArea();
     }
@@ -103,7 +98,17 @@ public class Triangle extends AbstractFigure {
     }
 
     @Override
-    public Rectangle getBoundingBox() {
+    public BoundingBox getBoundingBox() {
+        if(dirty){
+            boundingBox = calculateBoundingBox();
+            dirty = false;
+        }
         return boundingBox;
+    }
+
+    @Override
+    public void move() {
+        dirty = true;
+        super.move();
     }
 }

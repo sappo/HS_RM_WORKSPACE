@@ -28,8 +28,8 @@ public class Vector {
     public Vector add(Vector that) {
         return new Vector(this.x + that.x, this.y + that.y);
     }
-    
-        /**
+
+    /**
      * <p>Subtracts up two vectors<p/>
      * 
      * <code>this.x - that.x</code><br/>
@@ -67,13 +67,12 @@ public class Vector {
 
     /**
      * Inverses this Vector on a given base point.
-     * @param basePoint the base point Vector
      * @return the inversed Vector
      */
-    public Vector inverse(Vector basePoint) {
-        return new Vector(basePoint.getX() - this.getX(), basePoint.getY() - this.getY());
+    public Vector inverse() {
+        return new Vector(Math.pow(this.getX(), -1), Math.pow(this.getY(), -1));
     }
-    
+
     public double getLength() {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }

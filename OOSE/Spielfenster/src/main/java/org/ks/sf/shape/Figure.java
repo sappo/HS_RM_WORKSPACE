@@ -15,7 +15,7 @@ public interface Figure {
     
     void turn();
     
-    boolean isTouches(Figure f);
+    boolean intersects(Figure f);
     
     Vector getBasePoint();
     
@@ -23,5 +23,5 @@ public interface Figure {
     
     double getMass();
     
-    Rectangle getBoundingBox();
+    BoundingBox getBoundingBox();
 }
