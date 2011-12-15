@@ -35,7 +35,7 @@ public class SpielFenster extends JFrame {
         pack();
         setVisible(true);
 
-        Timer t = new Timer(300, new ActionListener() {
+        Timer t = new Timer(100, new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 tick();
@@ -56,8 +56,8 @@ public class SpielFenster extends JFrame {
 
     public static void main(String[] args) {
         SpielFenster sf = new SpielFenster(20);
-        for (int i = 1; i < 5; i++) {
-            for (int j = 1; j < 4; j++) {
+        for (int i = 1; i < 7; i++) {
+            for (int j = 1; j < 6; j++) {
                 Vector fusspunkt = new Vector(i * 100., j * 100.);
                 Vector geschwindigkeit = new Vector(
                         (Math.random() - .5) * 15.0, (Math.random() - .5) * 15.);

@@ -73,4 +73,14 @@ public class VectorTest {
 
         Assert.assertEquals(expectedLenght, actualVector.getLength());
     }
+    
+    @Test
+    public void testInverse() {
+        double expectedX = -2.;
+        double expectedY = -3.;
+        Vector v = new Vector(2, 3);
+        Vector inversed = v.inverse();
+        Assert.assertEquals(expectedX, inversed.getX());
+        Assert.assertEquals(expectedY, inversed.getY());
+    }
 }

@@ -70,9 +70,16 @@ public class FigureContainer implements Figure {
     /**
      * Move all figures in the container.
      */
+    @Override
     public void move() {
         for (Figure figure : figureContainer) {
             figure.move();
+            for (Figure figureX : figureContainer) {
+                if (figure.intersects(figureX)) {
+                    figure.turn();
+                    figureX.turn();
+                }
+            }
         }
     }
 
@@ -88,16 +95,9 @@ public class FigureContainer implements Figure {
 
     @Override
     public void turn() {
-        for (Figure figureX : figureContainer) {
-            for (Figure figureY : figureContainer) {
-                if (figureX.intersects(figureY)) {
-                    figureX.turn();
-                }
-            }
-        }
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    
+
     @Override
     public double getMass() {
         double mass = 0;
@@ -106,7 +106,6 @@ public class FigureContainer implements Figure {
         }
         return mass;
     }
-
 
     @Override
     public boolean intersects(Figure f) {

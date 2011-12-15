@@ -50,6 +50,14 @@ public abstract class AbstractFigure implements Figure {
     public final boolean intersects(Figure collidingFigure) {
         return this.calculateIntersection(collidingFigure);
     }
+    
+//    public boolean isAbove(Figure that){
+//        return this.getBasePoint().getY()+getHeight()<that.getBoundingBox().getBasePoint().getY();
+//    }
+//
+//    public boolean isLeftOf(Figure that){
+//        return this.getBoundingBox().getBasePoint().getX()+this.getWidth()< that.getBoundingBox().getBasePoint().getX();
+//    }   
 
     private boolean calculateIntersection(Figure collidingFigure) {
         Vector pointC = getPointC(getBoundingBox());

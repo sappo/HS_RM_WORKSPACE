@@ -70,7 +70,7 @@ public class Vector {
      * @return the inversed Vector
      */
     public Vector inverse() {
-        return new Vector(Math.pow(this.getX(), -1), Math.pow(this.getY(), -1));
+        return new Vector(this.getX()* -1, this.getY()* -1);
     }
 
     public double getLength() {
