@@ -92,6 +92,9 @@ public class RectangleTest {
                 .5)), true);
         testRectangle(bb, new Rectangle(new Vector(1.5, 1.5), new Vector(
                 -.5, -.5)), true);
+        
+        bb = new Rectangle(new Vector(50.0, 0.0), new Vector(10., 9.));
+        testRectangle(bb, new Rectangle(new Vector(800., 0.),new Vector(-800.,0)), true);
     }
 
     private static void testRectangle(Rectangle bb1, Rectangle bb2,

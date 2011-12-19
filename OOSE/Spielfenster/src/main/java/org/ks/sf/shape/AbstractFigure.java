@@ -12,7 +12,7 @@ public abstract class AbstractFigure implements Figure {
     private Vector basePoint;
 
     private Vector acceleration;
-    
+
     public AbstractFigure(Vector basePoint) {
         this.basePoint = basePoint;
     }
@@ -34,13 +34,17 @@ public abstract class AbstractFigure implements Figure {
 
     @Override
     public void move() {
-        basePoint = basePoint.add(acceleration);
-        
+        if (acceleration != null) {
+            basePoint = basePoint.add(acceleration);
+        }
+
     }
 
     @Override
     public void turn() {
-        acceleration = acceleration.inverse();
+        if (acceleration != null) {
+            acceleration = acceleration.inverse();
+        }
     }
 
     @Override
@@ -48,17 +52,89 @@ public abstract class AbstractFigure implements Figure {
 
     @Override
     public final boolean intersects(Figure collidingFigure) {
-        return this.calculateIntersection(collidingFigure);
+//        if (this.equals(collidingFigure)) {
+//            return false;
+//        }
+//        if (this.isLeftOf(collidingFigure)) {
+//            return false;
+//        }
+//        if (collidingFigure.isLeftOf(this)) {
+//            return false;
+//        }
+//        if (this.isAbove(collidingFigure)) {
+//            return false;
+//        }
+//        if (collidingFigure.isAbove(this)) {
+//            return false;
+//        }
+//        return true;
+//        return this.calculateIntersection(collidingFigure);
+        return checkOverlap(collidingFigure);
     }
-    
-//    public boolean isAbove(Figure that){
-//        return this.getBasePoint().getY()+getHeight()<that.getBoundingBox().getBasePoint().getY();
-//    }
-//
-//    public boolean isLeftOf(Figure that){
-//        return this.getBoundingBox().getBasePoint().getX()+this.getWidth()< that.getBoundingBox().getBasePoint().getX();
-//    }   
 
+    /**
+     * Inspired by "Eric Panitz - Java will spielen"
+     * Checks if this is above that
+     * @param that figure to comapre this to.
+     * @return true if this is above that, else false
+     */
+    @Override
+    public boolean isAbove(Figure that) {
+        Vector pointC = this.getBoundingBox().getBasePoint().add(this.
+                getBoundingBox().getDiagonal());
+        double height = (this.getBoundingBox().getBasePoint().getY() - pointC.
+                getY());
+        height = height < 0 ? height * -1 : height;
+        return this.getBasePoint().getY() + height < that.getBoundingBox().
+                getBasePoint().getY();
+    }
+
+    /** 
+     * Inspired by "Eric Panitz - Java will spielen"
+     * Checks if this is left of that
+     * @param that figure to comapre this to.
+     * @return true if this is left of that, else false#
+     */
+    @Override
+    public boolean isLeftOf(Figure that) {
+        Vector pointC = this.getBoundingBox().getBasePoint().add(this.
+                getBoundingBox().getDiagonal());
+        double width = (this.getBoundingBox().getBasePoint().getX() - pointC.
+                getX());
+        width = width < 0 ? width * -1 : width;
+        return this.getBoundingBox().getBasePoint().getX() + width < that.
+                getBoundingBox().getBasePoint().getX();
+    }
+
+    /**
+     * Check overlapping of the bounding boxes with the following conditions.
+     * <p>The left edge of B is to the left of right edge of R.</p>
+     * <p>The top edge of B is above the R bottom edge.</p>
+     * <p>The right edge of B is to the right of left edge of R.</p>
+     * <p>The bottom edge of B is below the R upper edge.</p>
+     * @param that figure to compare this to.
+     * @return true if all conditions are met, else false.
+     */
+    private boolean checkOverlap(Figure that) {
+        Vector thatPointC = that.getBoundingBox().getBasePoint().add(that.
+                getBoundingBox().getDiagonal());
+        Vector thisPointC = this.getBoundingBox().getBasePoint().add(this.
+                getBoundingBox().getDiagonal());
+        return ((thisPointC.getX() >= that.getBoundingBox().getBasePoint().getX())
+                && (thisPointC.getY() >= that.getBoundingBox().getBasePoint().
+                getY())
+                && (this.getBoundingBox().getBasePoint().getX() <= thatPointC.
+                getX())
+                && (this.getBoundingBox().getBasePoint().getY() <= thatPointC.
+                getY()));
+    }
+
+    /**
+     * Check if 
+     * this.x1 < that.x1 < this.x2 
+     * @param collidingFigure
+     * @return 
+     */
     private boolean calculateIntersection(Figure collidingFigure) {
         Vector pointC = getPointC(getBoundingBox());
         double fX1 = getBoundingBox().getBasePoint().getX();
@@ -97,8 +173,8 @@ public abstract class AbstractFigure implements Figure {
         }
 
         return ((fX1 <= cfX1 && cfX1 <= fX2) || (fX1 <= cfX2 && cfX2 <= fX2))
-                && ((fY1 <= cfY1 && cfY1 <= fY2) || (fY1 <= cfY2 && cfY2 <= fY2)) || 
-                ((cfX1 <= fX1 && fX1 <= cfX2) || (cfX1 <= fX2 && fX2 <= cfX2))
+                && ((fY1 <= cfY1 && cfY1 <= fY2) || (fY1 <= cfY2 && cfY2 <= fY2))
+                || ((cfX1 <= fX1 && fX1 <= cfX2) || (cfX1 <= fX2 && fX2 <= cfX2))
                 && ((cfY1 <= fY1 && fY1 <= cfY2) || (cfY1 <= fY2 && fY2 <= cfY2));
     }
 

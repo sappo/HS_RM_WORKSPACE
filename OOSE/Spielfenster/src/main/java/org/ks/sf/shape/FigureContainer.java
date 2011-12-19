@@ -2,6 +2,7 @@ package org.ks.sf.shape;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.naming.SizeLimitExceededException;
 import org.ks.sf.math.Vector;
@@ -16,7 +17,13 @@ public class FigureContainer implements Figure {
 
     private List<Figure> figureContainer;
 
+    private BoundingBox boundingBox;
+
     private int capacity;
+
+    private boolean checkContainerCollusions = true;
+
+    private boolean dirty = true;
 
     /** Creates a figure container with the passed capacity.
      * @param capacity initial capacity
@@ -72,12 +79,18 @@ public class FigureContainer implements Figure {
      */
     @Override
     public void move() {
+        dirty = true;
         for (Figure figure : figureContainer) {
             figure.move();
-            for (Figure figureX : figureContainer) {
-                if (figure.intersects(figureX)) {
-                    figure.turn();
-                    figureX.turn();
+            if (checkContainerCollusions) {
+                for (Figure figureX : figureContainer) {
+                    if (figure.intersects(figureX)) {
+                        //turn and move away from each other
+                        figure.turn();
+                        figure.move();
+                        figureX.turn();
+                        figureX.move();
+                    }
                 }
             }
         }
@@ -95,7 +108,9 @@ public class FigureContainer implements Figure {
 
     @Override
     public void turn() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        for (Figure figure : figureContainer) {
+            figure.turn();
+        }
     }
 
     @Override
@@ -108,13 +123,28 @@ public class FigureContainer implements Figure {
     }
 
     @Override
-    public boolean intersects(Figure f) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean intersects(Figure collidingFigure) {
+        if (this.equals(collidingFigure)) {
+            return false;
+        }
+        if (this.isLeftOf(collidingFigure)) {
+            return false;
+        }
+        if (collidingFigure.isLeftOf(this)) {
+            return false;
+        }
+        if (this.isAbove(collidingFigure)) {
+            return false;
+        }
+        if (collidingFigure.isAbove(this)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public Vector getBasePoint() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getBoundingBox().getBasePoint();
     }
 
     @Override
@@ -138,6 +168,61 @@ public class FigureContainer implements Figure {
 
     @Override
     public BoundingBox getBoundingBox() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (dirty) {
+            List<Double> xCoordinates = new ArrayList<Double>();
+            List<Double> yCoordinates = new ArrayList<Double>();
+
+            for (Figure figure : figureContainer) {
+                BoundingBox boundingBox = figure.getBoundingBox();
+                Vector basePoint = boundingBox.getBasePoint();
+                Vector pointC = basePoint.add(boundingBox.getDiagonal());
+                xCoordinates.add(basePoint.getX());
+                yCoordinates.add(basePoint.getY());
+                xCoordinates.add(pointC.getX());
+                yCoordinates.add(pointC.getY());
+            }
+            Collections.sort(xCoordinates);
+            Collections.sort(yCoordinates);
+
+            Vector rectPointA = new Vector(xCoordinates.get(0),
+                    yCoordinates.get(
+                    0));
+            Vector rectPointC = new Vector(xCoordinates.get(
+                    xCoordinates.size() - 1),
+                    yCoordinates.get(yCoordinates.size() - 1));
+
+            boundingBox = new BoundingBox(rectPointA, rectPointC.subtract(
+                    rectPointA));
+            dirty = false;
+        }
+        return boundingBox;
+    }
+
+    @Override
+    public boolean isAbove(Figure that) {
+        Vector pointC = this.getBoundingBox().getBasePoint().add(this.
+                getBoundingBox().getDiagonal());
+        double height = (this.getBoundingBox().getBasePoint().getY() - pointC.
+                getY()) * -1;
+        return this.getBasePoint().getY() + height < that.getBoundingBox().
+                getBasePoint().getY();
+    }
+
+    @Override
+    public boolean isLeftOf(Figure that) {
+        Vector pointC = this.getBoundingBox().getBasePoint().add(this.
+                getBoundingBox().getDiagonal());
+        double witdth = (this.getBoundingBox().getBasePoint().getX() - pointC.
+                getX()) * -1;
+        return this.getBoundingBox().getBasePoint().getX() + witdth < that.
+                getBoundingBox().getBasePoint().getX();
+    }
+
+    public boolean isCheckContainerCollusions() {
+        return checkContainerCollusions;
+    }
+
+    public void setCheckContainerCollusions(boolean checkContainerCollusions) {
+        this.checkContainerCollusions = checkContainerCollusions;
     }
 }

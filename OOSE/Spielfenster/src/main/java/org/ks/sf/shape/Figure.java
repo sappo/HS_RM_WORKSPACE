@@ -24,4 +24,8 @@ public interface Figure {
     double getMass();
     
     BoundingBox getBoundingBox();
+    
+    boolean isAbove(Figure that);
+    
+    boolean isLeftOf(Figure that);
 }

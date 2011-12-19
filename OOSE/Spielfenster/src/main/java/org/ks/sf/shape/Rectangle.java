@@ -10,9 +10,9 @@ import org.ks.sf.math.Vector;
 public class Rectangle extends AbstractFigure {
 
     private final Vector diagonal;
-    
+
     private BoundingBox boundingBox;
-    
+
     private boolean dirty = true;
 
     public Rectangle(Vector basePoint, Vector diagonal) {
@@ -27,8 +27,18 @@ public class Rectangle extends AbstractFigure {
 
     @Override
     public void draw(Graphics g) {
-        g.drawRect((int) getBasePoint().getX(), (int) getBasePoint().getY(),
-                (int) diagonal.getX(), (int) diagonal.getY());
+        Vector pointC = getBasePoint().add(diagonal);
+        Vector pointB = new Vector(pointC.getX(), getBasePoint().getY());
+        Vector pointD = new Vector(getBasePoint().getX(), pointC.getY());
+        
+        g.drawLine((int) getBasePoint().getX(), (int) getBasePoint().getY(),
+                (int) pointB.getX(), (int) pointB.getY());
+        g.drawLine((int) pointB.getX(), (int) pointB.getY(),
+                (int) pointC.getX(), (int) pointC.getY());
+        g.drawLine((int) pointC.getX(), (int) pointC.getY(),
+                (int) pointD.getX(), (int) pointD.getY());
+        g.drawLine((int) pointD.getX(), (int) pointD.getY(),
+                (int) getBasePoint().getX(), (int) getBasePoint().getY());
     }
 
     @Override
@@ -59,7 +69,7 @@ public class Rectangle extends AbstractFigure {
 
     @Override
     public BoundingBox getBoundingBox() {
-        if(dirty) {
+        if (dirty) {
             boundingBox = new BoundingBox(getBasePoint(), diagonal);
             dirty = false;
         }
@@ -71,6 +81,4 @@ public class Rectangle extends AbstractFigure {
         dirty = true;
         super.move();
     }
-    
-    
 }
