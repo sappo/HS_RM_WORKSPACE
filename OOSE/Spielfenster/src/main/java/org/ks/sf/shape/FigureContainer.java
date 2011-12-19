@@ -198,23 +198,37 @@ public class FigureContainer implements Figure {
         return boundingBox;
     }
 
+    /**
+     * Inspired by "Eric Panitz - Java will spielen"
+     * Checks if this is above that
+     * @param that figure to comapre this to.
+     * @return true if this is above that, else false
+     */
     @Override
     public boolean isAbove(Figure that) {
         Vector pointC = this.getBoundingBox().getBasePoint().add(this.
                 getBoundingBox().getDiagonal());
         double height = (this.getBoundingBox().getBasePoint().getY() - pointC.
-                getY()) * -1;
+                getY());
+        height = height < 0 ? height * -1 : height;
         return this.getBasePoint().getY() + height < that.getBoundingBox().
                 getBasePoint().getY();
     }
 
+    /** 
+     * Inspired by "Eric Panitz - Java will spielen"
+     * Checks if this is left of that
+     * @param that figure to comapre this to.
+     * @return true if this is left of that, else false#
+     */
     @Override
     public boolean isLeftOf(Figure that) {
         Vector pointC = this.getBoundingBox().getBasePoint().add(this.
                 getBoundingBox().getDiagonal());
-        double witdth = (this.getBoundingBox().getBasePoint().getX() - pointC.
-                getX()) * -1;
-        return this.getBoundingBox().getBasePoint().getX() + witdth < that.
+        double width = (this.getBoundingBox().getBasePoint().getX() - pointC.
+                getX());
+        width = width < 0 ? width * -1 : width;
+        return this.getBoundingBox().getBasePoint().getX() + width < that.
                 getBoundingBox().getBasePoint().getX();
     }
 
