@@ -11,7 +11,6 @@ import org.ks.frogger.events.FroggerDeath;
 import org.ks.frogger.events.GameOver;
 import org.ks.frogger.gameobjects.Frogger;
 import org.ks.frogger.gameobjects.GameObjectContainer;
-import org.ks.frogger.gameobjects.GameObject;
 import org.ks.frogger.gameobjects.Streetobject;
 import org.ks.sf.math.Vector;
 import org.ks.sf.shape.Rectangle;
@@ -64,9 +63,9 @@ public class GameManager implements KeyListener {
 
     gameObjectContainer.addFrogger(frogger);
 
-    gameObjectContainer.addMobileGameobject(createCar(1));
-    gameObjectContainer.addMobileGameobject(createCar(2));
-    gameObjectContainer.addMobileGameobject(createCar(3));
+    gameObjectContainer.addMobileGameObject(createCar(1));
+    gameObjectContainer.addMobileGameObject(createCar(2));
+    gameObjectContainer.addMobileGameObject(createCar(3));
 
     return this;
   }

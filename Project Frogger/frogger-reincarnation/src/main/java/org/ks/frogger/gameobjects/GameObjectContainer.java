@@ -7,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.ks.frogger.events.FroggerDeath;
-import org.ks.sf.shape.Figure;
 import org.ks.sf.shape.FigureContainer;
 
 /**
@@ -29,6 +28,7 @@ public class GameObjectContainer {
   @PostConstruct
   public void initialize() {
     this.mobileFigureList = new FigureContainer<>();
+    this.immobileFigureList = new FigureContainer<>();
   }
 
   /**
@@ -45,7 +45,7 @@ public class GameObjectContainer {
    * Add a gameobject which can be moved.
    * @param gameobject 
    */
-  public void addMobileGameobject(GameObject gameobject) {
+  public void addMobileGameObject(GameObject gameobject) {
     mobileFigureList.add(gameobject);
   }
   
@@ -96,10 +96,14 @@ public class GameObjectContainer {
   }
 
   public void checkFroggerIntersection() {
+    // check frogger collusion with mobile figures
     Optional<GameObject> intersectedFigure = mobileFigureList.
             intersectContainerFigures(frogger);
-    intersectedFigure = intersectedFigure.isPresent() ? intersectedFigure : immobileFigureList.
-            intersectContainerFigures(frogger);
+    // check frogger collusion with immobile figures
+    if(!intersectedFigure.isPresent()) {
+      intersectedFigure = immobileFigureList.intersectContainerFigures(frogger);
+    }
+
     if (intersectedFigure.isPresent()) {
       switch (intersectedFigure.get().getCollusionAction()) {
         case KILL:
