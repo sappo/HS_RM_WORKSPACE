@@ -3,9 +3,10 @@ package org.ks.sf.shape;
 import com.google.common.base.Optional;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import javax.naming.SizeLimitExceededException;
 import org.apache.commons.collections.CollectionUtils;
 import org.ks.sf.math.Vector;
 
@@ -15,7 +16,7 @@ import org.ks.sf.math.Vector;
  * Einfuegen von Figur-Objekten in diesen Behaelter die urspruengliche
  * Kapazitaet ueberschritten, dann erweitert sich der Behaelter selbsttaetig.
  */
-public class FigureContainer<FigureGeneric extends Figure> implements Figure {
+public class FigureContainer<FigureGeneric extends Figure> implements Figure, Collection<FigureGeneric> {
 
   private List<FigureGeneric> figureContainer;
 
@@ -27,18 +28,6 @@ public class FigureContainer<FigureGeneric extends Figure> implements Figure {
    */
   public FigureContainer() throws IllegalArgumentException {
     this.figureContainer = new ArrayList<FigureGeneric>();
-  }
-
-  /** Adds a figure to the container.
-   * @param figure to add
-   * @throws IllegalArgumentException if figure is null
-   * @throws SizeLimitExceededException if capacity is reached.
-   */
-  public void add(FigureGeneric figure) throws IllegalArgumentException {
-    if (figure == null) {
-      throw new IllegalArgumentException("Cannot add a empty figure.");
-    }
-    figureContainer.add(figure);
   }
 
   /**
@@ -61,7 +50,7 @@ public class FigureContainer<FigureGeneric extends Figure> implements Figure {
    * @return the figure associated with the index
    * @throws ArrayIndexOutOfBoundsException if the index doesn't exist.
    */
-  public Figure elementAt(int index) throws ArrayIndexOutOfBoundsException {
+  public FigureGeneric elementAt(int index) throws ArrayIndexOutOfBoundsException {
     return figureContainer.get(index);
   }
 
@@ -217,5 +206,64 @@ public class FigureContainer<FigureGeneric extends Figure> implements Figure {
 
   public void setCheckContainerCollusions(boolean checkContainerCollusions) {
     this.turnFiguresOnCollusion = checkContainerCollusions;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return figureContainer.isEmpty();
+  }
+
+  @Override
+  public boolean contains(Object o) {
+    return figureContainer.contains(o);
+  }
+
+  @Override
+  public Iterator<FigureGeneric> iterator() {
+    return figureContainer.iterator();
+  }
+
+  @Override
+  public Object[] toArray() {
+    return figureContainer.toArray();
+  }
+
+  @Override
+  public <T> T[] toArray(T[] a) {
+    return figureContainer.toArray(a);
+  }
+
+  @Override
+  public boolean add(FigureGeneric figure) {
+    if (figure == null) {
+      return false;
+    }
+    figureContainer.add(figure);
+    return true;
+  }
+
+  @Override
+  public boolean remove(Object object) {
+    return figureContainer.remove(object);
+  }
+
+  @Override
+  public boolean containsAll(Collection<?> c) {
+    return figureContainer.containsAll(c);
+  }
+
+  @Override
+  public boolean addAll(Collection<? extends FigureGeneric> c) {
+    return figureContainer.addAll(c);
+  }
+
+  @Override
+  public boolean removeAll(Collection<?> c) {
+    return figureContainer.removeAll(c);
+  }
+
+  @Override
+  public boolean retainAll(Collection<?> c) {
+    return figureContainer.retainAll(c);
   }
 }
