@@ -2,14 +2,15 @@ package org.ks.frogger.gameobjects;
 
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
+import org.ks.frogger.events.FroggerDeath;
 import org.ks.sf.math.Vector;
 import org.ks.sf.shape.BoundingBox;
 import org.ks.sf.shape.Figure;
 import org.ks.sf.shape.Rectangle;
 
 /**
- *
- * @author Kevin Sapper
+ * This class represents a GameObject
+ * @author Kevin Sapper 2011
  */
 public abstract class GameObject implements Figure {
 
@@ -45,37 +46,65 @@ public abstract class GameObject implements Figure {
     getPictureBoundingBox().draw(g);
   }
 
+  /**
+   * Checks weather two figures intersect with each other.
+   * @param figure the figure to check against this.
+   * @return true if interects, else false
+   */
   public boolean intersects(Figure figure) {
     return getPictureBoundingBox().intersects(figure);
   }
-  
-  public abstract CollusionAction getCollusionAction();
 
+  /**
+   * Get the action which shall be applied by a collusion.
+   * @return the action or an empty string for no action.
+   */
+  public abstract CollusionAction getCollusionAction();
+  
+  /**
+   * Moves an GameObject according to it's pictureBoundingBox acceleration.
+   */
   @Override
   public void move() {
     pictureBoundingBox.move();
   }
 
+  /**
+   * Turns a GameObject by 180° 
+   */
   @Override
   public void turn() {
     pictureBoundingBox.turn();
   }
 
+  /**
+   * Get the basePoint of the pictureBoundingBox
+   * @return 
+   */
   @Override
   public Vector getBasePoint() {
     return pictureBoundingBox.getBasePoint();
   }
 
+  /**
+   * Get the acceleration of the pictureBoundingBox
+   * @return Acceleration
+   */
   @Override
   public Vector getAcceleration() {
     return pictureBoundingBox.getAcceleration();
   }
 
+  
   @Override
   public double getMass() {
     return pictureBoundingBox.getMass();
   }
 
+  /**
+   * Get the pictureBoundingBox
+   * @return the BoudingBox
+   */
   @Override
   public BoundingBox getBoundingBox() {
     return pictureBoundingBox.getBoundingBox();

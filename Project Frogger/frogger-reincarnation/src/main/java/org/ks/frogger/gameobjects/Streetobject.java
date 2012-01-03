@@ -1,12 +1,13 @@
 package org.ks.frogger.gameobjects;
 
+import javax.swing.ImageIcon;
 import org.ks.frogger.events.FroggerDeath;
 import org.ks.sf.shape.Rectangle;
 
 /**
- * An object representing any kind of steetobject e.g car, truck, motorcycle, 
- * etc..
- * @author Kevin Sapper
+ * A StreetObject represents any kind of vehicle which can drive on a street.
+ * E.g. car, van, truck, motorcycle, etc...
+ * @author Kevin Sapper 2011
  */
 public class Streetobject extends GameObject {
 
@@ -14,11 +15,21 @@ public class Streetobject extends GameObject {
     super(pictureBoundingBox);
   }
 
+  public Streetobject(Rectangle pictureBoundingBox, ImageIcon image) {
+    super(pictureBoundingBox, image);
+  }
+
+  /**
+   * @inherited
+   */
   @Override
   public CollusionAction getCollusionAction() {
     return CollusionAction.KILL;
   }
-  
+
+  /**
+   * @inherited
+   */
   public String getDeathCause() {
     return FroggerDeath.OVERRUN;
   }

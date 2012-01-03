@@ -1,5 +1,6 @@
 package org.ks.frogger.manager;
 
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import org.ks.frogger.events.GameOver;
 import org.ks.frogger.gameobjects.Frogger;
 import org.ks.frogger.gameobjects.GameObjectContainer;
 import org.ks.frogger.gameobjects.Streetobject;
+import org.ks.frogger.gameobjects.Waterobject;
 import org.ks.sf.math.Vector;
 import org.ks.sf.shape.Rectangle;
 
@@ -50,22 +52,31 @@ public class GameManager implements KeyListener {
   }
 
   private Streetobject createCar(int streetLvl) {
-    return new Streetobject(new Rectangle(new Vector(-75, streetLvl * 50),
+    return new Streetobject(new Rectangle(new Vector(-50, streetLvl * 50),
             new Vector(1, 0), new Vector(50, 25)));
+  }
+
+  private Waterobject createTreeTrunk(int waterLvl) {
+    return new Waterobject(new Rectangle(new Vector(-50, waterLvl * 200),
+            new Vector(2, 0), new Vector(50, 25)));
   }
 
   /**
    * Starts a new game.
    *  @param frame the frame to start the game on
    */
-  public KeyListener startGame() {
+  public KeyListener startGame(Dimension gamePanelSize) {
     Frogger frogger = createFrooger();
+    
+    gameObjectContainer.addBorder(gamePanelSize.height, gamePanelSize.width);
 
     gameObjectContainer.addFrogger(frogger);
 
     gameObjectContainer.addMobileGameObject(createCar(1));
     gameObjectContainer.addMobileGameObject(createCar(2));
     gameObjectContainer.addMobileGameObject(createCar(3));
+    
+    gameObjectContainer.addMobileGameObject(createTreeTrunk(1));
 
     return this;
   }

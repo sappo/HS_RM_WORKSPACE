@@ -8,6 +8,8 @@ public class FroggerDeath {
   
   public static final String OVERRUN = "overrun";
   
+  public static final String BORDERCRASH = "bordercrash";
+  
   private String reason;
 
   public FroggerDeath(String reason) {

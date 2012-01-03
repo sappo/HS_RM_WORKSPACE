@@ -158,7 +158,7 @@ public class Main extends JFrame implements ActionListener {
   }
 
   private void actionNewGame(ActionEvent event) {
-    KeyListener listener = gameManager.startGame();
+    KeyListener listener = gameManager.startGame(gamePanel.getPreferredSize());
     gamePanel.addKeyListener(listener);
 
     switchToPanel(gamePanel);
