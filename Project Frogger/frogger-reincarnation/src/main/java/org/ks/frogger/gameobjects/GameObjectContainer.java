@@ -2,7 +2,9 @@ package org.ks.frogger.gameobjects;
 
 import com.google.common.base.Optional;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -25,16 +27,22 @@ public class GameObjectContainer {
 
   private FigureContainer<GameObject> immobileFigureList;
 
+  private List<FrogNest> frogNestList;
+
   private Frogger frogger;
 
   @Inject
   private Event<FroggerDeath> deathEvent;
+
+  @Inject
+  private Event<FrogNest> winEvent;
 
   @PostConstruct
   public void initialize() {
     this.border = new FigureContainer<>();
     this.mobileGameObjectList = new FigureContainer<>();
     this.immobileFigureList = new FigureContainer<>();
+    this.frogNestList = new ArrayList<>(5);
   }
 
   /**
@@ -64,18 +72,23 @@ public class GameObjectContainer {
 
   /**
    * Add a gameobject which can be moved.
-   * @param gameobject 
+   * @param gameObject 
    */
-  public void addMobileGameObject(GameObject gameobject) {
-    mobileGameObjectList.add(gameobject);
+  public void addMobileGameObject(GameObject gameObject) {
+    mobileGameObjectList.add(gameObject);
   }
 
   /**
    * Adds a gameobject which should not be moved.
-   * @param gameobject 
+   * @param gameObject 
    */
-  public void addImmobileGameobject(GameObject gameobject) {
-    immobileFigureList.add(gameobject);
+  public void addImmobileGameobject(GameObject gameObject) {
+    immobileFigureList.add(gameObject);
+  }
+
+  public void addFroggerNest(FrogNest frogNest) {
+    frogNestList.add(frogNest);
+    immobileFigureList.add(frogNest);
   }
 
   public void draw(Graphics g) {
@@ -86,7 +99,20 @@ public class GameObjectContainer {
   }
 
   public void clear() {
+    removeFrogger();
+    border.clear();
     mobileGameObjectList.clear();
+    immobileFigureList.clear();
+    frogNestList.clear();
+  }
+  
+  /**
+   * Remove all invaders from the nests.
+   */
+  public void clearFrogNestInvaders() {
+    for (FrogNest frogNest : frogNestList) {
+      frogNest.removeInvader();
+    }
   }
 
   public void removeFrogger() {
@@ -128,25 +154,6 @@ public class GameObjectContainer {
     checkFroggerIntersection();
   }
 
-  /**
-   * Analyses the moving direction of a GameObject. Ignores up and down movement.
-   * @param gameObject the GameObject to analyse the direction.
-   * @return -1 if moving left, 1 if moving right and 0 if not moving
-   */
-  private int movingDirection(GameObject gameObject) {
-    Vector acceleration = gameObject.getAcceleration();
-    int direction = 0;
-    if (acceleration != null) {
-      if (acceleration.getY() == 0 && acceleration.getX() < 0) {
-        direction = -1;
-      }
-      if (acceleration.getY() == 0 && acceleration.getX() > 0) {
-        direction = 1;
-      }
-    }
-    return direction;
-  }
-
   public void checkFroggerIntersection() {
     //Prioritise object intersection
     //1st Priority - Border
@@ -179,6 +186,7 @@ public class GameObjectContainer {
         frogger.jumpOn(intersectedFigure);
         break;
       case WIN:
+        winEvent.fire((FrogNest) intersectedFigure);
         break;
     }
   }

@@ -1,6 +1,9 @@
 package org.ks.frogger;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,15 +16,20 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import org.apache.commons.lang.ArrayUtils;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
-import org.ks.frogger.events.FroggerDeath;
 import org.ks.frogger.events.GameOver;
+import org.ks.frogger.events.LifeUpdate;
+import org.ks.frogger.events.ScoreUpdate;
+import org.ks.frogger.events.TimeData;
+import org.ks.frogger.events.TimeUpdate;
 import org.ks.frogger.gameobjects.GameObjectContainer;
 import org.ks.frogger.manager.GameManager;
 
@@ -48,9 +56,17 @@ public class Main extends JFrame implements ActionListener {
 
   private JPanel gamePanel;
 
-  private JPanel gameOverPanel;
+  private JPanel gameMetaInfoPanel;
+
+  private JProgressBar progressBar;
   
-  private JPanel gameOverReasonLabel;
+  private JLabel lifeDataLabel;
+  
+  private JLabel scoreDataLabel;
+
+  private JPanel gameOverPanel;
+
+  private JLabel gameOverScoreLabel;
 
   private Timer repaintTimer;
 
@@ -61,10 +77,12 @@ public class Main extends JFrame implements ActionListener {
 
   public void main(@Observes ContainerInitialized event) {
     setVisible(true);
+    getContentPane().setLayout(new BorderLayout());
 
     initMenu();
     initStartPanel();
     initGamePanel();
+    initGameMetaInfoPanel();
     initGameOverScreen();
     initTimer();
 
@@ -101,19 +119,48 @@ public class Main extends JFrame implements ActionListener {
     };
   }
 
+  private void initGameMetaInfoPanel() {
+    gameMetaInfoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    gameMetaInfoPanel.setPreferredSize(new Dimension(800, 30));
+    gameMetaInfoPanel.setBackground(Color.LIGHT_GRAY);
+
+    JLabel lifeLabel = new JLabel("Lives:");
+    lifeDataLabel = new JLabel();
+
+    JLabel timeLabel = new JLabel("Time:");
+
+    progressBar = new JProgressBar(SwingConstants.HORIZONTAL);
+    progressBar.setBorderPainted(false);
+    progressBar.setPreferredSize(new Dimension(250, 20));
+    progressBar.setForeground(Color.YELLOW);
+    progressBar.setBackground(Color.GRAY);
+    progressBar.setMinimum(0);
+
+
+    JLabel scoreLabel = new JLabel("Score:");
+    scoreDataLabel = new JLabel();
+    
+    gameMetaInfoPanel.add(lifeLabel);
+    gameMetaInfoPanel.add(lifeDataLabel);
+    gameMetaInfoPanel.add(timeLabel);
+    gameMetaInfoPanel.add(progressBar);
+    gameMetaInfoPanel.add(scoreLabel);
+    gameMetaInfoPanel.add(scoreDataLabel);
+  }
+
   private void initGameOverScreen() {
     gameOverPanel = new JPanel();
     gameOverPanel.setPreferredSize(new Dimension(500, 300));
-    
+
     JButton tryAgainButton = new JButton("Try again!");
     tryAgainButton.setActionCommand(ActionCommand.NEWGAME);
     tryAgainButton.addActionListener(this);
     gameOverPanel.add(tryAgainButton);
-    
+
     gameOverPanel.add(new JButton("Highscore!"));
-    
-    gameOverReasonLabel = new JPanel();
-    gamePanel.add(gameOverReasonLabel);
+
+    gameOverScoreLabel = new JLabel();
+    gameOverPanel.add(gameOverScoreLabel);
   }
 
   private void initMenu() {
@@ -149,7 +196,7 @@ public class Main extends JFrame implements ActionListener {
         actionNewGame(event);
         break;
       case ActionCommand.STOPGAME:
-        actionStopGame(event);
+        actionEndGame(event);
         break;
       case ActionCommand.EXIT:
         System.exit(0);
@@ -159,30 +206,51 @@ public class Main extends JFrame implements ActionListener {
 
   private void actionNewGame(ActionEvent event) {
     KeyListener listener = gameManager.startGame(gamePanel.getPreferredSize());
-    gamePanel.addKeyListener(listener);
 
-    switchToPanel(gamePanel);
+    boolean addListener = true;
+    for (KeyListener keyListener : gamePanel.getKeyListeners()) {
+      if (keyListener.equals(listener)) {
+        addListener = false;
+      }
+    }
+    if (addListener) {
+      gamePanel.addKeyListener(listener);
+    }
+
+    switchToGamePanel();
 
     repaintTimer.start();
   }
 
-  private void actionStopGame(ActionEvent event) {
+  private void actionEndGame(ActionEvent event) {
     endGame();
     switchToPanel(startPanel);
   }
-  
-  public void listenToGameOver(@Observes @GameOver FroggerDeath death){
+
+  public void listenToGameOver(@Observes @GameOver Long score) {
     endGame();
-    System.out.println("Game over because " + death.getReason());
-    gameOverReasonLabel.setName(death.getReason());
+    System.out.println("Game over! Score" + score);
+    gameOverScoreLabel.setText("Score " + score);
     switchToPanel(gameOverPanel);
   }
+
+  public void listenToTimeUpdate(@Observes @TimeUpdate TimeData timeData) {
+    progressBar.setMaximum(timeData.getMaxTime().intValue());
+    progressBar.setValue(timeData.getRemainingTime().intValue());
+    progressBar.setString(timeData.getRemainingTime().toString() + "s");
+  }
   
+  public void listenToLifeUpdate(@Observes @LifeUpdate Long lives) {
+    lifeDataLabel.setText(lives.toString());
+  }
+  
+  public void listenToScoreUpdate(@Observes @ScoreUpdate Long score) {
+    scoreDataLabel.setText(score.toString());
+  }
+
   private void endGame() {
     repaintTimer.stop();
     gameManager.endGame();
-    //remove the frogger key listener
-    ArrayUtils.nullToEmpty(gamePanel.getComponentListeners());
   }
 
   @PreDestroy
@@ -192,8 +260,16 @@ public class Main extends JFrame implements ActionListener {
 
   private void switchToPanel(JPanel panel) {
     getContentPane().removeAll();
-    add(panel);
+    add(panel, BorderLayout.CENTER);
     panel.requestFocus();
+    pack();
+  }
+
+  private void switchToGamePanel() {
+    getContentPane().removeAll();;
+    add(gamePanel, BorderLayout.CENTER);
+    add(gameMetaInfoPanel, BorderLayout.NORTH);
+    gamePanel.requestFocus();
     pack();
   }
 }

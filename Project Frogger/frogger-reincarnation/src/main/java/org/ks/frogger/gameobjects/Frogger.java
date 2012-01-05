@@ -13,39 +13,66 @@ public class Frogger extends GameObject {
 
   private boolean carried = false;
 
+  private boolean sittingInNest = false;
+
   /**
-   * Create a new Frogger with the given start position.
+   * Create a new Frogger at the given start position.
    * @param startPosition the Froggers start position
    */
-  public Frogger(Rectangle startPosition) {
+  private Frogger(Rectangle startPosition) {
     super(startPosition);
     this.startPosition = new Rectangle(startPosition);
   }
 
+  /**
+   * Only works if not sitting in nest!
+   */
   public void moveRight() {
-    getPictureBoundingBox().move(new Vector(10, 0));
+    if (!sittingInNest) {
+      move(new Vector(10, 0));
+    }
   }
 
+  /**
+   * Only works if not sitting in nest!
+   */
   public void moveLeft() {
-    getPictureBoundingBox().move(new Vector(-10, 0));
+    if (!sittingInNest) {
+      move(new Vector(-10, 0));
+    }
   }
 
+  /**
+   * Only works if not sitting in nest!
+   */
   public void moveUp() {
-    getPictureBoundingBox().move(new Vector(0, -25));
+    move(new Vector(0, -25));
   }
 
+  /**
+   * Only works if not sitting in nest!
+   */
   public void moveDown() {
-    getPictureBoundingBox().move(new Vector(0, 25));
+    if (!sittingInNest) {
+      move(new Vector(0, 25));
+    }
   }
-  
+
   public void jumpOff() {
-    this.carried = false;
-    getPictureBoundingBox().setAcceleration(null);
+    if (!sittingInNest) {
+      this.carried = false;
+      setAcceleration(null);
+    }
   }
-  
+
+  /**
+   * Only works if not sitting in nest!
+   */
   public void jumpOn(GameObject carrier) {
-    this.carried = true;
-    getPictureBoundingBox().setAcceleration(carrier.getAcceleration());
+    if (!sittingInNest) {
+      this.carried = true;
+      setAcceleration(carrier.getAcceleration());
+    }
   }
 
   public boolean isCarried() {
@@ -61,6 +88,35 @@ public class Frogger extends GameObject {
 
   @Override
   public CollusionAction getCollusionAction() {
-    return CollusionAction.KILL;
+    CollusionAction action = CollusionAction.NOTHING;
+    if (sittingInNest) {
+      action = CollusionAction.KILL;
+    }
+    return action;
+  }
+
+  /**
+   * Creates a new Frogger at the given start position.
+   * @param startPosition position to draw the frogger.
+   * @return a new Frogger
+   */
+  public static Frogger newInstanceAtStart(Rectangle startPosition) {
+    return new Frogger(startPosition);
+  }
+
+  /**
+   * Creates a new Frogger inside the given nest. Nest must be at least as 
+   * large as the Frogger
+   * @param the size of the frogger to place in the nest
+   * @param nest the nest to place the frogger inside
+   * @return a new Frogger
+   */
+  public static Frogger newInstanceInNest(Vector froggerSize, FrogNest nest) {
+    Vector nestSize = nest.getDiagonal();
+    Vector froggerPositionOffset = nestSize.subtract(froggerSize).mult(0.5);
+    Vector froggerPosition = nest.getBasePoint().add(froggerPositionOffset);
+    Frogger frogger = new Frogger(new Rectangle(froggerPosition, froggerSize));
+    frogger.sittingInNest = true;
+    return frogger;
   }
 }

@@ -2,7 +2,6 @@ package org.ks.frogger.gameobjects;
 
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
-import org.ks.frogger.events.FroggerDeath;
 import org.ks.sf.math.Vector;
 import org.ks.sf.shape.BoundingBox;
 import org.ks.sf.shape.Figure;
@@ -27,10 +26,9 @@ public abstract class GameObject implements Figure {
     this.pictureBoundingBox = pictureBoundingBox;
   }
 
-  public Rectangle getPictureBoundingBox() {
-    return pictureBoundingBox;
-  }
-
+//  public Rectangle getPictureBoundingBox() {
+//    return pictureBoundingBox;
+//  }
   /**
    * Sets the game objects to a position 
    * @param position to set the object to
@@ -43,7 +41,7 @@ public abstract class GameObject implements Figure {
    * @inherited
    */
   public void draw(Graphics g) {
-    getPictureBoundingBox().draw(g);
+    pictureBoundingBox.draw(g);
   }
 
   /**
@@ -52,7 +50,7 @@ public abstract class GameObject implements Figure {
    * @return true if interects, else false
    */
   public boolean intersects(Figure figure) {
-    return getPictureBoundingBox().intersects(figure);
+    return pictureBoundingBox.intersects(figure);
   }
 
   /**
@@ -60,13 +58,17 @@ public abstract class GameObject implements Figure {
    * @return the action or an empty string for no action.
    */
   public abstract CollusionAction getCollusionAction();
-  
+
   /**
    * Moves an GameObject according to it's pictureBoundingBox acceleration.
    */
   @Override
   public void move() {
     pictureBoundingBox.move();
+  }
+
+  public void move(Vector direction) {
+    pictureBoundingBox.move(direction);
   }
 
   /**
@@ -86,6 +88,10 @@ public abstract class GameObject implements Figure {
     return pictureBoundingBox.getBasePoint();
   }
 
+  public Vector getDiagonal() {
+    return pictureBoundingBox.getDiagonal();
+  }
+
   /**
    * Get the acceleration of the pictureBoundingBox
    * @return Acceleration
@@ -95,7 +101,10 @@ public abstract class GameObject implements Figure {
     return pictureBoundingBox.getAcceleration();
   }
 
-  
+  public void setAcceleration(Vector acceleration) {
+    pictureBoundingBox.setAcceleration(acceleration);
+  }
+
   @Override
   public double getMass() {
     return pictureBoundingBox.getMass();
