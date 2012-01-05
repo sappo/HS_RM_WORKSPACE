@@ -3,37 +3,69 @@ package org.ks.sf.shape;
 import java.awt.Graphics;
 import org.ks.sf.math.Vector;
 
-public class Line extends Figure {
+/**
+ * 
+ * @author Kevin Sapper 2011
+ */
+public class Line extends AbstractFigure {
 
-  private Vector v;
+    private Vector line;
 
-  public Line(Vector fusspunkt, Vector v) {
-    super(fusspunkt);
-    this.v = v;
-  }
+    private BoundingBox boundingBox;
 
-  public Line(Vector fusspunkt, Vector geschwindigkeit, Vector v) {
-    super(fusspunkt, geschwindigkeit);
-    this.v = v;
-  }
+    private boolean dirty = true;
 
-  public void zeichne(Graphics g) {
-    int x1 = (int) getFusspunkt().getX();
-    int y1 = (int) getFusspunkt().getY();
-    Vector spitze = getFusspunkt().add(v);
-    int x2 = (int) spitze.getX();
-    int y2 = (int) spitze.getY();
-    g.drawLine(x1, y1, x2, y2);
-  }
+    public Line(Vector basepoint, Vector line) {
+        super(basepoint);
+        this.line = line;
+    }
 
-  @Override
-  public Vector getFusspunkt() {
-    return super.getFusspunkt();
-  }
+    public Line(Vector basePoint, Vector acceleration, Vector line) {
+        super(basePoint, acceleration);
+        this.line = line;
+    }
 
-  @Override
-  public String toString() {
-    return "Line<(" + getFusspunkt().getX() + "," + getFusspunkt().getY() + ")," + "(" + v.
-            getX() + "," + v.getY() + ")" + ">";
-  }
+    private BoundingBox calculateBoundingBox() {
+        return new BoundingBox(getBasePoint(), line);
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        int x1 = (int) getBasePoint().getX();
+        int y1 = (int) getBasePoint().getY();
+        Vector pointB = getBasePoint().add(line);
+        int x2 = (int) pointB.getX();
+        int y2 = (int) pointB.getY();
+        g.drawLine(x1, y1, x2, y2);
+    }
+
+    @Override
+    public String toString() {
+        return "Line<(" + getBasePoint().getX() + "," + getBasePoint().getY() + ")," + "(" + line.
+                getX() + "," + line.getY() + ")" + ">";
+    }
+
+    @Override
+    public double getMass() {
+        return 1 * line.getLength();
+    }
+
+    public Vector getLine() {
+        return line;
+    }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        if (dirty) {
+            boundingBox = calculateBoundingBox();
+            dirty = false;
+        }
+        return boundingBox;
+    }
+
+    @Override
+    public void move() {
+        dirty = true;
+        super.move();
+    }
 }

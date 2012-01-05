@@ -1,7 +1,7 @@
 package org.ks.woerterbuch;
 
 
-import org.ks.woerterbuch.WoerterBuch;
+import javax.naming.LimitExceededException;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -35,7 +35,7 @@ public class WoerterBuchTest {
   }
 
   @Test
-  public void testNegativeCapacity() {
+  public void testNegativeCapacity() throws LimitExceededException {
     WoerterBuch wb1 = new WoerterBuch(-17);
     wb1.put("public", "oeffentlich");
     
@@ -43,7 +43,7 @@ public class WoerterBuchTest {
   }
   
   @Test
-  public void testZeroCapacity() {
+  public void testZeroCapacity() throws LimitExceededException {
     WoerterBuch wb2 = new WoerterBuch(0);
 		wb2.put("public","oeffentlich");
     
@@ -51,7 +51,7 @@ public class WoerterBuchTest {
   }
   
   @Test
-  public void testFunctionality() {
+  public void testFunctionality() throws LimitExceededException {
     WoerterBuch wb3 = new WoerterBuch(5);
     wb3.put("extends","erweitert");
 		wb3.put("private","privat");

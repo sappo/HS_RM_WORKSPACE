@@ -16,56 +16,80 @@ import org.ks.sf.shape.Triangle;
 
 public class SpielFenster extends JFrame {
 
-  private FigureContainer figures;
+    private FigureContainer figures;
 
-  private JPanel meinPanel = new JPanel() {
+    private JPanel meinPanel = new JPanel() {
 
-    public Dimension getPreferredSize() {
-      return new Dimension(800, 600);
+        public Dimension getPreferredSize() {
+            return new Dimension(800, 600);
+        }
+
+        protected void paintComponent(Graphics g) {
+            figures.draw(g);
+        }
+    };
+
+    public SpielFenster(int kapazitaet) {
+        figures = new FigureContainer(kapazitaet);
+
+        add(meinPanel);
+        pack();
+        setVisible(true);
+
+        Timer t = new Timer(100, new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                tick();
+            }
+        });
+        t.start();
     }
 
-    protected void paintComponent(Graphics g) {
-      figures.zeichne(g);
+    public void tick() {
+        figures.move();
+        repaint();
     }
-  };
 
-  public SpielFenster(int kapazitaet) {
-    figures = new FigureContainer(kapazitaet);
+    public void fuegeEin(Figure figur) {
+        figures.add(figur);
+        meinPanel.repaint();
+    }
 
-    add(meinPanel);
-    pack();
-    setVisible(true);
+    public static void main(String[] args) {
+        SpielFenster sf = new SpielFenster(20);
+        for (int i = 1; i < 5; i++) {
+            for (int j = 1; j < 4; j++) {
+                Vector fusspunkt = new Vector(i * 100., j * 100.);
+                Vector geschwindigkeit = new Vector(
+                        (Math.random() - .5) * 15.0, (Math.random() - .5) * 15.);
+                if (Math.random() > .5) {
+                    sf.fuegeEin(new Triangle(fusspunkt, geschwindigkeit,
+                            new Vector(5. + Math.random() * 10., -5.
+                            - Math.random() * 10.), new Vector(
+                            5. + Math.random() * 20., 0.)));
+                } else {
+                    sf.fuegeEin(new Rectangle(fusspunkt, geschwindigkeit,
+                            new Vector(5. + Math.random() * 10., 5. + Math.
+                            random() * 10.)));
+                }
+            }
+        }
 
-    Timer t = new Timer(100, new ActionListener() {
-
-      public void actionPerformed(ActionEvent e) {
-        tick();
-      }
-    });
-    t.start();
-  }
-
-  public void tick() {
-    figures.bewege();
-    repaint();
-  }
-
-  public void fuegeEin(Figure figur) {
-    figures.add(figur);
-    meinPanel.repaint();
-  }
-
-  public static void main(String[] args) {
-    SpielFenster sf = new SpielFenster(20);
-    sf.fuegeEin(new Line(new Vector(100.0, 100.0), new Vector(1.0, 0.0), new Vector(100.0, 0.0)));
-    sf.fuegeEin(new Line(new Vector(200.0, 100.0), new Vector(1.0, 0.0), new Vector(0.0, 200.0)));
-    sf.fuegeEin(new Line(new Vector(200.0, 300.0), new Vector(1.0, 0.0), new Vector(-50.0, 25.0)));
-    sf.fuegeEin(new Line(new Vector(150.0, 325.0), new Vector(1.0, 0.0), new Vector(-50.0, -25.0)));
-
-    sf.fuegeEin(new Triangle(new Vector(285.5, 212.5), new Vector(0.0, -1.0), new Vector(37.5, -112.5), new Vector(75.0, 0.0)));
-    sf.fuegeEin(new Line(new Vector(285.5, 212.5), new Vector(0.0, -1.0), new Vector(-37.5, 112.5)));
-    sf.fuegeEin(new Line(new Vector(360.5, 212.5), new Vector(0.0, -1.0), new Vector(37.5, 112.5)));
-
-    sf.fuegeEin(new Rectangle(new Vector(75.0, 75.0), new Vector(5.0, 5.0), new Vector(500.0, 200.0)));
-  }
+        FigureContainer fb = new FigureContainer(2);
+        Vector geschwindigkeit = new Vector(-10., 10.);
+        fb.add(new Rectangle(new Vector(400., 400.), geschwindigkeit,
+                new Vector(50., 50.)));
+        fb.add(new Triangle(new Vector(400., 400.), geschwindigkeit, new Vector(
+                50., 0.), new Vector(25., -25.)));
+        fb.setCheckContainerCollusions(false);
+        sf.fuegeEin(fb);
+        
+        sf.fuegeEin(new Rectangle(new Vector(0, 0), new Vector(0, 600)));
+        sf.fuegeEin(new Rectangle(new Vector(0, 600), new Vector(800, 0)));
+        sf.fuegeEin(new Rectangle(new Vector(800, 0), new Vector(0, 600)));
+        sf.fuegeEin(new Rectangle(new Vector(0, 0), new Vector(800, 0)));
+//        sf.fuegeEin(new Rectangle(new Vector(800, 600), new Vector(0, -600)));
+//        sf.fuegeEin(new Rectangle(new Vector(800, 0), new Vector(-800, 0)));
+        
+    }
 }

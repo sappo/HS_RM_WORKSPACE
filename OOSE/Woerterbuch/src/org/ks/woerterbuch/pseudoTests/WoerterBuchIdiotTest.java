@@ -5,23 +5,21 @@ import org.ks.woerterbuch.WoerterBuch;
 
 public class WoerterBuchIdiotTest {
 
-  public static void testeGibEintrag(WoerterBuch wb, String schluessel, String eintrag) {
-    System.out.println("gibEintrag(" + schluessel + "): " + wb.get(schluessel) + " [" + eintrag + "]");
+  public static void testeGibEintrag(WoerterBuch wb, String schluessel,
+          String eintrag) {
+    System.out.println(
+            "gibEintrag(" + schluessel + "): " + wb.get(schluessel) + " [" + eintrag + "]");
   }
 
   public static void main(String[] args) {
-    try {
       System.out.println("+-----+");
       System.out.println("| wb1 |");
       System.out.println("+-----+");
 
+    try {
       WoerterBuch wb1 = new WoerterBuch(-17);
-      wb1.put("public", "oeffentlich");
-      System.out.print("toString(): " + wb1.toString());
-      System.out.println(" [leeres Woerterbuch]");
-      testeGibEintrag(wb1, "public", null);
-      System.out.println();
-    } catch (LimitExceededException | IllegalArgumentException ex) {
+      System.out.println("Keine IllegalArgumentException!");
+    } catch (Exception ex) {
       System.out.println(ex.getClass().getName() + " [IllegalArgumentException]");
     }
 
@@ -57,7 +55,7 @@ public class WoerterBuchIdiotTest {
     }
     System.out.print("toString(): " + wb3.toString());
     System.out.print(
-                                                                                        " [(extends->erweitert), (package->Paket), (private->privat)");
+            " [(extends->erweitert), (package->Paket), (private->privat)");
     System.out.println(", (protected->geschuetzt), (public->oeffentlich)]");
     testeGibEintrag(wb3, "public", "oeffentlich");
     testeGibEintrag(wb3, "protected", "geschuetzt");
