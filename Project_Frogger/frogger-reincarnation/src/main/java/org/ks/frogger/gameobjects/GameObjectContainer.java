@@ -129,11 +129,17 @@ public class GameObjectContainer {
   }
 
   public void moveFroggerLeft() {
+    if (frogger.isCarried()) {
+      frogger.jumpOff();
+    }
     frogger.moveLeft();
     checkFroggerIntersection();
   }
 
   public void moveFroggerRight() {
+    if (frogger.isCarried()) {
+      frogger.jumpOff();
+    }
     frogger.moveRight();
     checkFroggerIntersection();
   }

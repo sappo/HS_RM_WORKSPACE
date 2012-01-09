@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
@@ -32,6 +34,8 @@ import org.ks.frogger.events.TimeData;
 import org.ks.frogger.events.TimeUpdate;
 import org.ks.frogger.gameobjects.GameObjectContainer;
 import org.ks.frogger.manager.GameManager;
+import org.ks.frogger.manager.Highscore;
+import org.ks.frogger.manager.HighscoreManager;
 
 @Singleton
 public class Main extends JFrame implements ActionListener {
@@ -42,6 +46,9 @@ public class Main extends JFrame implements ActionListener {
   @Inject
   private GameObjectContainer gameObjectContainer;
 
+  @Inject
+  private HighscoreManager highscoreManager;
+
   private JMenuBar menu;
 
   private JMenu gameMenu;
@@ -49,6 +56,8 @@ public class Main extends JFrame implements ActionListener {
   private JMenuItem newGameMenuItem;
 
   private JMenuItem stopGameMenuItem;
+
+  private JMenuItem highscoreMenuItem;
 
   private JMenuItem exitMenuItem;
 
@@ -59,14 +68,16 @@ public class Main extends JFrame implements ActionListener {
   private JPanel gameMetaInfoPanel;
 
   private JProgressBar progressBar;
-  
+
   private JLabel lifeDataLabel;
-  
+
   private JLabel scoreDataLabel;
 
   private JPanel gameOverPanel;
 
   private JLabel gameOverScoreLabel;
+
+  private JPanel highscorePanel;
 
   private Timer repaintTimer;
 
@@ -83,6 +94,7 @@ public class Main extends JFrame implements ActionListener {
     initStartPanel();
     initGamePanel();
     initGameMetaInfoPanel();
+    initHighscorePanel();
     initGameOverScreen();
     initTimer();
 
@@ -139,7 +151,7 @@ public class Main extends JFrame implements ActionListener {
 
     JLabel scoreLabel = new JLabel("Score:");
     scoreDataLabel = new JLabel();
-    
+
     gameMetaInfoPanel.add(lifeLabel);
     gameMetaInfoPanel.add(lifeDataLabel);
     gameMetaInfoPanel.add(timeLabel);
@@ -163,6 +175,14 @@ public class Main extends JFrame implements ActionListener {
     gameOverPanel.add(gameOverScoreLabel);
   }
 
+  private void initHighscorePanel() {
+    highscorePanel = new JPanel();
+    JLabel header = new JLabel("Highscore");
+    header.setFont(new Font("arial", Font.BOLD, 24));
+
+    highscorePanel.add(header);
+  }
+
   private void initMenu() {
     menu = new JMenuBar();
 
@@ -173,15 +193,20 @@ public class Main extends JFrame implements ActionListener {
     newGameMenuItem.addActionListener(this);
 
     stopGameMenuItem = new JMenuItem("Stop Game");
-    stopGameMenuItem.setActionCommand("stopGame");
+    stopGameMenuItem.setActionCommand(ActionCommand.STOPGAME);
     stopGameMenuItem.addActionListener(this);
 
+    highscoreMenuItem = new JMenuItem("Highscore");
+    highscoreMenuItem.setActionCommand(ActionCommand.HIGHSCORE);
+    highscoreMenuItem.addActionListener(this);
+
     exitMenuItem = new JMenuItem("Exit");
-    exitMenuItem.setActionCommand("exit");
+    exitMenuItem.setActionCommand(ActionCommand.EXIT);
     exitMenuItem.addActionListener(this);
 
     gameMenu.add(newGameMenuItem);
     gameMenu.add(stopGameMenuItem);
+    gameMenu.add(highscoreMenuItem);
     gameMenu.add(exitMenuItem);
 
     menu.add(gameMenu);
@@ -197,6 +222,9 @@ public class Main extends JFrame implements ActionListener {
         break;
       case ActionCommand.STOPGAME:
         actionEndGame(event);
+        break;
+      case ActionCommand.HIGHSCORE:
+        actionShowHighscore(event);
         break;
       case ActionCommand.EXIT:
         System.exit(0);
@@ -227,6 +255,17 @@ public class Main extends JFrame implements ActionListener {
     switchToPanel(startPanel);
   }
 
+  private void actionShowHighscore(ActionEvent event) {
+    if (gameManager.isRunning()) {
+      endGame();
+    }
+    for (Highscore highscore : highscoreManager.getTopTen()) {
+      highscorePanel.add(new JLabel(highscore.getName()));
+      highscorePanel.add(new JLabel(String.valueOf(highscore.getHighscore())));
+    }
+    switchToPanel(highscorePanel);
+  }
+
   public void listenToGameOver(@Observes @GameOver Long score) {
     endGame();
     System.out.println("Game over! Score" + score);
@@ -239,11 +278,11 @@ public class Main extends JFrame implements ActionListener {
     progressBar.setValue(timeData.getRemainingTime().intValue());
     progressBar.setString(timeData.getRemainingTime().toString() + "s");
   }
-  
+
   public void listenToLifeUpdate(@Observes @LifeUpdate Long lives) {
     lifeDataLabel.setText(lives.toString());
   }
-  
+
   public void listenToScoreUpdate(@Observes @ScoreUpdate Long score) {
     scoreDataLabel.setText(score.toString());
   }
@@ -251,6 +290,8 @@ public class Main extends JFrame implements ActionListener {
   private void endGame() {
     repaintTimer.stop();
     gameManager.endGame();
+    String name = JOptionPane.showInputDialog("Enter your name for the highscore!");
+    highscoreManager.submitHighscore(name);
   }
 
   @PreDestroy
