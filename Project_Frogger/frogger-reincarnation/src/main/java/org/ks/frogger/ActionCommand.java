@@ -10,6 +10,7 @@ public class ActionCommand {
   public static final String EXIT = "exit";
   public static final String TIMEUP = "timeUp";
   public static final String TIMEUPDATE = "timeUpdate";
-  public static final String HIGHSCORE = "highscore";
+  public static final String SHOWHIGHSCORE = "showHighscore";
+  public static final String SHOWOPENING = "showOpening";
   
 }

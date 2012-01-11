@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import org.apache.commons.beanutils.BeanComparator;
 import org.ks.frogger.events.ScoreUpdate;
 
 /**
@@ -18,15 +17,15 @@ import org.ks.frogger.events.ScoreUpdate;
 public class HighscoreManager {
 
   private Highscore highScore;
-  
+
   private List<Highscore> highscoreList;
-  
+
   private HighscoreLoader loader;
 
   @Inject
   @ScoreUpdate
   private Event<Long> scoreUpdateEvent;
-  
+
   @PostConstruct
   public void initialize() {
     try {
@@ -36,7 +35,7 @@ public class HighscoreManager {
       //@TODO: implement failsafe
     }
   }
-  
+
   /**
    * Updates the current highscore.
    * @param maxTime max. time for level
@@ -61,7 +60,7 @@ public class HighscoreManager {
     highScore.setHighscore(0L);
     scoreUpdateEvent.fire(highScore.getHighscore());
   }
-  
+
   /**
    * Submit the current highscore to the highscore list.
    * Does not create a new highscore.
@@ -81,7 +80,14 @@ public class HighscoreManager {
   }
 
   public List<Highscore> getTopTen() {
-    Collections.sort(highscoreList, new BeanComparator("highscore"));
-    return highscoreList.subList(0, 10);
+    Collections.sort(highscoreList);
+    return highscoreList.size() < 10 ? highscoreList.subList(0, highscoreList.
+            size()) : highscoreList.subList(0, 10);
+  }
+
+  public boolean isInTopTen() {
+    List<Highscore> topTen = getTopTen();
+    return Long.compare(highScore.getHighscore(), topTen.get(topTen.size() - 1).
+            getHighscore()) > 0;
   }
 }

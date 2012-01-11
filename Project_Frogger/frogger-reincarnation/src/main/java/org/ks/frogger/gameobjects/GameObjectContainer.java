@@ -92,8 +92,10 @@ public class GameObjectContainer {
   }
 
   public void draw(Graphics g) {
-    frogger.draw(g);
-//    border.draw(g);
+    if (frogger != null) {
+      frogger.draw(g);
+    }
+    border.draw(g);
     mobileGameObjectList.draw(g);
     immobileFigureList.draw(g);
   }
@@ -105,7 +107,7 @@ public class GameObjectContainer {
     immobileFigureList.clear();
     frogNestList.clear();
   }
-  
+
   /**
    * Remove all invaders from the nests.
    */

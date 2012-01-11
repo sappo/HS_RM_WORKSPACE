@@ -33,8 +33,10 @@ public class GameManager implements KeyListener {
   private static final int RIGHT = 39;
 
   private static final int DOWN = 40;
+  
+  private static final int ESC = 27;
 
-  private static final Vector froggerStartPos = new Vector(250, 50);
+  private static final Vector froggerStartPos = new Vector(215, 510);
 
   private static final Vector froggerSize = new Vector(30, 30);
 
@@ -52,6 +54,9 @@ public class GameManager implements KeyListener {
 
   @Inject
   private TimeManager timeManager;
+
+  @Inject
+  private StageManager stageManager;
 
   @Inject
   @GameOver
@@ -78,21 +83,6 @@ public class GameManager implements KeyListener {
     return Frogger.newInstanceInNest(froggerSize, nest);
   }
 
-  private Streetobject createCar(int streetLvl) {
-    return new Streetobject(new Rectangle(new Vector(-50, streetLvl * 50),
-            new Vector(1, 0), new Vector(50, 25)));
-  }
-
-  private Waterobject createTreeTrunk(int waterLvl) {
-    return new Waterobject(new Rectangle(new Vector(-50, waterLvl * 200),
-            new Vector(2, 0), new Vector(50, 25)));
-  }
-
-  private FrogNest createFrogNest(int number) {
-    return new FrogNest(new Rectangle(new Vector(100 * number, 350),
-            new Vector(2, 0), new Vector(75, 75)));
-  }
-
   /**
    * Starts a new game.
    *  @param frame the frame to start the game on
@@ -101,18 +91,8 @@ public class GameManager implements KeyListener {
     gameObjectContainer.addBorder(gamePanelSize.height, gamePanelSize.width);
 
     gameObjectContainer.addFrogger(createFroggerAtStartPos());
-
-    gameObjectContainer.addMobileGameObject(createCar(1));
-    gameObjectContainer.addMobileGameObject(createCar(2));
-    gameObjectContainer.addMobileGameObject(createCar(3));
-
-    gameObjectContainer.addMobileGameObject(createTreeTrunk(1));
-
-    gameObjectContainer.addFroggerNest(createFrogNest(1));
-    gameObjectContainer.addFroggerNest(createFrogNest(2));
-    gameObjectContainer.addFroggerNest(createFrogNest(3));
-    gameObjectContainer.addFroggerNest(createFrogNest(4));
-    gameObjectContainer.addFroggerNest(createFrogNest(5));
+    
+    stageManager.setupAutobahnStage();
 
     lifeUpdateEvent.fire(remainingLives);
 
@@ -188,21 +168,26 @@ public class GameManager implements KeyListener {
   }
 
   private void handleKeyInput(int keyCode) {
-    switch (keyCode) {
-      case RIGHT:
-        gameObjectContainer.moveFroggerRight();
-        break;
-      case LEFT:
-        gameObjectContainer.moveFroggerLeft();
-        break;
-      case UP:
-        gameObjectContainer.moveFroggerUp();
-        break;
-      case DOWN:
-        gameObjectContainer.moveFroggerDown();
-        break;
-      default:
-        System.out.println("Ignore key!");
+    if (isRunning()) {
+      switch (keyCode) {
+        case RIGHT:
+          gameObjectContainer.moveFroggerRight();
+          break;
+        case LEFT:
+          gameObjectContainer.moveFroggerLeft();
+          break;
+        case UP:
+          gameObjectContainer.moveFroggerUp();
+          break;
+        case DOWN:
+          gameObjectContainer.moveFroggerDown();
+          break;
+        case ESC:
+          System.out.println("Not implemented yet!");
+          break;
+        default:
+          System.out.println("Ignore key!");
+      }
     }
   }
 

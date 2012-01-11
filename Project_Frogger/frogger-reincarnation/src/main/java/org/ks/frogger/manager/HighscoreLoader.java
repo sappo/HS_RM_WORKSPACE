@@ -43,8 +43,8 @@ public class HighscoreLoader {
     StringBuilder content = new StringBuilder();
 
     for (Highscore highscore : highscoreList) {
-      content.append(highscore.getName()).append(SEPERATOR).append(highscore.
-              getHighscore()).append(LINEBREAK);
+      content.append(highscore.getName()).append(SEPERATOR).append(String.
+              valueOf(highscore.getHighscore())).append(LINEBREAK);
     }
 
     FileUtils.writeStringToFile(getHighscoreFile(), content.toString());

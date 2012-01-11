@@ -1,10 +1,12 @@
 package org.ks.frogger.manager;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 /**
  *
  * @author Kevin Sapper 2011
  */
-public class Highscore {
+public class Highscore implements Comparable<Highscore> {
 
   private String name;
 
@@ -32,5 +34,28 @@ public class Highscore {
 
   public void setHighscore(long highscore) {
     this.highscore = highscore;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Highscore) {
+      Highscore that = (Highscore) obj;
+      EqualsBuilder builder = new EqualsBuilder();
+      builder.append(this.highscore, that.highscore);
+      return builder.isEquals();
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int compareTo(Highscore that) {
+    if (this.equals(that)) {
+      return 0;
+    } else if (this.highscore > that.highscore) {
+      return -1;
+    } else {
+      return 1;
+    }
   }
 }
