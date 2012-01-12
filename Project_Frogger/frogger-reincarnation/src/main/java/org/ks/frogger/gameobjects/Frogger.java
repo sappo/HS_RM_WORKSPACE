@@ -29,7 +29,7 @@ public class Frogger extends GameObject {
    */
   public void moveRight() {
     if (!sittingInNest) {
-      move(new Vector(50, 0));
+      move(new Vector(25, 0));
     }
   }
 
@@ -38,7 +38,7 @@ public class Frogger extends GameObject {
    */
   public void moveLeft() {
     if (!sittingInNest) {
-      move(new Vector(-50, 0));
+      move(new Vector(-25, 0));
     }
   }
 

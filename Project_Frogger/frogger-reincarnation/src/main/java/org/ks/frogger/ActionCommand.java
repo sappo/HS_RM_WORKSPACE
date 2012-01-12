@@ -12,5 +12,6 @@ public class ActionCommand {
   public static final String TIMEUPDATE = "timeUpdate";
   public static final String SHOWHIGHSCORE = "showHighscore";
   public static final String SHOWOPENING = "showOpening";
+  public static final String SHOWSTAGES = "showStages";
   
 }

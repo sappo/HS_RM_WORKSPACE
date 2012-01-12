@@ -1,4 +1,4 @@
-package org.ks.frogger.manager;
+package org.ks.frogger.stages;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 

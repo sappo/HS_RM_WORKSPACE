@@ -1,5 +1,6 @@
 package org.ks.frogger.manager;
 
+import org.ks.frogger.stages.StageManager;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,8 +15,6 @@ import org.ks.frogger.events.LifeUpdate;
 import org.ks.frogger.gameobjects.FrogNest;
 import org.ks.frogger.gameobjects.Frogger;
 import org.ks.frogger.gameobjects.GameObjectContainer;
-import org.ks.frogger.gameobjects.Streetobject;
-import org.ks.frogger.gameobjects.Waterobject;
 import org.ks.sf.math.Vector;
 import org.ks.sf.shape.Rectangle;
 
@@ -92,7 +91,7 @@ public class GameManager implements KeyListener {
 
     gameObjectContainer.addFrogger(createFroggerAtStartPos());
     
-    stageManager.setupAutobahnStage();
+//    stageManager.setupAutobahnStage();
 
     lifeUpdateEvent.fire(remainingLives);
 

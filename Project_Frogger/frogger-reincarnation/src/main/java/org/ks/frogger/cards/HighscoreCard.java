@@ -41,7 +41,7 @@ public class HighscoreCard extends javax.swing.JPanel {
         backButton = new javax.swing.JButton();
 
         setFocusable(false);
-        setFont(new java.awt.Font("Kristen ITC", 0, 24)); // NOI18N
+        setFont(new java.awt.Font("Kristen ITC", 0, 24));
         setMaximumSize(new java.awt.Dimension(500, 600));
         setName("highscore"); // NOI18N
         setPreferredSize(new java.awt.Dimension(500, 600));
@@ -54,7 +54,7 @@ public class HighscoreCard extends javax.swing.JPanel {
             }
         });
 
-        headerLabel.setFont(new java.awt.Font("Kristen ITC", 1, 60));
+        headerLabel.setFont(new java.awt.Font("Kristen ITC", 1, 60)); // NOI18N
         headerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         headerLabel.setText("Highscore");
         headerLabel.setFocusable(false);
@@ -64,15 +64,16 @@ public class HighscoreCard extends javax.swing.JPanel {
         headerLabel.setOpaque(true);
         headerLabel.setPreferredSize(new java.awt.Dimension(330, 80));
 
-        topTenLabel.setFont(new java.awt.Font("Kristen ITC", 0, 24));
+        topTenLabel.setFont(new java.awt.Font("Kristen ITC", 0, 24)); // NOI18N
+        topTenLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         topTenLabel.setText("TOP TEN");
 
         backButton.setFont(new java.awt.Font("Kristen ITC", 1, 18)); // NOI18N
+        backButton.setText("Main-Menu");
         backButton.setBorder(null);
         backButton.setBorderPainted(false);
         backButton.setContentAreaFilled(false);
         backButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        backButton.setLabel("Back");
         backButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 backButtonMouseEntered(evt);
@@ -89,16 +90,16 @@ public class HighscoreCard extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(headerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                            .addContainerGap())
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(topTenLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                            .addContainerGap()))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(topTenLabel)
-                        .addGap(188, 188, 188))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(84, 84, 84)
-                        .addComponent(headerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(84, 84, 84))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(backButton)
-                        .addContainerGap(449, Short.MAX_VALUE))))
+                        .addGap(191, 191, 191))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

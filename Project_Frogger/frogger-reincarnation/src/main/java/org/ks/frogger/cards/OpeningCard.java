@@ -24,8 +24,8 @@ public class OpeningCard extends javax.swing.JPanel {
   public OpeningCard(ActionListener actionListener) {
     initComponents();
     
-    playButton.setActionCommand(ActionCommand.NEWGAME);
-    playButton.addActionListener(actionListener);
+    stagesButton.setActionCommand(ActionCommand.SHOWSTAGES);
+    stagesButton.addActionListener(actionListener);
     
     highscoreButton.setActionCommand(ActionCommand.SHOWHIGHSCORE);
     highscoreButton.addActionListener(actionListener);
@@ -44,7 +44,7 @@ public class OpeningCard extends javax.swing.JPanel {
     private void initComponents() {
 
         exitButton = new javax.swing.JButton();
-        playButton = new javax.swing.JButton();
+        stagesButton = new javax.swing.JButton();
         highscoreButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 255, 153));
@@ -67,18 +67,18 @@ public class OpeningCard extends javax.swing.JPanel {
             }
         });
 
-        playButton.setFont(new java.awt.Font("Kristen ITC", 1, 60)); // NOI18N
-        playButton.setText("Play");
-        playButton.setBorder(null);
-        playButton.setBorderPainted(false);
-        playButton.setContentAreaFilled(false);
-        playButton.setFocusPainted(false);
-        playButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        stagesButton.setFont(new java.awt.Font("Kristen ITC", 1, 60)); // NOI18N
+        stagesButton.setText("Stages");
+        stagesButton.setBorder(null);
+        stagesButton.setBorderPainted(false);
+        stagesButton.setContentAreaFilled(false);
+        stagesButton.setFocusPainted(false);
+        stagesButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                playButtonMouseEntered(evt);
+                stagesButtonMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                playButtonMouseExited(evt);
+                stagesButtonMouseExited(evt);
             }
         });
 
@@ -104,31 +104,27 @@ public class OpeningCard extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(174, 174, 174)
-                        .addComponent(playButton))
+                        .addGap(146, 146, 146)
+                        .addComponent(stagesButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(182, 182, 182)
-                        .addComponent(exitButton)))
-                .addContainerGap(183, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(100, Short.MAX_VALUE)
-                    .addComponent(highscoreButton)
-                    .addGap(73, 73, 73)))
+                        .addGap(85, 85, 85)
+                        .addComponent(highscoreButton)))
+                .addContainerGap(88, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(184, Short.MAX_VALUE)
+                .addComponent(exitButton)
+                .addGap(181, 181, 181))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(182, Short.MAX_VALUE)
-                .addComponent(playButton)
-                .addGap(199, 199, 199)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(170, 170, 170)
+                .addComponent(stagesButton)
+                .addGap(26, 26, 26)
+                .addComponent(highscoreButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                 .addComponent(exitButton)
-                .addGap(55, 55, 55))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(280, Short.MAX_VALUE)
-                    .addComponent(highscoreButton)
-                    .addGap(238, 238, 238)))
+                .addGap(61, 61, 61))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -148,17 +144,17 @@ public class OpeningCard extends javax.swing.JPanel {
     highscoreButton.setForeground(Color.BLACK);
   }//GEN-LAST:event_highscoreButtonMouseExited
 
-  private void playButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseEntered
-    playButton.setForeground(Color.WHITE);
-  }//GEN-LAST:event_playButtonMouseEntered
+  private void stagesButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stagesButtonMouseEntered
+    stagesButton.setForeground(Color.WHITE);
+  }//GEN-LAST:event_stagesButtonMouseEntered
 
-  private void playButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseExited
-    playButton.setForeground(Color.BLACK);
-  }//GEN-LAST:event_playButtonMouseExited
+  private void stagesButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stagesButtonMouseExited
+    stagesButton.setForeground(Color.BLACK);
+  }//GEN-LAST:event_stagesButtonMouseExited
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exitButton;
     private javax.swing.JButton highscoreButton;
-    private javax.swing.JButton playButton;
+    private javax.swing.JButton stagesButton;
     // End of variables declaration//GEN-END:variables
 }

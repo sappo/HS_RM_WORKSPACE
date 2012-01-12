@@ -2,13 +2,8 @@ package org.ks.frogger;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -19,26 +14,18 @@ import javax.enterprise.event.Observes;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.ks.frogger.cards.GameCard;
 import org.ks.frogger.cards.HighscoreCard;
 import org.ks.frogger.cards.OpeningCard;
+import org.ks.frogger.cards.StagesCard;
 import org.ks.frogger.events.GameOver;
-import org.ks.frogger.events.LifeUpdate;
-import org.ks.frogger.events.ScoreUpdate;
-import org.ks.frogger.events.TimeData;
-import org.ks.frogger.events.TimeUpdate;
 import org.ks.frogger.gameobjects.GameObjectContainer;
 import org.ks.frogger.manager.GameManager;
 import org.ks.frogger.manager.Highscore;
@@ -63,13 +50,12 @@ public class Main extends JFrame implements ActionListener {
   private OpeningCard openingCard;
 
   @Inject
+  private StagesCard stagesCard;
+
+  @Inject
   private GameCard gameCard;
 
   private JPanel gameMetaInfoPanel;
-
-  private JPanel gameOverPanel;
-
-  private JLabel gameOverScoreLabel;
 
   private HighscoreCard highscoreCard;
 
@@ -83,14 +69,16 @@ public class Main extends JFrame implements ActionListener {
   public void main(@Observes ContainerInitialized event) {
     setVisible(true);
     setLayout(new CardLayout());
+//    setPreferredSize(new Dimension(500, 600));
+
 
     mainCards = getContentPane();
     levelCards = new JPanel(new CardLayout());
 
     initOpeningCard();
     initGameCard();
+    initStagesCard();
     initHighscoreCard();
-    initGameOverScreen();
     initTimer();
 
     switchToCard(openingCard);
@@ -118,22 +106,10 @@ public class Main extends JFrame implements ActionListener {
     mainCards.add(gameCard, gameCard.getName());
   }
 
-  private void initGameOverScreen() {
-    gameOverPanel = new JPanel();
-    gameOverPanel.setPreferredSize(new Dimension(500, 300));
-    gameOverPanel.setName("gameOverCard");
-
-    JButton tryAgainButton = new JButton("Try again!");
-    tryAgainButton.setActionCommand(ActionCommand.NEWGAME);
-    tryAgainButton.addActionListener(this);
-    gameOverPanel.add(tryAgainButton);
-
-    gameOverPanel.add(new JButton("Highscore!"));
-
-    gameOverScoreLabel = new JLabel();
-    gameOverPanel.add(gameOverScoreLabel);
-    
-    mainCards.add(gameOverPanel, gameOverPanel.getName());
+  private void initStagesCard() {
+    stagesCard.addActionListener(this);
+    stagesCard.setName("stagesCard");
+    mainCards.add(stagesCard, stagesCard.getName());
   }
 
   private void initHighscoreCard() {
@@ -155,6 +131,9 @@ public class Main extends JFrame implements ActionListener {
         break;
       case ActionCommand.SHOWOPENING:
         switchToCard(openingCard);
+        break;
+      case ActionCommand.SHOWSTAGES:
+        switchToCard(stagesCard);
         break;
       case ActionCommand.EXIT:
         System.exit(0);
@@ -216,8 +195,7 @@ public class Main extends JFrame implements ActionListener {
   public void listenToGameOver(@Observes @GameOver Long score) {
     endGame();
     System.out.println("Game over! Score" + score);
-    gameOverScoreLabel.setText("Score " + score);
-    switchToCard(gameOverPanel);
+    switchToCard(stagesCard);
   }
 
   private void endGame() {
