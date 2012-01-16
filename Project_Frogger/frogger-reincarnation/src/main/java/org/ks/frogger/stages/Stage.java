@@ -20,6 +20,8 @@ public class Stage {
 
   private long bronzeMedalEffort;
 
+  private long playerLives;
+
   private int stageNo;
 
   private String stageName;
@@ -33,6 +35,7 @@ public class Stage {
   private Stage(Builder builder) {
     this.stageRowList = builder.stageRowList;
     this.highscore = builder.highscore;
+    this.playerLives = builder.playerLives;
     this.stageNo = builder.stageNo;
     this.stageName = builder.stageName;
     this.stageObjective = builder.stageObjective;
@@ -87,6 +90,10 @@ public class Stage {
     return highscore;
   }
 
+  public long getPlayerLives() {
+    return playerLives;
+  }
+
   public String getStageObjective() {
     return stageObjective;
   }
@@ -112,14 +119,16 @@ public class Stage {
     //Mandatory
     private int stageNo;
 
-    //Optional 
     private GameMode gameMode;
 
+    //Optional 
     private long goldMedalEffort;
 
     private long silverMedalEffort;
 
     private long bronzeMedalEffort;
+
+    private long playerLives;
 
     private List<StageRow> stageRowList;
 
@@ -150,6 +159,11 @@ public class Stage {
 
     public Builder setStageObjective(String stageObjective) {
       this.stageObjective = stageObjective;
+      return this;
+    }
+
+    public Builder setPlayerLives(long playerLives) {
+      this.playerLives = playerLives;
       return this;
     }
 

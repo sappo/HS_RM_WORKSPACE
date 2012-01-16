@@ -15,6 +15,7 @@ import org.ks.frogger.Helper.ImageHelper;
 import org.ks.frogger.gameobjects.FrogNest;
 import org.ks.frogger.gameobjects.GameObjectContainer;
 import org.ks.frogger.gameobjects.Streetobject;
+import org.ks.frogger.gameobjects.TargetGrassStrip;
 import org.ks.frogger.gameobjects.Waterobject;
 import org.ks.sf.math.Vector;
 import org.ks.sf.shape.Rectangle;
@@ -47,19 +48,29 @@ public class StageManager implements ActionListener {
   }
 
   public void setupAutobahnStage(Image stageImage) {
-    Stage autobahn = new Stage.Builder(1, GameMode.TIME).setStageName("Autobahn").
+    Stage autobahn = new Stage.Builder(1, GameMode.TIME).setStageName(
+            "Autobahn").
             setStageObjective("Save as many frogs as possible in 1 Minute!").
-            addStageImage(stageImage).setGoldMedalEffort(10).
-            setSilverMedalEffort(7).setBronzeMedalEffort(5).addStageRow(new StageRow(
-            1, 1)).addStageRow(new StageRow(2, 3)).addStageRow(new StageRow(3,
-            -1)).addStageRow(new StageRow(4, -2)).addStageRow(new StageRow(6, 1)).
-            addStageRow(new StageRow(7, 2)).addStageRow(new StageRow(8, -1)).
-            addStageRow(new StageRow(9, -3)).build();
+            addStageImage(stageImage).
+            setPlayerLives(3).
+            setGoldMedalEffort(10).
+            setSilverMedalEffort(7).
+            setBronzeMedalEffort(5).
+            addStageRow(new StageRow(1, 1)).
+            addStageRow(new StageRow(2, 3)).
+            addStageRow(new StageRow(3, -1)).
+            addStageRow(new StageRow(4, -2)).
+            addStageRow(new StageRow(6, 1)).
+            addStageRow(new StageRow(7, 2)).
+            addStageRow(new StageRow(8, -1)).
+            addStageRow(new StageRow(9, -3)).
+            build();
 
     stages.add(autobahn);
     currentStage = autobahn;
 
-    gameObjectContainer.addImmobileGameobject(createFrogNest(0));
+    gameObjectContainer.addImmobileGameobject(new TargetGrassStrip(new Rectangle(
+            new Vector(0, 0), new Vector(500, 50))));
     timer.start();
   }
 

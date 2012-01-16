@@ -43,7 +43,7 @@ public class FrogNest extends GameObject {
     if (invader.isPresent()) {
       action = invader.get().getCollusionAction();
     } else {
-      action = CollusionAction.WIN;
+      action = CollusionAction.OBJECTIVEREACHED;
     }
     return action;
   }

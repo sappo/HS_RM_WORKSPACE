@@ -6,6 +6,6 @@ package org.ks.frogger.gameobjects;
  */
 public enum CollusionAction {
 
-  NOTHING, KILL, CARRY, WIN;
+  NOTHING, KILL, CARRY, OBJECTIVEREACHED;
 
 }

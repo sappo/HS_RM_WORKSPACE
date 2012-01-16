@@ -9,9 +9,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.ks.frogger.ActionCommand;
+import org.ks.frogger.events.GameOver;
 import org.ks.frogger.stages.StageManager;
 
 /**
@@ -45,11 +47,15 @@ public class StagesCard extends javax.swing.JPanel {
     previousButton.setVisible(!stageManager.getCurrentStage().isFirstStage());
     nextButton.setVisible(stageManager.getCurrentStage().isNextStageUnlocked());
   }
+  
+  public void listenToGameOver(@Observes @GameOver long highscore) {
+    //@TODO show game score on game over 
+  }
 
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    g.drawImage(stageManager.getCurrentStage().getStageImage(), 10, 150, null);
+    g.drawImage(stageManager.getCurrentStage().getStageImage(), 12, 146, null);
   }
 
   /** This method is called from within the constructor to
@@ -66,10 +72,11 @@ public class StagesCard extends javax.swing.JPanel {
         previousButton = new javax.swing.JButton();
         mainButton = new javax.swing.JButton();
         playButton = new javax.swing.JButton();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
 
         setMaximumSize(new java.awt.Dimension(500, 600));
 
-        headerLabel.setFont(new java.awt.Font("Kristen ITC", 0, 48)); // NOI18N
+        headerLabel.setFont(new java.awt.Font("Kristen ITC", 0, 48));
         headerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         headerLabel.setText("Stage");
 
@@ -88,7 +95,7 @@ public class StagesCard extends javax.swing.JPanel {
             }
         });
 
-        previousButton.setFont(new java.awt.Font("Kristen ITC", 0, 18)); // NOI18N
+        previousButton.setFont(new java.awt.Font("Kristen ITC", 0, 18));
         previousButton.setText("Previous Stage");
         previousButton.setBorder(null);
         previousButton.setBorderPainted(false);
@@ -132,6 +139,8 @@ public class StagesCard extends javax.swing.JPanel {
             }
         });
 
+        jLayeredPane1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -149,7 +158,10 @@ public class StagesCard extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
                                 .addComponent(nextButton))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
+                        .addContainerGap()
+                        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(playButton)))
                 .addContainerGap())
         );
@@ -158,9 +170,11 @@ public class StagesCard extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(headerLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 330, Short.MAX_VALUE)
+                .addGap(64, 64, 64)
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(playButton)
-                .addGap(100, 100, 100)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
                     .addComponent(previousButton)
@@ -204,6 +218,7 @@ public class StagesCard extends javax.swing.JPanel {
   }//GEN-LAST:event_playButtonMouseExited
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel headerLabel;
+    private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JButton mainButton;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton playButton;

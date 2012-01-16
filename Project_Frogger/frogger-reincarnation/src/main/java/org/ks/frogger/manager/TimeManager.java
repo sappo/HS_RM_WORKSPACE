@@ -12,6 +12,7 @@ import javax.swing.Timer;
 import org.ks.frogger.ActionCommand;
 import org.ks.frogger.events.FroggerDeath;
 import org.ks.frogger.events.TimeData;
+import org.ks.frogger.events.TimeOut;
 import org.ks.frogger.events.TimeUpdate;
 
 /**
@@ -32,6 +33,7 @@ public class TimeManager implements ActionListener {
     private Event<TimeData> timeUpdateEvent;
 
     @Inject
+    @TimeOut
     private Event<FroggerDeath> deathEvent;
 
     private Timer timer;

@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.ks.frogger.events.FroggerDeath;
+import org.ks.frogger.events.ObjectiveReached;
 import org.ks.sf.math.Vector;
 import org.ks.sf.shape.FigureContainer;
 import org.ks.sf.shape.Rectangle;
@@ -35,7 +36,8 @@ public class GameObjectContainer {
   private Event<FroggerDeath> deathEvent;
 
   @Inject
-  private Event<FrogNest> winEvent;
+  @ObjectiveReached
+  private Event<GameObject> objectiveReachedEvent;
 
   @PostConstruct
   public void initialize() {
@@ -193,8 +195,8 @@ public class GameObjectContainer {
       case CARRY:
         frogger.jumpOn(intersectedFigure);
         break;
-      case WIN:
-        winEvent.fire((FrogNest) intersectedFigure);
+      case OBJECTIVEREACHED:
+        objectiveReachedEvent.fire(intersectedFigure);
         break;
     }
   }
