@@ -1,18 +1,15 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * StartCard.java
- *
- * Created on 09.01.2012, 19:10:47
+ * Opening Card
  */
 package org.ks.frogger.cards;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 import org.ks.frogger.ActionCommand;
+import org.ks.frogger.Helper.ImageHelper;
+import org.ks.frogger.Helper.CardLayer;
+import org.ks.frogger.cards.ui.ImageComponent;
 
 /**
  *
@@ -20,18 +17,39 @@ import org.ks.frogger.ActionCommand;
  */
 public class OpeningCard extends javax.swing.JPanel {
 
+  private Image backgroundImage;
+
   /** Creates new form StartCard */
   public OpeningCard(ActionListener actionListener) {
     initComponents();
     
+
+    backgroundImage = ImageHelper.load(this,
+            "src/main/resources/pictures/cards/background_opening.png");
+    ImageComponent background = new ImageComponent(backgroundImage);
+    
+    layers.add(background, CardLayer.BACKGROUND_LAYER);
+    
+    titleLabel1.setForeground(Color.BLACK);
+    layers.setLayer(titleLabel1, CardLayer.CONTENT_LAYER);
+
+    titleLabel2.setForeground(Color.BLACK);
+    layers.setLayer(titleLabel2, CardLayer.CONTENT_LAYER);
+
     stagesButton.setActionCommand(ActionCommand.SHOWSTAGES);
     stagesButton.addActionListener(actionListener);
-    
+    stagesButton.setForeground(Color.BLACK);
+    layers.setLayer(stagesButton, CardLayer.CONTENT_LAYER);
+
     highscoreButton.setActionCommand(ActionCommand.SHOWHIGHSCORE);
     highscoreButton.addActionListener(actionListener);
-    
+    highscoreButton.setForeground(Color.BLACK);
+    layers.setLayer(highscoreButton, CardLayer.CONTENT_LAYER);
+
     exitButton.setActionCommand(ActionCommand.EXIT);
     exitButton.addActionListener(actionListener);
+    exitButton.setForeground(Color.BLACK);
+    layers.setLayer(exitButton, CardLayer.CONTENT_LAYER);
   }
 
   /** This method is called from within the constructor to
@@ -43,32 +61,42 @@ public class OpeningCard extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        exitButton = new javax.swing.JButton();
+        layers = new javax.swing.JLayeredPane();
+        titleLabel1 = new javax.swing.JLabel();
+        titleLabel2 = new javax.swing.JLabel();
         stagesButton = new javax.swing.JButton();
         highscoreButton = new javax.swing.JButton();
+        exitButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 255, 153));
+        setAlignmentX(0.0F);
+        setAlignmentY(0.0F);
         setMaximumSize(new java.awt.Dimension(500, 600));
+        setMinimumSize(new java.awt.Dimension(500, 600));
         setName("openingPanel"); // NOI18N
         setPreferredSize(new java.awt.Dimension(500, 600));
+        setRequestFocusEnabled(false);
+        setVerifyInputWhenFocusTarget(false);
+        setLayout(new java.awt.BorderLayout());
 
-        exitButton.setFont(new java.awt.Font("Kristen ITC", 1, 60)); // NOI18N
-        exitButton.setText("Exit");
-        exitButton.setBorder(null);
-        exitButton.setBorderPainted(false);
-        exitButton.setContentAreaFilled(false);
-        exitButton.setFocusPainted(false);
-        exitButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                exitButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                exitButtonMouseExited(evt);
-            }
-        });
+        layers.setAlignmentX(0.0F);
+        layers.setAlignmentY(0.0F);
+        layers.setMaximumSize(new java.awt.Dimension(500, 600));
+        layers.setMinimumSize(new java.awt.Dimension(500, 600));
 
-        stagesButton.setFont(new java.awt.Font("Kristen ITC", 1, 60)); // NOI18N
+        titleLabel1.setFont(new java.awt.Font("Kristen ITC", 1, 48));
+        titleLabel1.setText("Frogger");
+        titleLabel1.setBounds(150, 40, 195, 66);
+        layers.add(titleLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        titleLabel2.setFont(new java.awt.Font("Kristen ITC", 1, 48)); // NOI18N
+        titleLabel2.setText("Reincarnation");
+        titleLabel2.setBounds(70, 80, 368, 66);
+        layers.add(titleLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        stagesButton.setFont(new java.awt.Font("Kristen ITC", 1, 60));
         stagesButton.setText("Stages");
+        stagesButton.setToolTipText("");
         stagesButton.setBorder(null);
         stagesButton.setBorderPainted(false);
         stagesButton.setContentAreaFilled(false);
@@ -81,8 +109,10 @@ public class OpeningCard extends javax.swing.JPanel {
                 stagesButtonMouseExited(evt);
             }
         });
+        stagesButton.setBounds(150, 370, 209, 82);
+        layers.add(stagesButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        highscoreButton.setFont(new java.awt.Font("Kristen ITC", 1, 60)); // NOI18N
+        highscoreButton.setFont(new java.awt.Font("Kristen ITC", 1, 60));
         highscoreButton.setText("Highscore");
         highscoreButton.setBorder(null);
         highscoreButton.setBorderPainted(false);
@@ -96,36 +126,27 @@ public class OpeningCard extends javax.swing.JPanel {
                 highscoreButtonMouseExited(evt);
             }
         });
+        highscoreButton.setBounds(80, 450, 327, 82);
+        layers.add(highscoreButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(146, 146, 146)
-                        .addComponent(stagesButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(85, 85, 85)
-                        .addComponent(highscoreButton)))
-                .addContainerGap(88, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(184, Short.MAX_VALUE)
-                .addComponent(exitButton)
-                .addGap(181, 181, 181))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(170, 170, 170)
-                .addComponent(stagesButton)
-                .addGap(26, 26, 26)
-                .addComponent(highscoreButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
-                .addComponent(exitButton)
-                .addGap(61, 61, 61))
-        );
+        exitButton.setFont(new java.awt.Font("Kristen ITC", 1, 36));
+        exitButton.setText("Exit");
+        exitButton.setBorder(null);
+        exitButton.setBorderPainted(false);
+        exitButton.setContentAreaFilled(false);
+        exitButton.setFocusPainted(false);
+        exitButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                exitButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                exitButtonMouseExited(evt);
+            }
+        });
+        exitButton.setBounds(410, 540, 82, 49);
+        layers.add(exitButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        add(layers, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
   private void exitButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitButtonMouseEntered
@@ -151,10 +172,12 @@ public class OpeningCard extends javax.swing.JPanel {
   private void stagesButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stagesButtonMouseExited
     stagesButton.setForeground(Color.BLACK);
   }//GEN-LAST:event_stagesButtonMouseExited
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exitButton;
     private javax.swing.JButton highscoreButton;
+    private javax.swing.JLayeredPane layers;
     private javax.swing.JButton stagesButton;
+    private javax.swing.JLabel titleLabel1;
+    private javax.swing.JLabel titleLabel2;
     // End of variables declaration//GEN-END:variables
 }

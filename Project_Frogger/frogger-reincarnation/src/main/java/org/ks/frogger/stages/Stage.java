@@ -3,6 +3,7 @@ package org.ks.frogger.stages;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
+import org.ks.sf.math.Vector;
 
 /**
  *
@@ -22,6 +23,8 @@ public class Stage {
 
   private long playerLives;
 
+  private long timeout;
+
   private int stageNo;
 
   private String stageName;
@@ -32,10 +35,13 @@ public class Stage {
 
   private GameMode gameMode;
 
+  private Vector froggerStartPos;
+
   private Stage(Builder builder) {
     this.stageRowList = builder.stageRowList;
     this.highscore = builder.highscore;
     this.playerLives = builder.playerLives;
+    this.timeout = builder.timeout;
     this.stageNo = builder.stageNo;
     this.stageName = builder.stageName;
     this.stageObjective = builder.stageObjective;
@@ -44,6 +50,7 @@ public class Stage {
     this.goldMedalEffort = builder.goldMedalEffort;
     this.silverMedalEffort = builder.silverMedalEffort;
     this.bronzeMedalEffort = builder.bronzeMedalEffort;
+    this.froggerStartPos = builder.froggerStartPos;
   }
 
   public boolean hasGoldMedal() {
@@ -114,6 +121,10 @@ public class Stage {
     this.highscore = highscore;
   }
 
+  public Vector getFroggerStartPos() {
+    return froggerStartPos;
+  }
+  
   public static class Builder {
 
     //Mandatory
@@ -130,6 +141,8 @@ public class Stage {
 
     private long playerLives;
 
+    private long timeout;
+
     private List<StageRow> stageRowList;
 
     private String stageName;
@@ -139,6 +152,8 @@ public class Stage {
     private long highscore;
 
     private Image stageImage;
+    
+    private Vector froggerStartPos;
 
     public Builder(int stageNo, GameMode gameMode) {
       this.stageNo = stageNo;
@@ -167,6 +182,11 @@ public class Stage {
       return this;
     }
 
+    public Builder setTimeout(long timeout) {
+      this.timeout = timeout;
+      return this;
+    }
+
     public Builder addHighscore(long highscore) {
       this.highscore = highscore;
       return this;
@@ -189,6 +209,11 @@ public class Stage {
 
     public Builder setBronzeMedalEffort(long bronzeMedalEffort) {
       this.bronzeMedalEffort = bronzeMedalEffort;
+      return this;
+    }
+    
+    public Builder setFroggerStartPos(Vector froggerStartPos) {
+      this.froggerStartPos = froggerStartPos;
       return this;
     }
 

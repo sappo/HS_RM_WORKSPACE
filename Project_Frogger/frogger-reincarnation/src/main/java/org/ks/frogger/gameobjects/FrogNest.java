@@ -2,7 +2,7 @@ package org.ks.frogger.gameobjects;
 
 import com.google.common.base.Optional;
 import java.awt.Graphics;
-import javax.swing.ImageIcon;
+import java.awt.Image;
 import org.ks.sf.shape.Rectangle;
 
 /**
@@ -17,7 +17,7 @@ public class FrogNest extends GameObject {
     super(pictureBoundingBox);
   }
 
-  public FrogNest(Rectangle pictureBoundingBox, ImageIcon image) {
+  public FrogNest(Rectangle pictureBoundingBox, Image image) {
     super(pictureBoundingBox, image);
   }
 

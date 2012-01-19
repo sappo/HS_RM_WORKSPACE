@@ -54,6 +54,11 @@ public class TimeManager implements ActionListener {
         timeUpdateTimer.setActionCommand(ActionCommand.TIMEUPDATE);
     }
 
+    
+    public void startTimer(long triggerDelay) {
+     //@TODO: 
+    }
+    
     /**
      * 
      * @param actionListener

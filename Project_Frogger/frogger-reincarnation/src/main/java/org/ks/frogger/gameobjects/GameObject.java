@@ -1,7 +1,7 @@
 package org.ks.frogger.gameobjects;
 
 import java.awt.Graphics;
-import javax.swing.ImageIcon;
+import java.awt.Image;
 import org.ks.sf.math.Vector;
 import org.ks.sf.shape.BoundingBox;
 import org.ks.sf.shape.Figure;
@@ -13,7 +13,7 @@ import org.ks.sf.shape.Rectangle;
  */
 public abstract class GameObject implements Figure {
 
-  private ImageIcon image;
+  private Image image;
 
   private Rectangle pictureBoundingBox;
 
@@ -21,7 +21,7 @@ public abstract class GameObject implements Figure {
     this.pictureBoundingBox = pictureBoundingBox;
   }
 
-  public GameObject(Rectangle pictureBoundingBox, ImageIcon image) {
+  public GameObject(Rectangle pictureBoundingBox, Image image) {
     this.image = image;
     this.pictureBoundingBox = pictureBoundingBox;
   }
@@ -41,7 +41,14 @@ public abstract class GameObject implements Figure {
    * @inherited
    */
   public void draw(Graphics g) {
-    pictureBoundingBox.draw(g);
+    if (image == null) {
+      pictureBoundingBox.draw(g);
+    } else {
+      pictureBoundingBox.draw(g);
+      g.drawImage(image, (int) pictureBoundingBox.getBasePoint().
+              getX(), (int) pictureBoundingBox.getBasePoint().
+              getY(), null);
+    }
   }
 
   /**
@@ -119,7 +126,7 @@ public abstract class GameObject implements Figure {
     return pictureBoundingBox.getBoundingBox();
   }
 
-  public void setImage(ImageIcon image) {
+  public void setImage(Image image) {
     this.image = image;
   }
 }

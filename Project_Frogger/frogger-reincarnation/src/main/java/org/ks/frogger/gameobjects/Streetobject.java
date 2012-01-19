@@ -1,6 +1,6 @@
 package org.ks.frogger.gameobjects;
 
-import javax.swing.ImageIcon;
+import java.awt.Image;
 import org.ks.frogger.events.FroggerDeath;
 import org.ks.sf.shape.Rectangle;
 
@@ -15,7 +15,7 @@ public class Streetobject extends GameObject {
     super(pictureBoundingBox);
   }
 
-  public Streetobject(Rectangle pictureBoundingBox, ImageIcon image) {
+  public Streetobject(Rectangle pictureBoundingBox, Image image) {
     super(pictureBoundingBox, image);
   }
 

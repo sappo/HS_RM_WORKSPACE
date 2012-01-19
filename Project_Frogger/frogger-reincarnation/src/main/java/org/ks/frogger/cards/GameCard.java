@@ -65,6 +65,14 @@ public class GameCard extends javax.swing.JPanel {
     scoreValueLabel.setText(score.toString());
   }
 
+  @Override
+  public void setVisible(boolean aFlag) {
+    super.setVisible(aFlag);
+    gamePanel.requestFocusInWindow();
+  }
+  
+  
+
   /** This method is called from within the constructor to
    * initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is
@@ -84,6 +92,8 @@ public class GameCard extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
 
+        setAlignmentX(0.0F);
+        setAlignmentY(0.0F);
         setFont(new java.awt.Font("Kristen ITC", 0, 24)); // NOI18N
         setMaximumSize(new java.awt.Dimension(500, 600));
         setName("gameCard"); // NOI18N
@@ -91,6 +101,8 @@ public class GameCard extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         metadataPanel.setBackground(new java.awt.Color(153, 153, 153));
+        metadataPanel.setAlignmentX(0.0F);
+        metadataPanel.setAlignmentY(0.0F);
         metadataPanel.setMaximumSize(new java.awt.Dimension(500, 50));
         metadataPanel.setPreferredSize(new java.awt.Dimension(500, 50));
 
@@ -103,7 +115,7 @@ public class GameCard extends javax.swing.JPanel {
         lifeValueLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
         remainingTimeBar.setBackground(new java.awt.Color(204, 204, 204));
-        remainingTimeBar.setFont(new java.awt.Font("Kristen ITC", 0, 12)); // NOI18N
+        remainingTimeBar.setFont(new java.awt.Font("Kristen ITC", 0, 12));
         remainingTimeBar.setForeground(new java.awt.Color(255, 255, 102));
         remainingTimeBar.setString("0s");
         remainingTimeBar.setStringPainted(true);

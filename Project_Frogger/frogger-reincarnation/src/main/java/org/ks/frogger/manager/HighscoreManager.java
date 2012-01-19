@@ -1,24 +1,30 @@
 package org.ks.frogger.manager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.ks.frogger.events.ScoreUpdate;
+import org.ks.frogger.stages.StageManager;
 
 /**
- *
+ * Manages the highscores of the game
  * @author Kevin Sapper 2011
  */
 @ApplicationScoped
 public class HighscoreManager {
 
-  private Highscore highScore;
+  @Inject
+  private StageManager stageManager;
 
-  private List<Highscore> highscoreList;
+  private Highscore highscore;
+
+  private Map<Integer, List<Highscore>> highscoreList;
 
   private HighscoreLoader loader;
 
@@ -37,28 +43,40 @@ public class HighscoreManager {
   }
 
   /**
-   * Updates the current highscore.
+   * Updates the current highscore for survival mode.
    * @param maxTime max. time for level
    * @param timeElapsed elapsed time
    * @param level current level
    */
-  public void updateHighscore(long maxTime, long timeElapsed, int level) {
+  public void updateSurvivalHighscore(long maxTime, long timeElapsed, int level) {
     double timeFactor = (double) (maxTime - timeElapsed) / maxTime;
     double levelFactor = 0.1 * level;
     double multiplicator = 1000;
 
-    highScore.setHighscore(highScore.getHighscore() + Math.round(
+    highscore.setHighscore(highscore.getHighscore() + Math.round(
             timeFactor * levelFactor * multiplicator));
-    scoreUpdateEvent.fire(highScore.getHighscore());
+    scoreUpdateEvent.fire(highscore.getHighscore());
+  }
+
+  /**
+   * Updates the current highscore for time mode.
+   * @param maxTime max. time for level
+   * @param timeElapsed elapsed time
+   * @param level current level
+   */
+  public void updateTimeHighscore() {
+    //increment highscore
+    highscore.setHighscore(highscore.getHighscore() + 1);
+    scoreUpdateEvent.fire(highscore.getHighscore());
   }
 
   /**
    * Truncates to old highscore without submitting it to the highscore list
    */
   public void newHighscore() {
-    highScore = new Highscore();
-    highScore.setHighscore(0L);
-    scoreUpdateEvent.fire(highScore.getHighscore());
+    highscore = new Highscore();
+    highscore.setHighscore(0L);
+    scoreUpdateEvent.fire(highscore.getHighscore());
   }
 
   /**
@@ -67,8 +85,18 @@ public class HighscoreManager {
    */
   public void submitHighscore(String name) {
     try {
-      highScore.setName(name);
-      highscoreList.add(highScore);
+      Integer stageNo = stageManager.getCurrentStage().
+              getStageNo();
+      highscore.setName(name);
+      // add score to list
+      if (highscoreList.containsKey(stageNo)) {
+        highscoreList.get(stageNo).
+                add(highscore);
+      } else {
+        List<Highscore> scores = new ArrayList<>();
+        scores.add(highscore);
+        highscoreList.put(stageNo, scores);
+      }
       loader.saveHighscores(highscoreList);
     } catch (IOException ex) {
       //@TODO:
@@ -76,18 +104,36 @@ public class HighscoreManager {
   }
 
   public long getHighScore() {
-    return highScore.getHighscore();
+    return highscore.getHighscore();
   }
 
-  public List<Highscore> getTopTen() {
-    Collections.sort(highscoreList);
-    return highscoreList.size() < 10 ? highscoreList.subList(0, highscoreList.
-            size()) : highscoreList.subList(0, 10);
+  /**
+   * Get the top ten list for a stage.
+   * @param stageNo the stage to get the top ten list for
+   * @return the top ten list or null
+   */
+  public List<Highscore> getTopTen(int stageNo) {
+    if(highscoreList.isEmpty()) {
+      return null;
+    }
+    List<Highscore> topTenList = highscoreList.get(stageNo);
+    Collections.sort(topTenList);
+      return topTenList.size() < 10 ? topTenList.subList(0,
+            topTenList.size()) : topTenList.subList(0, 10);
   }
 
-  public boolean isInTopTen() {
-    List<Highscore> topTen = getTopTen();
-    return Long.compare(highScore.getHighscore(), topTen.get(topTen.size() - 1).
+  /**
+   * Is the current score in the top ten list?
+   * @param stageNo the stage no
+   * @return true if in top ten, else false
+   */
+  public boolean isInTopTen(int stageNo) {
+    if (highscoreList.isEmpty() || highscoreList.size() < 10) {
+      return true;
+    }
+    List<Highscore> topTenList = getTopTen(stageNo);
+    return Long.compare(highscore.getHighscore(),
+            topTenList.get(topTenList.size() - 1).
             getHighscore()) > 0;
   }
 }

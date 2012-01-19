@@ -1,8 +1,6 @@
 package org.ks.frogger.gameobjects;
 
-import javax.swing.ImageIcon;
-import org.apache.commons.lang.StringUtils;
-import org.ks.frogger.events.FroggerDeath;
+import java.awt.Image;
 import org.ks.sf.shape.Rectangle;
 
 /**
@@ -16,12 +14,11 @@ public class Waterobject extends GameObject {
     super(pictureBoundingBox);
   }
 
-  public Waterobject(Rectangle pictureBoundingBox, ImageIcon image) {
+  public Waterobject(Rectangle pictureBoundingBox, Image image) {
     super(pictureBoundingBox, image);
   }
 
   public CollusionAction getCollusionAction() {
     return CollusionAction.CARRY;
   }
-
 }

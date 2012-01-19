@@ -8,17 +8,18 @@ import java.util.Random;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.swing.Timer;
 import org.jboss.weld.util.collections.ArraySet;
+import org.ks.frogger.Helper.MobileGameObject;
 import org.ks.frogger.Helper.ImageHelper;
-import org.ks.frogger.gameobjects.FrogNest;
+import org.ks.frogger.Helper.ImmobileGameObject;
+import org.ks.frogger.events.GameOver;
+import org.ks.frogger.factory.GameObjectFactory;
+import org.ks.frogger.gameobjects.GameObject;
 import org.ks.frogger.gameobjects.GameObjectContainer;
-import org.ks.frogger.gameobjects.Streetobject;
-import org.ks.frogger.gameobjects.TargetGrassStrip;
-import org.ks.frogger.gameobjects.Waterobject;
 import org.ks.sf.math.Vector;
-import org.ks.sf.shape.Rectangle;
 
 /**
  *
@@ -38,84 +39,90 @@ public class StageManager implements ActionListener {
 
   @PostConstruct
   public void initialize() {
-    timer = new Timer(100, this);
+    timer = new Timer(50, this);
     stages = new ArraySet<>();
   }
 
   public void setupStages(Component component) {
-    setupAutobahnStage(ImageHelper.loadAndResize(component,
-            "src/main/resources/pictures/autobahn.jpg", 250));
+    setupAutobahnStage(ImageHelper.load(component,
+            "src/main/resources/pictures/stages/stage1.png"));
   }
 
   public void setupAutobahnStage(Image stageImage) {
+    MobileGameObject greenCar = MobileGameObject.GREENCAR;
+
     Stage autobahn = new Stage.Builder(1, GameMode.TIME).setStageName(
             "Autobahn").
             setStageObjective("Save as many frogs as possible in 1 Minute!").
             addStageImage(stageImage).
             setPlayerLives(3).
+            setTimeout(10000).
             setGoldMedalEffort(10).
             setSilverMedalEffort(7).
             setBronzeMedalEffort(5).
-            addStageRow(new StageRow(1, 1)).
-            addStageRow(new StageRow(2, 3)).
-            addStageRow(new StageRow(3, -1)).
-            addStageRow(new StageRow(4, -2)).
-            addStageRow(new StageRow(6, 1)).
-            addStageRow(new StageRow(7, 2)).
-            addStageRow(new StageRow(8, -1)).
-            addStageRow(new StageRow(9, -3)).
+            setFroggerStartPos(new Vector(215, 510)).
+            addStageRow(new StageRow(0, 0, null, ImmobileGameObject.TARGETSTRIP)).
+            addStageRow(new StageRow(1, 1, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(2, 3, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(3, -1, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(4, -2, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(5, 0, null, ImmobileGameObject.GRASSSTRIP)).
+            addStageRow(new StageRow(6, 1, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(7, 2, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(8, -1, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(9, -3, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(10, 0, null, ImmobileGameObject.GRASSSTRIP)).
             build();
 
     stages.add(autobahn);
     currentStage = autobahn;
+  }
 
-    gameObjectContainer.addImmobileGameobject(new TargetGrassStrip(new Rectangle(
-            new Vector(0, 0), new Vector(500, 50))));
+  public void initializeCurrentStage() {
+    gameObjectContainer.addFrogger(GameObjectFactory.createNewFroggerAt(
+            currentStage.getFroggerStartPos()));
+
+    for (StageRow stageRow : currentStage.getStageRowList()) {
+      if (stageRow.getImmobileGameObjectType() != null) {
+        gameObjectContainer.addImmobileGameobject(GameObjectFactory.
+                createImmobileGameObject(stageRow.getImmobileGameObjectType(),
+                stageRow.getRowLevel()));
+      }
+    }
+
     timer.start();
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     for (StageRow stageRow : currentStage.getStageRowList()) {
-      int accleration = Math.abs(stageRow.getGameObjectAcceleration());
-      long timePuffer = (50 / accleration) * 100;
-      if (stageRow.getLastObjectAdded() + timePuffer < System.currentTimeMillis()) {
-        Random random = new Random();
-        int randomNo = random.nextInt(20);
-        if (randomNo == 1) {
-          gameObjectContainer.addMobileGameObject(createCar(
-                  stageRow.getRowLevel(),
-                  stageRow.getGameObjectAcceleration()));
-          stageRow.setLastObjectAdded(System.currentTimeMillis());
+      if (stageRow.getMobileGameObjectType() != null) {
+        int accleration = Math.abs(stageRow.getGameObjectAcceleration());
+        double movementFactor = stageRow.getMobileGameObjectSize().
+                getX() / accleration;
+        long timePuffer = (int) movementFactor * 50;
+        if (stageRow.getLastObjectAdded() + timePuffer < System.
+                currentTimeMillis()) {
+          Random random = new Random();
+          int randomNo = random.nextInt(100);
+          if (randomNo == 1) {
+            GameObject mobileGameObject = GameObjectFactory.
+                    createMobileGameObject(
+                    stageRow.getMobileGameObjectType(), stageRow.getRowLevel(),
+                    stageRow.getGameObjectAcceleration());
+            gameObjectContainer.addMobileGameObject(mobileGameObject);
+            stageRow.setLastObjectAdded(System.currentTimeMillis());
+          }
         }
       }
     }
   }
 
+  public void listenToGameOver(@Observes @GameOver Long score) {
+    timer.stop();
+  }
+
   public Stage getCurrentStage() {
     return currentStage;
-  }
-
-  private Streetobject createCar(int streetLvl, int acceleration) {
-    int yLevel = getLevel(streetLvl);
-    int xLevel = acceleration > 0 ? -50 : 500;
-
-    return new Streetobject(new Rectangle(new Vector(xLevel, yLevel),
-            new Vector(acceleration, 0), new Vector(50, 30)));
-  }
-
-  private Waterobject createTreeTrunk(int waterLvl) {
-    return new Waterobject(new Rectangle(new Vector(-50, waterLvl * 200),
-            new Vector(2, 0), new Vector(50, 25)));
-  }
-
-  private FrogNest createFrogNest(int level) {
-    int yLevel = getLevel(level);
-    return new FrogNest(new Rectangle(new Vector(215, yLevel),
-            new Vector(50, 50)));
-  }
-
-  private int getLevel(int level) {
-    return 10 + (level * 50);
   }
 }

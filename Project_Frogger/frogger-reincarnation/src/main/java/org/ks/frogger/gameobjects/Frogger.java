@@ -1,5 +1,6 @@
 package org.ks.frogger.gameobjects;
 
+import java.awt.Image;
 import org.ks.sf.math.Vector;
 import org.ks.sf.shape.Rectangle;
 
@@ -15,6 +16,14 @@ public class Frogger extends GameObject {
 
   private boolean sittingInNest = false;
 
+  private Image up;
+
+  private Image down;
+
+  private Image left;
+
+  private Image right;
+
   /**
    * Create a new Frogger at the given start position.
    * @param startPosition the Froggers start position
@@ -24,12 +33,23 @@ public class Frogger extends GameObject {
     this.startPosition = new Rectangle(startPosition);
   }
 
+  public Frogger(Rectangle startPosition, Image up, Image down, Image left,
+          Image right) {
+    super(startPosition, up);
+    this.startPosition = new Rectangle(startPosition);
+    this.up = up;
+    this.down = down;
+    this.left = left;
+    this.right = right;
+  }
+
   /**
    * Only works if not sitting in nest!
    */
   public void moveRight() {
     if (!sittingInNest) {
       move(new Vector(25, 0));
+      setImage(right);
     }
   }
 
@@ -39,6 +59,7 @@ public class Frogger extends GameObject {
   public void moveLeft() {
     if (!sittingInNest) {
       move(new Vector(-25, 0));
+      setImage(left);
     }
   }
 
@@ -46,7 +67,10 @@ public class Frogger extends GameObject {
    * Only works if not sitting in nest!
    */
   public void moveUp() {
-    move(new Vector(0, -50));
+    if (!sittingInNest) {
+      move(new Vector(0, -50));
+      setImage(up);
+    }
   }
 
   /**
@@ -55,6 +79,7 @@ public class Frogger extends GameObject {
   public void moveDown() {
     if (!sittingInNest) {
       move(new Vector(0, 50));
+      setImage(down);
     }
   }
 
@@ -113,8 +138,10 @@ public class Frogger extends GameObject {
    */
   public static Frogger newInstanceInNest(Vector froggerSize, FrogNest nest) {
     Vector nestSize = nest.getDiagonal();
-    Vector froggerPositionOffset = nestSize.subtract(froggerSize).mult(0.5);
-    Vector froggerPosition = nest.getBasePoint().add(froggerPositionOffset);
+    Vector froggerPositionOffset = nestSize.subtract(froggerSize).
+            mult(0.5);
+    Vector froggerPosition = nest.getBasePoint().
+            add(froggerPositionOffset);
     Frogger frogger = new Frogger(new Rectangle(froggerPosition, froggerSize));
     frogger.sittingInNest = true;
     return frogger;

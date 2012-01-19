@@ -10,6 +10,8 @@ import java.awt.image.ReplicateScaleFilter;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 /**
  *
@@ -17,32 +19,76 @@ import javax.imageio.ImageIO;
  */
 public class ImageHelper {
 
-  public static Image loadAndResize(Component component, String path, int width) {
-    Image source = null;
+  public static Image load(Component component, String path) {
+    Image image = null;
+    try {
+      MediaTracker media = new MediaTracker(component);
+
+      image = ImageIO.read(new File(path));
+      media.addImage(image, 0);
+      media.waitForID(0);
+    } catch (InterruptedException | IOException ex) {
+    }
+    return image;
+  }
+
+  public static Image load(String path) {
+    Image image = null;
+    try {
+      MediaTracker media = new MediaTracker(new JPanel());
+
+      image = ImageIO.read(new File(path));
+      media.addImage(image, 0);
+      media.waitForID(0);
+    } catch (InterruptedException | IOException ex) {
+    }
+    return image;
+  }
+
+  public static Image loadAndResizeWidth(Component component, String path,
+          int width) {
+    Image source = load(component, path);
+
+    // force height to be a double
+    double ratio = new Integer(width).doubleValue() / source.getWidth(
+            component);
+    int height = (int) (source.getHeight(component) * ratio);
+
+    return loadAndResize(component, source, width, height);
+  }
+
+  public static Image loadAndResizeHeight(Component component, String path,
+          int height) {
+    Image source = load(component, path);
+
+    // force height to be a double
+    double ratio = new Integer(height).doubleValue() / source.getHeight(
+            component);
+    int width = (int) (source.getWidth(component) * ratio);
+
+    return loadAndResize(component, source, width, height);
+  }
+
+  public static Image loadAndResize(Component component, String path, int width,
+          int heigt) {
+    return loadAndResize(component, load(component, path), width, heigt);
+  }
+
+  private static Image loadAndResize(Component component, Image source,
+          int width, int height) {
     Image resizedImage = null;
 
     try {
       MediaTracker media = new MediaTracker(component);
-      // java how-to image for example, can be JPG
-      source = ImageIO.read(new File(path));
-      media.addImage(source, 0);
-      media.waitForID(0);
-      // scale down to 300 in width
-      int height = source.getHeight(component) * 250 / source.getWidth(component);
-      ImageFilter replicate = new ReplicateScaleFilter(250, height);
+
+      ImageFilter replicate = new ReplicateScaleFilter(width, height);
       ImageProducer prod =
               new FilteredImageSource(source.getSource(), replicate);
       resizedImage = component.createImage(prod);
-      media.addImage(resizedImage, 1);
-      media.waitForID(1);
-    } catch (InterruptedException | IOException ex) {
+      media.addImage(resizedImage, 0);
+      media.waitForID(0);
+    } catch (InterruptedException ex) {
     }
     return resizedImage;
-  }
-
-  ;
-  
-  public static Image loadAndResize(String path, int width, int heigt) {
-    return null;
   }
 }

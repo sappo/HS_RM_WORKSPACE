@@ -6,19 +6,23 @@
 package org.ks.frogger.cards;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.ks.frogger.ActionCommand;
+import org.ks.frogger.Helper.CardLayer;
+import org.ks.frogger.Helper.ImageHelper;
+import org.ks.frogger.cards.ui.ImageComponent;
+import org.ks.frogger.cards.ui.TransparentBox;
 import org.ks.frogger.events.GameOver;
 import org.ks.frogger.stages.StageManager;
 
 /**
  *
- * @author Sappo
+ * @author Kevin Sapper 2011
  */
 @Singleton
 public class StagesCard extends javax.swing.JPanel {
@@ -26,36 +30,99 @@ public class StagesCard extends javax.swing.JPanel {
   @Inject
   private StageManager stageManager;
 
+  private Image backgroundImage;
+
+  static {
+  }
+
   @PostConstruct
   public void initialize() {
     initComponents();
-    mainButton.setActionCommand(ActionCommand.SHOWOPENING);
-
-    playButton.setActionCommand(ActionCommand.NEWGAME);
 
     stageManager.setupStages(this);
 
+    backgroundImage = ImageHelper.load(this,
+            "src/main/resources/pictures/cards/background_stages.png");
+    ImageComponent background = new ImageComponent(backgroundImage);
+    layers.add(background, CardLayer.BACKGROUND_LAYER);
+
+    ImageComponent shelf = new ImageComponent(ImageHelper.loadAndResize(this,
+            "src/main/resources/pictures/stages/shelf_wood.png", 220, 80), 270, 150);
+    layers.add(shelf, CardLayer.CONTENT_LAYER);
+
+    headerLabel.setForeground(Color.BLACK);
+    layers.setLayer(headerLabel, CardLayer.IMAGE_LAYER);
+
+    TransparentBox headerBox = new TransparentBox(0.6f, 10, 5, 470, 75);
+    headerBox.setBackground(Color.WHITE);
+    layers.add(headerBox, CardLayer.BOX_LAYER);
+
+    objectiveLabel.setDisabledTextColor(Color.BLACK);
+    layers.setLayer(objectivePane, CardLayer.CONTENT_LAYER);
+    
+    TransparentBox objectiveBox = new TransparentBox(0.8f, 135, 120, 354, 279);
+    objectiveBox.setBackground(Color.DARK_GRAY);
+    layers.add(objectiveBox, CardLayer.BOX_LAYER);
+
+    mainButton.setActionCommand(ActionCommand.SHOWOPENING);
+    mainButton.setForeground(Color.BLACK);
+    layers.setLayer(mainButton, CardLayer.CONTENT_LAYER);
+
+    playButton.setActionCommand(ActionCommand.NEWGAME);
+    playButton.setForeground(Color.BLACK);
+    layers.setLayer(playButton, CardLayer.CONTENT_LAYER);
+
+    previousButton.setActionCommand(ActionCommand.NEWGAME);
+    previousButton.setForeground(Color.BLACK);
+    layers.setLayer(previousButton, CardLayer.CONTENT_LAYER);
+
+    nextButton.setActionCommand(ActionCommand.NEWGAME);
+    nextButton.setForeground(Color.BLACK);
+    layers.setLayer(nextButton, CardLayer.CONTENT_LAYER);
+
     updateStageValues();
   }
-  
-  public void addActionListener(ActionListener listener){
+
+  public void addActionListener(ActionListener listener) {
     mainButton.addActionListener(listener);
     playButton.addActionListener(listener);
   }
 
   private void updateStageValues() {
-    previousButton.setVisible(!stageManager.getCurrentStage().isFirstStage());
-    nextButton.setVisible(stageManager.getCurrentStage().isNextStageUnlocked());
-  }
-  
-  public void listenToGameOver(@Observes @GameOver long highscore) {
-    //@TODO show game score on game over 
+    previousButton.setVisible(!stageManager.getCurrentStage().
+            isFirstStage());
+    nextButton.setVisible(stageManager.getCurrentStage().
+            isNextStageUnlocked());
+
+    // Stage imgage
+    ImageComponent stageImage = new ImageComponent(stageManager.getCurrentStage().
+            getStageImage(), 10, 150);
+    layers.add(stageImage, CardLayer.IMAGE_LAYER);
+
+    // Medals
+    ImageComponent medalBronze = new ImageComponent(ImageHelper.
+            loadAndResizeHeight(this,
+            "src/main/resources/pictures/stages/medal_bronze.png", 70), 425, 155);
+    layers.add(medalBronze, CardLayer.IMAGE_LAYER);
+
+    ImageComponent medalSilver = new ImageComponent(ImageHelper.
+            loadAndResizeHeight(this,
+            "src/main/resources/pictures/stages/medal_silver.png", 70), 355, 155);
+    layers.add(medalSilver, CardLayer.IMAGE_LAYER);
+
+    ImageComponent medalGold = new ImageComponent(ImageHelper.
+            loadAndResizeHeight(this,
+            "src/main/resources/pictures/stages/medal_gold.png", 70), 285, 155);
+    layers.add(medalGold, CardLayer.IMAGE_LAYER);
+
+    headerLabel.setText("Stage - " + stageManager.getCurrentStage().
+            getStageName());
+    
+    objectiveLabel.setText(stageManager.getCurrentStage().getStageObjective());
   }
 
-  @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    g.drawImage(stageManager.getCurrentStage().getStageImage(), 12, 146, null);
+  public void listenToGameOver(@Observes @GameOver long highscore) {
+    //@TODO show game score on game over 
   }
 
   /** This method is called from within the constructor to
@@ -67,20 +134,29 @@ public class StagesCard extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        layers = new javax.swing.JLayeredPane();
         headerLabel = new javax.swing.JLabel();
         nextButton = new javax.swing.JButton();
         previousButton = new javax.swing.JButton();
         mainButton = new javax.swing.JButton();
         playButton = new javax.swing.JButton();
-        jLayeredPane1 = new javax.swing.JLayeredPane();
+        objectivePane = new javax.swing.JScrollPane();
+        objectiveLabel = new javax.swing.JTextArea();
 
         setMaximumSize(new java.awt.Dimension(500, 600));
+        setLayout(new java.awt.BorderLayout());
 
-        headerLabel.setFont(new java.awt.Font("Kristen ITC", 0, 48));
+        layers.setAlignmentX(0.0F);
+        layers.setAlignmentY(0.0F);
+        layers.setPreferredSize(new java.awt.Dimension(500, 600));
+
+        headerLabel.setFont(new java.awt.Font("Kristen ITC", 0, 48)); // NOI18N
         headerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         headerLabel.setText("Stage");
+        headerLabel.setBounds(11, 10, 480, 66);
+        layers.add(headerLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        nextButton.setFont(new java.awt.Font("Kristen ITC", 0, 18)); // NOI18N
+        nextButton.setFont(new java.awt.Font("Kristen ITC", 0, 18));
         nextButton.setText("Next Stage");
         nextButton.setBorder(null);
         nextButton.setBorderPainted(false);
@@ -94,6 +170,8 @@ public class StagesCard extends javax.swing.JPanel {
                 nextButtonMouseExited(evt);
             }
         });
+        nextButton.setBounds(390, 570, 98, 25);
+        layers.add(nextButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         previousButton.setFont(new java.awt.Font("Kristen ITC", 0, 18));
         previousButton.setText("Previous Stage");
@@ -109,8 +187,10 @@ public class StagesCard extends javax.swing.JPanel {
                 previousButtonMouseExited(evt);
             }
         });
+        previousButton.setBounds(10, 570, 130, 25);
+        layers.add(previousButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        mainButton.setFont(new java.awt.Font("Kristen ITC", 0, 18)); // NOI18N
+        mainButton.setFont(new java.awt.Font("Kristen ITC", 0, 18));
         mainButton.setText("Main-Menu");
         mainButton.setActionCommand("SHOWOPENING");
         mainButton.setBorder(null);
@@ -125,6 +205,8 @@ public class StagesCard extends javax.swing.JPanel {
                 mainButtonMouseExited(evt);
             }
         });
+        mainButton.setBounds(190, 570, 102, 25);
+        layers.add(mainButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         playButton.setFont(new java.awt.Font("Kristen ITC", 0, 36)); // NOI18N
         playButton.setText("Play Stage");
@@ -138,49 +220,30 @@ public class StagesCard extends javax.swing.JPanel {
                 playButtonMouseExited(evt);
             }
         });
+        playButton.setBounds(0, 400, 240, 57);
+        layers.add(playButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLayeredPane1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        objectivePane.setBorder(null);
+        objectivePane.setOpaque(false);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(headerLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(previousButton)
-                                .addGap(69, 69, 69)
-                                .addComponent(mainButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
-                                .addComponent(nextButton))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(playButton)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(headerLabel)
-                .addGap(64, 64, 64)
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(playButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nextButton)
-                    .addComponent(previousButton)
-                    .addComponent(mainButton))
-                .addContainerGap())
-        );
+        objectiveLabel.setColumns(1);
+        objectiveLabel.setEditable(false);
+        objectiveLabel.setFont(new java.awt.Font("Kristen ITC", 0, 14)); // NOI18N
+        objectiveLabel.setLineWrap(true);
+        objectiveLabel.setRows(5);
+        objectiveLabel.setText("123");
+        objectiveLabel.setToolTipText("");
+        objectiveLabel.setWrapStyleWord(true);
+        objectiveLabel.setAutoscrolls(false);
+        objectiveLabel.setBorder(null);
+        objectiveLabel.setEnabled(false);
+        objectiveLabel.setOpaque(false);
+        objectivePane.setViewportView(objectiveLabel);
+
+        objectivePane.setBounds(280, 250, 200, 140);
+        layers.add(objectivePane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        add(layers, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
   private void mainButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainButtonMouseEntered
@@ -218,9 +281,11 @@ public class StagesCard extends javax.swing.JPanel {
   }//GEN-LAST:event_playButtonMouseExited
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel headerLabel;
-    private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JLayeredPane layers;
     private javax.swing.JButton mainButton;
     private javax.swing.JButton nextButton;
+    private javax.swing.JTextArea objectiveLabel;
+    private javax.swing.JScrollPane objectivePane;
     private javax.swing.JButton playButton;
     private javax.swing.JButton previousButton;
     // End of variables declaration//GEN-END:variables

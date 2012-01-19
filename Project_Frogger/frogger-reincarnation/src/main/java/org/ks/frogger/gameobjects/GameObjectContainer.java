@@ -42,8 +42,8 @@ public class GameObjectContainer {
   @PostConstruct
   public void initialize() {
     this.border = new FigureContainer<>();
-    this.mobileGameObjectList = new FigureContainer<>();
     this.immobileFigureList = new FigureContainer<>();
+    this.mobileGameObjectList = new FigureContainer<>();
     this.frogNestList = new ArrayList<>(5);
   }
 
@@ -94,12 +94,12 @@ public class GameObjectContainer {
   }
 
   public void draw(Graphics g) {
+    border.draw(g);
+    immobileFigureList.draw(g);
     if (frogger != null) {
       frogger.draw(g);
     }
-    border.draw(g);
     mobileGameObjectList.draw(g);
-    immobileFigureList.draw(g);
   }
 
   public void clear() {

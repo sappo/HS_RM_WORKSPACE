@@ -1,9 +1,11 @@
 package org.ks.frogger;
 
-import java.awt.BorderLayout;
+import com.google.code.facebookapi.FacebookApiUrls;
+import com.google.code.facebookapi.FacebookException;
+import com.google.code.facebookapi.FacebookJsonRestClient;
+import com.google.code.facebookapi.Permission;
 import java.awt.CardLayout;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -15,11 +17,10 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import org.apache.commons.collections.CollectionUtils;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.ks.frogger.cards.GameCard;
 import org.ks.frogger.cards.HighscoreCard;
@@ -30,7 +31,12 @@ import org.ks.frogger.gameobjects.GameObjectContainer;
 import org.ks.frogger.manager.GameManager;
 import org.ks.frogger.manager.Highscore;
 import org.ks.frogger.manager.HighscoreManager;
+import org.ks.frogger.stages.StageManager;
 
+/**
+ * Main frame off the game.
+ * @author Kevin Sapper 2012
+ */
 @Singleton
 public class Main extends JFrame implements ActionListener {
 
@@ -43,9 +49,10 @@ public class Main extends JFrame implements ActionListener {
   @Inject
   private HighscoreManager highscoreManager;
 
-  private Container mainCards;
+  @Inject
+  private StageManager stageManager;
 
-  private Container levelCards;
+  private Container mainCards;
 
   private OpeningCard openingCard;
 
@@ -54,8 +61,6 @@ public class Main extends JFrame implements ActionListener {
 
   @Inject
   private GameCard gameCard;
-
-  private JPanel gameMetaInfoPanel;
 
   private HighscoreCard highscoreCard;
 
@@ -67,13 +72,13 @@ public class Main extends JFrame implements ActionListener {
   }
 
   public void main(@Observes ContainerInitialized event) {
-    setVisible(true);
+    setTitle("Frogger Reincarnation © Kevin Sapper");
+    setResizable(false);
     setLayout(new CardLayout());
-//    setPreferredSize(new Dimension(500, 600));
-
+    // Center frame
+    setLocationRelativeTo(null);
 
     mainCards = getContentPane();
-    levelCards = new JPanel(new CardLayout());
 
     initOpeningCard();
     initGameCard();
@@ -82,6 +87,8 @@ public class Main extends JFrame implements ActionListener {
     initTimer();
 
     switchToCard(openingCard);
+
+    setVisible(true);
   }
 
   private void initTimer() {
@@ -156,8 +163,6 @@ public class Main extends JFrame implements ActionListener {
     }
 
     switchToCard(gameCard);
-    gamePanel.requestFocus();
-//    switchToGamePanel();
 
     repaintTimer.start();
   }
@@ -173,21 +178,9 @@ public class Main extends JFrame implements ActionListener {
     if (gameManager.isRunning()) {
       endGame();
     }
-    List<Highscore> topTen = highscoreManager.getTopTen();
-    for (int i = 0; i < topTen.size(); i++) {
-      Highscore highscore = topTen.get(i);
-
-      JLabel name = new JLabel(highscore.getName());
-      name.setBounds(86, 162 + (40 * i), 250, 40);
-      name.setFont(new Font("Kristen ITC", Font.PLAIN, 20));
-
-      JLabel score = new JLabel(String.valueOf(highscore.getHighscore()));
-      score.setBounds(316, 162 + (40 * i), 90, 40);
-      score.setHorizontalAlignment(SwingConstants.RIGHT);
-      score.setFont(new Font("Kristen ITC", Font.PLAIN, 20));
-
-      highscoreCard.add(name);
-      highscoreCard.add(score);
+    List<Highscore> topTen = highscoreManager.getTopTen(1);
+    if (CollectionUtils.isNotEmpty(topTen)) {
+      highscoreCard.updateHighscore(topTen);
     }
     switchToCard(highscoreCard);
   }
@@ -201,7 +194,8 @@ public class Main extends JFrame implements ActionListener {
   private void endGame() {
     repaintTimer.stop();
     gameManager.endGame();
-    if (highscoreManager.isInTopTen()) {
+    if (highscoreManager.isInTopTen(stageManager.getCurrentStage().
+            getStageNo())) {
       String name = JOptionPane.showInputDialog(
               "Enter your name for the highscore!");
       highscoreManager.submitHighscore(name);
@@ -217,18 +211,7 @@ public class Main extends JFrame implements ActionListener {
   private void switchToCard(JPanel panel) {
     CardLayout cardLayout = (CardLayout) mainCards.getLayout();
     cardLayout.show(mainCards, panel.getName());
-//    getContentPane().removeAll();
-//    add(panel);
-//    panel.repaint();
-//    panel.requestFocus();
-    pack();
-  }
-
-  private void switchToGamePanel() {
-    getContentPane().removeAll();;
-    add(gameCard, BorderLayout.CENTER);
-    add(gameMetaInfoPanel, BorderLayout.NORTH);
-    gameCard.requestFocus();
+    System.out.println(panel);
     pack();
   }
 }

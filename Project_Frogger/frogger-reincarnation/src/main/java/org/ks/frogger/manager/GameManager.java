@@ -13,6 +13,7 @@ import org.ks.frogger.events.FroggerDeath;
 import org.ks.frogger.events.GameOver;
 import org.ks.frogger.events.LifeUpdate;
 import org.ks.frogger.events.TimeOut;
+import org.ks.frogger.factory.GameObjectFactory;
 import org.ks.frogger.gameobjects.FrogNest;
 import org.ks.frogger.gameobjects.Frogger;
 import org.ks.frogger.gameobjects.GameObject;
@@ -38,10 +39,6 @@ public class GameManager implements KeyListener {
   private static final int DOWN = 40;
 
   private static final int ESC = 27;
-
-  private static final Vector froggerStartPos = new Vector(215, 510);
-
-  private static final Vector froggerSize = new Vector(30, 30);
 
   private GameMode gameMode;
 
@@ -77,15 +74,6 @@ public class GameManager implements KeyListener {
   public void initialize() {
   }
 
-  private Frogger createFroggerAtStartPos() {
-    return Frogger.newInstanceAtStart(
-            new Rectangle(froggerStartPos, froggerSize));
-  }
-
-  private Frogger createFroggerInNest(FrogNest nest) {
-    return Frogger.newInstanceInNest(froggerSize, nest);
-  }
-
   /**
    * Starts a new game.
    *  @param frame the frame to start the game on
@@ -93,11 +81,13 @@ public class GameManager implements KeyListener {
   public KeyListener startGame(Dimension gamePanelSize) {
     gameObjectContainer.addBorder(gamePanelSize.height, gamePanelSize.width);
 
-    gameObjectContainer.addFrogger(createFroggerAtStartPos());
+//    gameObjectContainer.addFrogger(createFroggerAtStartPos());
 
     Stage currentStage = stageManager.getCurrentStage();
     gameMode = currentStage.getGameMode();
     remainingLives = currentStage.getPlayerLives();
+    
+    stageManager.initializeCurrentStage();
 
     lifeUpdateEvent.fire(remainingLives);
 
@@ -146,7 +136,7 @@ public class GameManager implements KeyListener {
           listenToFroggerDeath(death);
           break;
         case TIME:
-          gameOverEvent.fire(highscoreManager.getHighScore());
+          gameOverEvent.fire(savedFroggers);
           break;
       }
     }
@@ -159,19 +149,20 @@ public class GameManager implements KeyListener {
         if (savedFroggers < 5) {
           FrogNest nest = (FrogNest) triggeringObject;
           // adds an surviving Frogger to the nest.
-          nest.addInvader(createFroggerInNest(nest));
+          nest.addInvader(GameObjectFactory.createFroggerInNest(nest));
           gameObjectContainer.resetFrogger();
-          highscoreManager.updateHighscore(timeManager.getLevelDelay(),
+          highscoreManager.updateSurvivalHighscore(timeManager.getLevelDelay(),
                   timeManager.getElapsedSeconds(), currentLevel);
           timeManager.restartTimer();
           System.out.println("Froggers left to save " + (5 - savedFroggers));
         } else {
-          highscoreManager.updateHighscore(30, 5, currentLevel);
+          highscoreManager.updateSurvivalHighscore(30, 5, currentLevel);
           prepareNextLevel();
           System.out.println("Level " + currentLevel);
         }
         break;
       case TIME:
+        highscoreManager.updateTimeHighscore();
         gameObjectContainer.resetFrogger();
         break;
     }
@@ -187,9 +178,7 @@ public class GameManager implements KeyListener {
   }
 
   public void keyReleased(KeyEvent e) {
-    if (!running) {
       handleKeyInput(e.getKeyCode());
-    }
   }
 
   private void handleKeyInput(int keyCode) {
