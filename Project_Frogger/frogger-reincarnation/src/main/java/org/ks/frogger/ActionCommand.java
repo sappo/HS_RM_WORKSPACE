@@ -1,17 +1,34 @@
 package org.ks.frogger;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  *
  * @author Kevin Sapper 2011
  */
-public class ActionCommand {
-  public static final String NEWGAME = "newGame";
-  public static final String STOPGAME = "stopGame";
-  public static final String EXIT = "exit";
-  public static final String TIMEUP = "timeUp";
-  public static final String TIMEUPDATE = "timeUpdate";
-  public static final String SHOWHIGHSCORE = "showHighscore";
-  public static final String SHOWOPENING = "showOpening";
-  public static final String SHOWSTAGES = "showStages";
-  
+public enum ActionCommand {
+
+    NEWGAME("newGame"), STOPGAME("stopGame"), EXIT("exit"), TIMEUP("timeUp"),
+    TIMEUPDATE("timeUpdate"), SHOWHIGHSCORE("showHighscore"),
+    SHOWOPENING("showOpening"), SHOWSTAGES("showStages");
+
+    private String command;
+
+    private ActionCommand(String command) {
+        this.command = command;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public static ActionCommand getActionCommand(String command) {
+        ActionCommand result = null;
+        for (ActionCommand actionCommand : ActionCommand.values()) {
+            if (StringUtils.equals(actionCommand.getCommand(), command)) {
+                result = actionCommand;
+            }
+        }
+        return result;
+    }
 }

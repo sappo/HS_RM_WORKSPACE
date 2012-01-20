@@ -41,10 +41,10 @@ public class GameObjectContainer {
 
   @PostConstruct
   public void initialize() {
-    this.border = new FigureContainer<>();
-    this.immobileFigureList = new FigureContainer<>();
-    this.mobileGameObjectList = new FigureContainer<>();
-    this.frogNestList = new ArrayList<>(5);
+    this.border = new FigureContainer<GameObject>();
+    this.immobileFigureList = new FigureContainer<GameObject>();
+    this.mobileGameObjectList = new FigureContainer<GameObject>();
+    this.frogNestList = new ArrayList<FrogNest>(5);
   }
 
   /**

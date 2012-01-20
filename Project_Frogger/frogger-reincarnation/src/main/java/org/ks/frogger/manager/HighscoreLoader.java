@@ -28,7 +28,7 @@ public class HighscoreLoader {
   private static final String LINEBREAK = "\n";
 
   public Map<Integer, List<Highscore>> loadHighscore() throws IOException {
-    Map<Integer, List<Highscore>> highscoreList = new HashMap<>();
+    Map<Integer, List<Highscore>> highscoreList = new HashMap<Integer, List<Highscore>>();
 
     if (getHighscoreFile().
             exists()) {
@@ -40,7 +40,7 @@ public class HighscoreLoader {
           highscoreList.get(key).
                   add(new Highscore(line[1], Long.parseLong(line[2])));
         } else {
-          List<Highscore> scores = new ArrayList<>();
+          List<Highscore> scores = new ArrayList<Highscore>();
           scores.add(new Highscore(line[1], Long.parseLong(line[2])));
           highscoreList.put(key, scores);
         }

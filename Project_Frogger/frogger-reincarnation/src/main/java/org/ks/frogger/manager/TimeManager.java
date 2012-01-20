@@ -47,18 +47,17 @@ public class TimeManager implements ActionListener {
         stopwatch = new Stopwatch();
 
         timer = new Timer((int) delay, this);
-        timer.setActionCommand(ActionCommand.TIMEUP);
+        timer.setActionCommand(ActionCommand.TIMEUP.getCommand());
 
         timeUpdateTimer = new Timer(1000, this);
         timeUpdateTimer.setInitialDelay(0);
-        timeUpdateTimer.setActionCommand(ActionCommand.TIMEUPDATE);
+        timeUpdateTimer.setActionCommand(ActionCommand.TIMEUPDATE.getCommand());
     }
 
-    
     public void startTimer(long triggerDelay) {
-     //@TODO: 
+        //@TODO: 
     }
-    
+
     /**
      * 
      * @param actionListener
@@ -160,12 +159,12 @@ public class TimeManager implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        switch (event.getActionCommand()) {
-            case ActionCommand.TIMEUP:
+        switch (ActionCommand.getActionCommand(event.getActionCommand())) {
+            case TIMEUP:
                 deathEvent.fire(new FroggerDeath(FroggerDeath.TIMEUP));
                 break;
-            case ActionCommand.TIMEUPDATE:
-                timeUpdateEvent.fire(new TimeData(getLevelDelay(),getRemainingTime()));
+            case TIMEUPDATE:
+                timeUpdateEvent.fire(new TimeData(getLevelDelay(), getRemainingTime()));
                 break;
         }
     }

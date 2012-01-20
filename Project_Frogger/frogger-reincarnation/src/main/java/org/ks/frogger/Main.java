@@ -1,9 +1,5 @@
 package org.ks.frogger;
 
-import com.google.code.facebookapi.FacebookApiUrls;
-import com.google.code.facebookapi.FacebookException;
-import com.google.code.facebookapi.FacebookJsonRestClient;
-import com.google.code.facebookapi.Permission;
 import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -40,178 +36,178 @@ import org.ks.frogger.stages.StageManager;
 @Singleton
 public class Main extends JFrame implements ActionListener {
 
-  @Inject
-  private GameManager gameManager;
+    @Inject
+    private GameManager gameManager;
 
-  @Inject
-  private GameObjectContainer gameObjectContainer;
+    @Inject
+    private GameObjectContainer gameObjectContainer;
 
-  @Inject
-  private HighscoreManager highscoreManager;
+    @Inject
+    private HighscoreManager highscoreManager;
 
-  @Inject
-  private StageManager stageManager;
+    @Inject
+    private StageManager stageManager;
 
-  private Container mainCards;
+    private Container mainCards;
 
-  private OpeningCard openingCard;
+    private OpeningCard openingCard;
 
-  @Inject
-  private StagesCard stagesCard;
+    @Inject
+    private StagesCard stagesCard;
 
-  @Inject
-  private GameCard gameCard;
+    @Inject
+    private GameCard gameCard;
 
-  private HighscoreCard highscoreCard;
+    private HighscoreCard highscoreCard;
 
-  private Timer repaintTimer;
+    private Timer repaintTimer;
 
-  @PostConstruct
-  public void postConstruct() {
-    System.out.println("post-construct");
-  }
+    @PostConstruct
+    public void postConstruct() {
+        System.out.println("post-construct");
+    }
 
-  public void main(@Observes ContainerInitialized event) {
-    setTitle("Frogger Reincarnation © Kevin Sapper");
-    setResizable(false);
-    setLayout(new CardLayout());
-    // Center frame
-    setLocationRelativeTo(null);
+    public void main(@Observes ContainerInitialized event) {
+        setTitle("Frogger Reincarnation © Kevin Sapper");
+        setResizable(false);
+        setLayout(new CardLayout());
+        // Center frame
+        setLocationRelativeTo(null);
 
-    mainCards = getContentPane();
+        mainCards = getContentPane();
 
-    initOpeningCard();
-    initGameCard();
-    initStagesCard();
-    initHighscoreCard();
-    initTimer();
+        initOpeningCard();
+        initGameCard();
+        initStagesCard();
+        initHighscoreCard();
+        initTimer();
 
-    switchToCard(openingCard);
-
-    setVisible(true);
-  }
-
-  private void initTimer() {
-    repaintTimer = new Timer(50, new ActionListener() {
-
-      public void actionPerformed(ActionEvent e) {
-        if (gameManager.isRunning()) {
-          gameObjectContainer.moveFigures();
-        }
-        repaint();
-      }
-    });
-  }
-
-  private void initOpeningCard() {
-    openingCard = new OpeningCard(this);
-    mainCards.add(openingCard, openingCard.getName());
-  }
-
-  private void initGameCard() {
-    gameCard.setName("gameCard");
-    mainCards.add(gameCard, gameCard.getName());
-  }
-
-  private void initStagesCard() {
-    stagesCard.addActionListener(this);
-    stagesCard.setName("stagesCard");
-    mainCards.add(stagesCard, stagesCard.getName());
-  }
-
-  private void initHighscoreCard() {
-    highscoreCard = new HighscoreCard(this);
-    mainCards.add(highscoreCard, highscoreCard.getName());
-  }
-
-  @Override
-  public void actionPerformed(ActionEvent event) {
-    switch (event.getActionCommand()) {
-      case ActionCommand.NEWGAME:
-        actionNewGame(event);
-        break;
-      case ActionCommand.STOPGAME:
-        actionEndGame(event);
-        break;
-      case ActionCommand.SHOWHIGHSCORE:
-        actionShowHighscore(event);
-        break;
-      case ActionCommand.SHOWOPENING:
         switchToCard(openingCard);
-        break;
-      case ActionCommand.SHOWSTAGES:
+
+        setVisible(true);
+    }
+
+    private void initTimer() {
+        repaintTimer = new Timer(50, new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (gameManager.isRunning()) {
+                    gameObjectContainer.moveFigures();
+                }
+                repaint();
+            }
+        });
+    }
+
+    private void initOpeningCard() {
+        openingCard = new OpeningCard(this);
+        mainCards.add(openingCard, openingCard.getName());
+    }
+
+    private void initGameCard() {
+        gameCard.setName("gameCard");
+        mainCards.add(gameCard, gameCard.getName());
+    }
+
+    private void initStagesCard() {
+        stagesCard.addActionListener(this);
+        stagesCard.setName("stagesCard");
+        mainCards.add(stagesCard, stagesCard.getName());
+    }
+
+    private void initHighscoreCard() {
+        highscoreCard = new HighscoreCard(this);
+        mainCards.add(highscoreCard, highscoreCard.getName());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        switch (ActionCommand.getActionCommand(event.getActionCommand())) {
+            case NEWGAME:
+                actionNewGame(event);
+                break;
+            case STOPGAME:
+                actionEndGame(event);
+                break;
+            case SHOWHIGHSCORE:
+                actionShowHighscore(event);
+                break;
+            case SHOWOPENING:
+                switchToCard(openingCard);
+                break;
+            case SHOWSTAGES:
+                switchToCard(stagesCard);
+                break;
+            case EXIT:
+                System.exit(0);
+                break;
+        }
+    }
+
+    private void actionNewGame(ActionEvent event) {
+        JPanel gamePanel = gameCard.getGamePanel();
+        KeyListener listener = gameManager.startGame(gamePanel.getPreferredSize());
+
+        boolean addListener = true;
+        for (KeyListener keyListener : gamePanel.getKeyListeners()) {
+            if (keyListener.equals(listener)) {
+                addListener = false;
+            }
+        }
+        if (addListener) {
+            gamePanel.addKeyListener(listener);
+        }
+
+        switchToCard(gameCard);
+
+        repaintTimer.start();
+    }
+
+    private void actionEndGame(ActionEvent event) {
+        if (gameManager.isRunning()) {
+            endGame();
+        }
+        switchToCard(openingCard);
+    }
+
+    private void actionShowHighscore(ActionEvent event) {
+        if (gameManager.isRunning()) {
+            endGame();
+        }
+        List<Highscore> topTen = highscoreManager.getTopTen(1);
+        if (CollectionUtils.isNotEmpty(topTen)) {
+            highscoreCard.updateHighscore(topTen);
+        }
+        switchToCard(highscoreCard);
+    }
+
+    public void listenToGameOver(@Observes @GameOver Long score) {
+        endGame();
+        System.out.println("Game over! Score" + score);
         switchToCard(stagesCard);
-        break;
-      case ActionCommand.EXIT:
-        System.exit(0);
-        break;
-    }
-  }
-
-  private void actionNewGame(ActionEvent event) {
-    JPanel gamePanel = gameCard.getGamePanel();
-    KeyListener listener = gameManager.startGame(gamePanel.getPreferredSize());
-
-    boolean addListener = true;
-    for (KeyListener keyListener : gamePanel.getKeyListeners()) {
-      if (keyListener.equals(listener)) {
-        addListener = false;
-      }
-    }
-    if (addListener) {
-      gamePanel.addKeyListener(listener);
     }
 
-    switchToCard(gameCard);
+    private void endGame() {
+        repaintTimer.stop();
+        gameManager.endGame();
+        if (highscoreManager.isInTopTen(stageManager.getCurrentStage().
+                getStageNo())) {
+            String name = JOptionPane.showInputDialog(
+                    "Enter your name for the highscore!");
+            highscoreManager.submitHighscore(name);
+        }
 
-    repaintTimer.start();
-  }
-
-  private void actionEndGame(ActionEvent event) {
-    if (gameManager.isRunning()) {
-      endGame();
-    }
-    switchToCard(openingCard);
-  }
-
-  private void actionShowHighscore(ActionEvent event) {
-    if (gameManager.isRunning()) {
-      endGame();
-    }
-    List<Highscore> topTen = highscoreManager.getTopTen(1);
-    if (CollectionUtils.isNotEmpty(topTen)) {
-      highscoreCard.updateHighscore(topTen);
-    }
-    switchToCard(highscoreCard);
-  }
-
-  public void listenToGameOver(@Observes @GameOver Long score) {
-    endGame();
-    System.out.println("Game over! Score" + score);
-    switchToCard(stagesCard);
-  }
-
-  private void endGame() {
-    repaintTimer.stop();
-    gameManager.endGame();
-    if (highscoreManager.isInTopTen(stageManager.getCurrentStage().
-            getStageNo())) {
-      String name = JOptionPane.showInputDialog(
-              "Enter your name for the highscore!");
-      highscoreManager.submitHighscore(name);
     }
 
-  }
+    @PreDestroy
+    public void preDestroy() {
+        System.out.println("pre-destroy");
+    }
 
-  @PreDestroy
-  public void preDestroy() {
-    System.out.println("pre-destroy");
-  }
-
-  private void switchToCard(JPanel panel) {
-    CardLayout cardLayout = (CardLayout) mainCards.getLayout();
-    cardLayout.show(mainCards, panel.getName());
-    System.out.println(panel);
-    pack();
-  }
+    private void switchToCard(JPanel panel) {
+        CardLayout cardLayout = (CardLayout) mainCards.getLayout();
+        cardLayout.show(mainCards, panel.getName());
+        System.out.println(panel);
+        pack();
+    }
 }

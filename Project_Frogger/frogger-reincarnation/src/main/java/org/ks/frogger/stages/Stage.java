@@ -159,7 +159,7 @@ public class Stage {
       this.stageNo = stageNo;
       this.gameMode = gameMode;
       this.highscore = 0;
-      this.stageRowList = new ArrayList<>();
+      this.stageRowList = new ArrayList<StageRow>();
     }
 
     public Builder addStageRow(StageRow stageRow) {

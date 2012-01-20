@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+    spec="1.0+"
+    codebase="file:///C:/ProjectFrogger/HS_RM_WORKSPACE/Project_Frogger/frogger-reincarnation/target/jnlp"
+    href="frogger-reincarnation.jnlp">
+    <information>
+        <title>frogger-reincarnation</title>
+        <homepage href="http://maven.apache.org"/>
+        <vendor>Kevin Sapper</vendor>
+        <homepage href="homepage.html"/>
+        <description></description>
+        <icon href="default"/>
+        <offline-allowed/>
+        <shortcut online="true"/>
+    </information>
+  
+    <security>
+        <all-permissions/>
+    </security>
+  
+    <resources>
+        <j2se version="1.7+" href="http://java.sun.com/products/autodl/j2se"/>
+         
+        <jar href="frogger-reincarnation-1.0-SNAPSHOT.jar" main="true"/>
+        <jar href="lib/commons-lang-2.6.jar"/>
+        <jar href="lib/commons-io-2.1.jar"/>
+        <jar href="lib/commons-logging-1.0.4.jar"/>
+        <jar href="lib/guava-10.0.1.jar"/>
+        <jar href="lib/weld-se-1.1.4.Final.jar"/>
+        <jar href="lib/game-commons-1.0-SNAPSHOT.jar"/>
+        <jar href="lib/commons-cli-1.0.jar"/>
+
+     $extensions
+    </resources>
+    <application-desc main-class="org.jboss.weld.environment.se.StartMain"/>
+</jnlp>
+

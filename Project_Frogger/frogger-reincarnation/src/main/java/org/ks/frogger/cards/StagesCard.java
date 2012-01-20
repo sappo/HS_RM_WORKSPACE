@@ -27,110 +27,107 @@ import org.ks.frogger.stages.StageManager;
 @Singleton
 public class StagesCard extends javax.swing.JPanel {
 
-  @Inject
-  private StageManager stageManager;
+    @Inject
+    private StageManager stageManager;
 
-  private Image backgroundImage;
+    private Image backgroundImage;
 
-  static {
-  }
+    static {
+    }
 
-  @PostConstruct
-  public void initialize() {
-    initComponents();
+    @PostConstruct
+    public void initialize() {
+        initComponents();
 
-    stageManager.setupStages(this);
+        stageManager.setupStages(this);
+        backgroundImage = ImageHelper.load("/pictures/cards/background_stages.png");
+        ImageComponent background = new ImageComponent(backgroundImage);
+        layers.add(background, CardLayer.BACKGROUND_LAYER);
 
-    backgroundImage = ImageHelper.load(this,
-            "src/main/resources/pictures/cards/background_stages.png");
-    ImageComponent background = new ImageComponent(backgroundImage);
-    layers.add(background, CardLayer.BACKGROUND_LAYER);
+        ImageComponent shelf = new ImageComponent(
+                ImageHelper.loadAndResize("/pictures/stages/shelf_wood.png", 220, 80), 270, 150);
+        layers.add(shelf, CardLayer.CONTENT_LAYER);
 
-    ImageComponent shelf = new ImageComponent(ImageHelper.loadAndResize(this,
-            "src/main/resources/pictures/stages/shelf_wood.png", 220, 80), 270, 150);
-    layers.add(shelf, CardLayer.CONTENT_LAYER);
+        headerLabel.setForeground(Color.BLACK);
+        layers.setLayer(headerLabel, CardLayer.IMAGE_LAYER);
 
-    headerLabel.setForeground(Color.BLACK);
-    layers.setLayer(headerLabel, CardLayer.IMAGE_LAYER);
+        TransparentBox headerBox = new TransparentBox(0.6f, 10, 5, 470, 75);
+        headerBox.setBackground(Color.WHITE);
+        layers.add(headerBox, CardLayer.BOX_LAYER);
 
-    TransparentBox headerBox = new TransparentBox(0.6f, 10, 5, 470, 75);
-    headerBox.setBackground(Color.WHITE);
-    layers.add(headerBox, CardLayer.BOX_LAYER);
+        objectiveLabel.setDisabledTextColor(Color.BLACK);
+        layers.setLayer(objectivePane, CardLayer.CONTENT_LAYER);
 
-    objectiveLabel.setDisabledTextColor(Color.BLACK);
-    layers.setLayer(objectivePane, CardLayer.CONTENT_LAYER);
-    
-    TransparentBox objectiveBox = new TransparentBox(0.8f, 135, 120, 354, 279);
-    objectiveBox.setBackground(Color.DARK_GRAY);
-    layers.add(objectiveBox, CardLayer.BOX_LAYER);
+        TransparentBox objectiveBox = new TransparentBox(0.8f, 135, 120, 354, 279);
+        objectiveBox.setBackground(Color.DARK_GRAY);
+        layers.add(objectiveBox, CardLayer.BOX_LAYER);
 
-    mainButton.setActionCommand(ActionCommand.SHOWOPENING);
-    mainButton.setForeground(Color.BLACK);
-    layers.setLayer(mainButton, CardLayer.CONTENT_LAYER);
+        mainButton.setActionCommand(ActionCommand.SHOWOPENING.getCommand());
+        mainButton.setForeground(Color.BLACK);
+        layers.setLayer(mainButton, CardLayer.CONTENT_LAYER);
 
-    playButton.setActionCommand(ActionCommand.NEWGAME);
-    playButton.setForeground(Color.BLACK);
-    layers.setLayer(playButton, CardLayer.CONTENT_LAYER);
+        playButton.setActionCommand(ActionCommand.NEWGAME.getCommand());
+        playButton.setForeground(Color.BLACK);
+        layers.setLayer(playButton, CardLayer.CONTENT_LAYER);
 
-    previousButton.setActionCommand(ActionCommand.NEWGAME);
-    previousButton.setForeground(Color.BLACK);
-    layers.setLayer(previousButton, CardLayer.CONTENT_LAYER);
+        previousButton.setActionCommand(ActionCommand.NEWGAME.getCommand());
+        previousButton.setForeground(Color.BLACK);
+        layers.setLayer(previousButton, CardLayer.CONTENT_LAYER);
 
-    nextButton.setActionCommand(ActionCommand.NEWGAME);
-    nextButton.setForeground(Color.BLACK);
-    layers.setLayer(nextButton, CardLayer.CONTENT_LAYER);
+        nextButton.setActionCommand(ActionCommand.NEWGAME.getCommand());
+        nextButton.setForeground(Color.BLACK);
+        layers.setLayer(nextButton, CardLayer.CONTENT_LAYER);
 
-    updateStageValues();
-  }
+        updateStageValues();
+    }
 
-  public void addActionListener(ActionListener listener) {
-    mainButton.addActionListener(listener);
-    playButton.addActionListener(listener);
-  }
+    public void addActionListener(ActionListener listener) {
+        mainButton.addActionListener(listener);
+        playButton.addActionListener(listener);
+    }
 
-  private void updateStageValues() {
-    previousButton.setVisible(!stageManager.getCurrentStage().
-            isFirstStage());
-    nextButton.setVisible(stageManager.getCurrentStage().
-            isNextStageUnlocked());
+    private void updateStageValues() {
+        previousButton.setVisible(!stageManager.getCurrentStage().
+                isFirstStage());
+        nextButton.setVisible(stageManager.getCurrentStage().
+                isNextStageUnlocked());
 
-    // Stage imgage
-    ImageComponent stageImage = new ImageComponent(stageManager.getCurrentStage().
-            getStageImage(), 10, 150);
-    layers.add(stageImage, CardLayer.IMAGE_LAYER);
+        // Stage imgage
+        ImageComponent stageImage = new ImageComponent(stageManager.
+                getCurrentStage().
+                getStageImage(), 10, 150);
+        layers.add(stageImage, CardLayer.IMAGE_LAYER);
 
-    // Medals
-    ImageComponent medalBronze = new ImageComponent(ImageHelper.
-            loadAndResizeHeight(this,
-            "src/main/resources/pictures/stages/medal_bronze.png", 70), 425, 155);
-    layers.add(medalBronze, CardLayer.IMAGE_LAYER);
+        // Medals
+        ImageComponent medalBronze = new ImageComponent(ImageHelper.
+                loadAndResizeHeight("/pictures/stages/medal_bronze.png", 70), 425, 155);
+        layers.add(medalBronze, CardLayer.IMAGE_LAYER);
 
-    ImageComponent medalSilver = new ImageComponent(ImageHelper.
-            loadAndResizeHeight(this,
-            "src/main/resources/pictures/stages/medal_silver.png", 70), 355, 155);
-    layers.add(medalSilver, CardLayer.IMAGE_LAYER);
+        ImageComponent medalSilver = new ImageComponent(ImageHelper.
+                loadAndResizeHeight("/pictures/stages/medal_silver.png", 70), 355, 155);
+        layers.add(medalSilver, CardLayer.IMAGE_LAYER);
 
-    ImageComponent medalGold = new ImageComponent(ImageHelper.
-            loadAndResizeHeight(this,
-            "src/main/resources/pictures/stages/medal_gold.png", 70), 285, 155);
-    layers.add(medalGold, CardLayer.IMAGE_LAYER);
+        ImageComponent medalGold = new ImageComponent(ImageHelper.
+                loadAndResizeHeight("/pictures/stages/medal_gold.png", 70), 285, 155);
+        layers.add(medalGold, CardLayer.IMAGE_LAYER);
 
-    headerLabel.setText("Stage - " + stageManager.getCurrentStage().
-            getStageName());
-    
-    objectiveLabel.setText(stageManager.getCurrentStage().getStageObjective());
-  }
+        headerLabel.setText("Stage - " + stageManager.getCurrentStage().
+                getStageName());
 
-  public void listenToGameOver(@Observes @GameOver long highscore) {
-    //@TODO show game score on game over 
-  }
+        objectiveLabel.setText(stageManager.getCurrentStage().
+                getStageObjective());
+    }
 
-  /** This method is called from within the constructor to
-   * initialize the form.
-   * WARNING: Do NOT modify this code. The content of this method is
-   * always regenerated by the Form Editor.
-   */
-  @SuppressWarnings("unchecked")
+    public void listenToGameOver(@Observes @GameOver long highscore) {
+        //@TODO show game score on game over 
+    }
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -247,37 +244,37 @@ public class StagesCard extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
   private void mainButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainButtonMouseEntered
-    mainButton.setForeground(Color.WHITE);
+      mainButton.setForeground(Color.WHITE);
 
   }//GEN-LAST:event_mainButtonMouseEntered
 
   private void mainButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainButtonMouseExited
-    mainButton.setForeground(Color.BLACK);
+      mainButton.setForeground(Color.BLACK);
 
   }//GEN-LAST:event_mainButtonMouseExited
 
   private void nextButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextButtonMouseEntered
-    nextButton.setForeground(Color.WHITE);
+      nextButton.setForeground(Color.WHITE);
   }//GEN-LAST:event_nextButtonMouseEntered
 
   private void nextButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextButtonMouseExited
-    nextButton.setForeground(Color.BLACK);
+      nextButton.setForeground(Color.BLACK);
   }//GEN-LAST:event_nextButtonMouseExited
 
   private void previousButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previousButtonMouseEntered
-    previousButton.setForeground(Color.WHITE);
+      previousButton.setForeground(Color.WHITE);
   }//GEN-LAST:event_previousButtonMouseEntered
 
   private void previousButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previousButtonMouseExited
-    previousButton.setForeground(Color.BLACK);
+      previousButton.setForeground(Color.BLACK);
   }//GEN-LAST:event_previousButtonMouseExited
 
   private void playButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseEntered
-    playButton.setForeground(Color.WHITE);
+      playButton.setForeground(Color.WHITE);
   }//GEN-LAST:event_playButtonMouseEntered
 
   private void playButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseExited
-    playButton.setForeground(Color.BLACK);
+      playButton.setForeground(Color.BLACK);
   }//GEN-LAST:event_playButtonMouseExited
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel headerLabel;
