@@ -27,7 +27,7 @@ public class FigureContainer<FigureGeneric extends Figure> implements Figure, Co
    * @throws IllegalArgumentException if capacity is negative.
    */
   public FigureContainer() throws IllegalArgumentException {
-    this.figureContainer = new ArrayList<>();
+    this.figureContainer = new ArrayList<FigureGeneric>();
   }
 
   /**
