@@ -32,7 +32,11 @@ public class ImageHelper {
             media.addImage(image, 0);
             media.waitForID(0);
         } catch (InterruptedException ex) {
+            Logger.getLogger(ImageHelper.class.getName()).
+                    log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(ImageHelper.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         return image;
     }
@@ -76,6 +80,8 @@ public class ImageHelper {
             media.addImage(resizedImage, 0);
             media.waitForID(0);
         } catch (InterruptedException ex) {
+            Logger.getLogger(ImageHelper.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         return resizedImage;
     }
@@ -89,7 +95,7 @@ public class ImageHelper {
                     getSystemResourceAsStream(newPath), file);
         } catch (IOException ex) {
             Logger.getLogger(ImageHelper.class.getName()).
-                    log(Level.SEVERE, null, ex);
+                    log(Level.SEVERE, newPath, ex);
         }
         return file;
     }

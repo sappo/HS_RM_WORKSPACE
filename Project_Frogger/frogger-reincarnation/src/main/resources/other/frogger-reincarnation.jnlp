@@ -19,12 +19,14 @@
     </security>
   
     <resources>
-        <j2se version="1.7+" href="http://java.sun.com/products/autodl/j2se"/>
+        <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
          
         <jar href="frogger-reincarnation-1.0-SNAPSHOT.jar" main="true"/>
         <jar href="lib/commons-lang-2.6.jar"/>
         <jar href="lib/commons-io-2.1.jar"/>
         <jar href="lib/commons-logging-1.0.4.jar"/>
+		<jar href="lib/commons-beanutils-1.8.3.jar"/>
+		<jar href="lib/commons-collections-3.2.1.jar"/>
         <jar href="lib/guava-10.0.1.jar"/>
         <jar href="lib/weld-se-1.1.4.Final.jar"/>
         <jar href="lib/game-commons-1.0-SNAPSHOT.jar"/>
