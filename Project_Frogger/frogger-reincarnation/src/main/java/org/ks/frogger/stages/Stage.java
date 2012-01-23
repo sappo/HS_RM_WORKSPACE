@@ -53,24 +53,54 @@ public class Stage {
     this.froggerStartPos = builder.froggerStartPos;
   }
 
+  /**
+   * Is gold medal effor reached
+   * @return true if reached, else false
+   */
   public boolean hasGoldMedal() {
     return highscore >= goldMedalEffort;
   }
 
+  /**
+   * Is silver medal effor reached
+   * @return true if reached, else false
+   */
   public boolean hasSilverMedal() {
     return highscore >= silverMedalEffort;
   }
 
+  /**
+   * Is bronze medal effor reached
+   * @return true if reached, else false
+   */
   public boolean hasBronzeMedal() {
     return highscore >= bronzeMedalEffort;
   }
 
+  /**
+   * The next stage unlocks if gold medal effort is reached.
+   * @return true if next stage unlocked, else false
+   */
   public boolean isNextStageUnlocked() {
     return hasGoldMedal();
   }
 
+  /**
+   * Is this the first stage
+   * @return true if first stage, else false
+   */
   public boolean isFirstStage() {
     return stageNo == 1;
+  }
+
+  /**
+   * Update the current highscore, apply only if higher than current.
+   * @param highscore the highscore to applay
+   */
+  public void updateHighscore(long highscore) {
+    if (this.highscore < highscore) {
+      this.highscore = highscore;
+    }
   }
 
   public List<StageRow> getStageRowList() {
@@ -91,6 +121,10 @@ public class Stage {
 
   public String getStageName() {
     return stageName;
+  }
+
+  public long getTimeout() {
+    return timeout;
   }
 
   public long getHighscore() {
@@ -124,7 +158,7 @@ public class Stage {
   public Vector getFroggerStartPos() {
     return froggerStartPos;
   }
-  
+
   public static class Builder {
 
     //Mandatory
@@ -152,13 +186,13 @@ public class Stage {
     private long highscore;
 
     private Image stageImage;
-    
+
     private Vector froggerStartPos;
 
     public Builder(int stageNo, GameMode gameMode) {
       this.stageNo = stageNo;
       this.gameMode = gameMode;
-      this.highscore = 0;
+      this.highscore = 0L;
       this.stageRowList = new ArrayList<StageRow>();
     }
 
@@ -211,7 +245,7 @@ public class Stage {
       this.bronzeMedalEffort = bronzeMedalEffort;
       return this;
     }
-    
+
     public Builder setFroggerStartPos(Vector froggerStartPos) {
       this.froggerStartPos = froggerStartPos;
       return this;

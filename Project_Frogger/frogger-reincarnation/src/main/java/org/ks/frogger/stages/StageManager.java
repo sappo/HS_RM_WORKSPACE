@@ -19,6 +19,7 @@ import org.ks.frogger.events.GameOver;
 import org.ks.frogger.factory.GameObjectFactory;
 import org.ks.frogger.gameobjects.GameObject;
 import org.ks.frogger.gameobjects.GameObjectContainer;
+import org.ks.frogger.manager.HighscoreManager;
 import org.ks.sf.math.Vector;
 
 /**
@@ -30,6 +31,9 @@ public class StageManager implements ActionListener {
 
     @Inject
     private GameObjectContainer gameObjectContainer;
+    
+    @Inject
+    private HighscoreManager highscoreManager;
 
     private Set<Stage> stages;
 
@@ -54,8 +58,9 @@ public class StageManager implements ActionListener {
                 "Autobahn").
                 setStageObjective("Save as many frogs as possible in 1 Minute!").
                 addStageImage(stageImage).
-                setPlayerLives(3).
-                setTimeout(10000).
+                setPlayerLives(5).
+                setTimeout(100000).
+                addHighscore(highscoreManager.getHighestScore(1)).
                 setGoldMedalEffort(10).
                 setSilverMedalEffort(7).
                 setBronzeMedalEffort(5).

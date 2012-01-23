@@ -22,150 +22,159 @@ import org.ks.frogger.events.TimeUpdate;
 @ApplicationScoped
 public class TimeManager implements ActionListener {
 
-    private final long delay = 30000;
+  private final long delay = 30000;
 
-    private final long minDelay = 5000;
+  private final long minDelay = 5000;
 
-    private long levelDelay = delay;
+  private long levelDelay = delay;
 
-    @Inject
-    @TimeUpdate
-    private Event<TimeData> timeUpdateEvent;
+  @Inject
+  @TimeUpdate
+  private Event<TimeData> timeUpdateEvent;
 
-    @Inject
-    @TimeOut
-    private Event<FroggerDeath> deathEvent;
+  @Inject
+  @TimeOut
+  private Event<FroggerDeath> deathEvent;
 
-    private Timer timer;
+  private Timer timer;
 
-    private Timer timeUpdateTimer;
+  private Timer timeUpdateTimer;
 
-    private Stopwatch stopwatch;
+  private Stopwatch stopwatch;
 
-    @PostConstruct
-    public void initialize() {
-        stopwatch = new Stopwatch();
+  @PostConstruct
+  public void initialize() {
+    stopwatch = new Stopwatch();
 
-        timer = new Timer((int) delay, this);
-        timer.setActionCommand(ActionCommand.TIMEUP.getCommand());
+    timer = new Timer((int) delay, this);
+    timer.setActionCommand(ActionCommand.TIMEUP.getCommand());
 
-        timeUpdateTimer = new Timer(1000, this);
-        timeUpdateTimer.setInitialDelay(0);
-        timeUpdateTimer.setActionCommand(ActionCommand.TIMEUPDATE.getCommand());
+    timeUpdateTimer = new Timer(1000, this);
+    timeUpdateTimer.setInitialDelay(0);
+    timeUpdateTimer.setActionCommand(ActionCommand.TIMEUPDATE.getCommand());
+  }
+
+  public void startTimer(long triggerDelay) {
+    if (!timer.isRunning()) {
+      timer.setInitialDelay((int) triggerDelay);
+      timer.setDelay((int) triggerDelay);
+
+      timer.start();
+      timeUpdateTimer.start();
+      stopwatch.start();
     }
+  }
 
-    public void startTimer(long triggerDelay) {
-        //@TODO: 
+  /**
+   * 
+   * @param actionListener
+   * @param level 
+   */
+  public void startTimer(int level) {
+    if (!timer.isRunning()) {
+      updateLevelDelay(level);
+
+      timer.setInitialDelay((int) levelDelay);
+      timer.setDelay((int) levelDelay);
+
+      timer.start();
+      timeUpdateTimer.start();
+      stopwatch.start();
     }
+  }
 
-    /**
-     * 
-     * @param actionListener
-     * @param level 
-     */
-    public void startTimer(int level) {
-        if (!timer.isRunning()) {
-            updateLevelDelay(level);
+  /**
+   * 
+   */
+  public void restartTimer() {
+    if (timer != null && timer.isRunning()) {
+      stopwatch.reset();
 
-            timer.setInitialDelay((int) levelDelay);
-            timer.setDelay((int) levelDelay);
+      timer.restart();
+      timeUpdateTimer.restart();
 
-            timer.start();
-            timeUpdateTimer.start();
-            stopwatch.start();
-        }
+      stopwatch.start();
     }
+  }
 
-    /**
-     * 
-     */
-    public void restartTimer() {
-        if (timer != null && timer.isRunning()) {
-            stopwatch.reset();
+  /**
+   * 
+   * @param currentLevel 
+   */
+  public void restartTimer(int currentLevel) {
+    if (timer != null && timer.isRunning()) {
+      stopwatch.reset();
 
-            timer.restart();
-            timeUpdateTimer.restart();
+      updateLevelDelay(currentLevel);
 
-            stopwatch.start();
-        }
+      timer.stop();
+      timer.setDelay((int) levelDelay);
+      timer.setInitialDelay((int) levelDelay);
+      timer.start();
+      timeUpdateTimer.restart();
+
+      stopwatch.start();
     }
+  }
 
-    /**
-     * 
-     * @param currentLevel 
-     */
-    public void restartTimer(int currentLevel) {
-        if (timer != null && timer.isRunning()) {
-            stopwatch.reset();
-
-            updateLevelDelay(currentLevel);
-
-            timer.stop();
-            timer.setDelay((int) levelDelay);
-            timer.setInitialDelay((int) levelDelay);
-            timer.start();
-            timeUpdateTimer.restart();
-
-            stopwatch.start();
-        }
+  /**
+   * 
+   */
+  public void stopTimer() {
+    if (timer != null && timer.isRunning()) {
+      timer.stop();
+      timeUpdateTimer.stop();
+      stopwatch.stop();
     }
+  }
 
-    /**
-     * 
-     */
-    public void stopTimer() {
-        if (timer != null && timer.isRunning()) {
-            timer.stop();
-            timeUpdateTimer.stop();
-            stopwatch.stop();
-        }
-    }
+  /**
+   * Get the elapsed time since timer start
+   * @return the elapsed time in seconds
+   */
+  public long getElapsedSeconds() {
+    return stopwatch.elapsedTime(TimeUnit.SECONDS);
+  }
 
-    /**
-     * Get the elapsed time since timer start
-     * @return the elapsed time in seconds
-     */
-    public long getElapsedSeconds() {
-        return stopwatch.elapsedTime(TimeUnit.SECONDS);
-    }
+  /**
+   * Gets the remaining time until the timer trigger again
+   * @return the remaining time in seconds
+   */
+  public long getRemainingTime() {
+    return millisToSeconds(timer.getDelay()) - stopwatch.elapsedTime(
+            TimeUnit.SECONDS);
+  }
 
-    /**
-     * Gets the remaining time until the timer trigger again
-     * @return the remaining time in seconds
-     */
-    public long getRemainingTime() {
-        return millisToSeconds(levelDelay) - stopwatch.elapsedTime(TimeUnit.SECONDS);
-    }
+  /**
+   * Get the current level trigger delay.
+   * @return level deplay in seconds.
+   */
+  public long getLevelDelay() {
+    return millisToSeconds(levelDelay);
+  }
 
-    /**
-     * Get the current level trigger delay.
-     * @return level deplay in seconds.
-     */
-    public long getLevelDelay() {
-        return millisToSeconds(levelDelay);
+  private void updateLevelDelay(int level) {
+    if (levelDelay > minDelay) {
+      levelDelay = delay - (level - 1 * 1000);
+    } else {
+      levelDelay = minDelay;
     }
+  }
 
-    private void updateLevelDelay(int level) {
-        if (levelDelay > minDelay) {
-            levelDelay = delay - (level - 1 * 1000);
-        } else {
-            levelDelay = minDelay;
-        }
-    }
+  private long millisToSeconds(long millis) {
+    return millis / 1000;
+  }
 
-    private long millisToSeconds(long millis) {
-        return millis / 1000;
+  @Override
+  public void actionPerformed(ActionEvent event) {
+    switch (ActionCommand.getActionCommand(event.getActionCommand())) {
+      case TIMEUP:
+        deathEvent.fire(new FroggerDeath(FroggerDeath.TIMEUP));
+        break;
+      case TIMEUPDATE:
+        timeUpdateEvent.fire(new TimeData(millisToSeconds(timer.getDelay()),
+                getRemainingTime()));
+        break;
     }
-
-    @Override
-    public void actionPerformed(ActionEvent event) {
-        switch (ActionCommand.getActionCommand(event.getActionCommand())) {
-            case TIMEUP:
-                deathEvent.fire(new FroggerDeath(FroggerDeath.TIMEUP));
-                break;
-            case TIMEUPDATE:
-                timeUpdateEvent.fire(new TimeData(getLevelDelay(), getRemainingTime()));
-                break;
-        }
-    }
+  }
 }

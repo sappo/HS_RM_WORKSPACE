@@ -86,13 +86,21 @@ public class GameManager implements KeyListener {
     Stage currentStage = stageManager.getCurrentStage();
     gameMode = currentStage.getGameMode();
     remainingLives = currentStage.getPlayerLives();
-    
+
     stageManager.initializeCurrentStage();
 
     lifeUpdateEvent.fire(remainingLives);
 
     highscoreManager.newHighscore();
-    timeManager.startTimer(currentLevel);
+
+    switch (gameMode) {
+      case SURVIVAL:
+        timeManager.startTimer(currentLevel);
+        break;
+      case TIME:
+        timeManager.startTimer(currentStage.getTimeout());
+    }
+
     running = true;
     return this;
   }
@@ -120,8 +128,10 @@ public class GameManager implements KeyListener {
     if (running) {
       if (--remainingLives > 0) {
         gameObjectContainer.resetFrogger();
-        timeManager.restartTimer();
         lifeUpdateEvent.fire(remainingLives);
+        if (gameMode.equals(GameMode.SURVIVAL)) {
+          timeManager.restartTimer();
+        }
       } else {
         gameOverEvent.fire(highscoreManager.getHighScore());
       }
@@ -178,7 +188,7 @@ public class GameManager implements KeyListener {
   }
 
   public void keyReleased(KeyEvent e) {
-      handleKeyInput(e.getKeyCode());
+    handleKeyInput(e.getKeyCode());
   }
 
   private void handleKeyInput(int keyCode) {

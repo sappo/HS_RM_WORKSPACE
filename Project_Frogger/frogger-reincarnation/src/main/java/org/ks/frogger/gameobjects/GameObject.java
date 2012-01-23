@@ -8,7 +8,7 @@ import org.ks.sf.shape.Figure;
 import org.ks.sf.shape.Rectangle;
 
 /**
- * This class represents a GameObject
+ * This class is the scaffold for all GameObjects.
  * @author Kevin Sapper 2011
  */
 public abstract class GameObject implements Figure {
@@ -26,9 +26,6 @@ public abstract class GameObject implements Figure {
     this.pictureBoundingBox = pictureBoundingBox;
   }
 
-//  public Rectangle getPictureBoundingBox() {
-//    return pictureBoundingBox;
-//  }
   /**
    * Sets the game objects to a position 
    * @param position to set the object to
@@ -39,12 +36,14 @@ public abstract class GameObject implements Figure {
 
   /**
    * @inherited
+   * This implementation draws a gameobjects image is available.
+   * In case there is no image the picture bounding box is drawn.
    */
   public void draw(Graphics g) {
     if (image == null) {
       pictureBoundingBox.draw(g);
     } else {
-      pictureBoundingBox.draw(g);
+//      pictureBoundingBox.draw(g);
       g.drawImage(image, (int) pictureBoundingBox.getBasePoint().
               getX(), (int) pictureBoundingBox.getBasePoint().
               getY(), null);
