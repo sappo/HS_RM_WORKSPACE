@@ -7,12 +7,12 @@ import java.lang.annotation.Target;
 import javax.inject.Qualifier;
 
 /**
+ * CDI classifier for typesafe dependency injection
  *
- * @author Kevin Sapper 2011
+ * @author Kevin Sapper 2012
  */
 @Qualifier
 @Target({ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ObjectiveReached {
 }
-

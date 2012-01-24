@@ -5,11 +5,7 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.event.Observes;
@@ -21,7 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.ks.frogger.cards.GameCard;
 import org.ks.frogger.cards.HighscoreCard;
@@ -36,6 +31,7 @@ import org.ks.frogger.stages.StageManager;
 
 /**
  * Main frame off the game.
+ *
  * @author Kevin Sapper 2012
  */
 @Singleton
@@ -72,6 +68,11 @@ public class Main extends JFrame implements ActionListener {
     System.out.println("post-construct");
   }
 
+  /**
+   * Entry point for the programm.
+   *
+   * @param event CDI event
+   */
   public void main(@Observes ContainerInitialized event) {
     setTitle("Frogger Reincarnation © Kevin Sapper");
     setResizable(false);
@@ -125,6 +126,12 @@ public class Main extends JFrame implements ActionListener {
     mainCards.add(highscoreCard, highscoreCard.getName());
   }
 
+  /**
+   * {@inheritDoc }
+   * This implementation evaluates the action commands for multiple components
+   * and acts according to their specification.
+   * @param event
+   */
   @Override
   public void actionPerformed(ActionEvent event) {
     switch (ActionCommand.getActionCommand(event.getActionCommand())) {
@@ -197,7 +204,7 @@ public class Main extends JFrame implements ActionListener {
     gameManager.endGame();
     int stageNo = stageManager.getCurrentStage().
             getStageNo();
-    if (highscoreManager.isInTopTen(stageNo))  {
+    if (highscoreManager.isInTopTen(stageNo)) {
       String name = JOptionPane.showInputDialog(
               "Enter your name for the highscore!");
       highscoreManager.submitHighscore(stageNo, name);

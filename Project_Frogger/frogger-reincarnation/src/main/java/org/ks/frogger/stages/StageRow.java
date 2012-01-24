@@ -6,8 +6,10 @@ import org.ks.frogger.Helper.MobileGameObject;
 import org.ks.sf.math.Vector;
 
 /**
+ * This object holds the data necessary to create game objects on row by a
+ * manager.
  *
- * @author Kevin Sapper 2011
+ * @author Kevin Sapper 2012
  */
 public class StageRow {
 

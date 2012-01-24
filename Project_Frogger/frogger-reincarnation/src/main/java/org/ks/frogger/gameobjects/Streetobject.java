@@ -11,16 +11,27 @@ import org.ks.sf.shape.Rectangle;
  */
 public class Streetobject extends GameObject {
 
+  /**
+   * Creates a new Streetobject.
+   *
+   * @param pictureBoundingBox the bounding box of this object
+   */
   public Streetobject(Rectangle pictureBoundingBox) {
     super(pictureBoundingBox);
   }
 
+  /**
+   * Creates a new Streetobject.
+   *
+   * @param pictureBoundingBox the bounding box of this object
+   * @param image this image painted for this object
+   */
   public Streetobject(Rectangle pictureBoundingBox, Image image) {
     super(pictureBoundingBox, image);
   }
 
   /**
-   * @inherited
+   * {@inherited}
    */
   @Override
   public CollusionAction getCollusionAction() {
@@ -28,7 +39,7 @@ public class Streetobject extends GameObject {
   }
 
   /**
-   * @inherited
+   * {@inherited}
    */
   public String getDeathCause() {
     return FroggerDeath.OVERRUN;

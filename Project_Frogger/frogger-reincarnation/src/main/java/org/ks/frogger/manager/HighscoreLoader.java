@@ -12,7 +12,7 @@ import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
+ * Loads and saves the highscore the a csv file
  * @author Kevin Sapper 2011
  */
 public class HighscoreLoader {
@@ -27,6 +27,11 @@ public class HighscoreLoader {
 
   private static final String LINEBREAK = "\n";
 
+  /**
+   * Load the highscore from a csv file
+   * @return the highscore list for each stage
+   * @throws IOException 
+   */
   public Map<Integer, List<Highscore>> loadHighscore() throws IOException {
     Map<Integer, List<Highscore>> highscoreList = new HashMap<Integer, List<Highscore>>();
 
@@ -50,6 +55,11 @@ public class HighscoreLoader {
     return highscoreList;
   }
 
+  /**
+   * Save the highscore the csv file
+   * @param highscoreList the highscore list for all stage to save
+   * @throws IOException 
+   */
   public void saveHighscores(Map<Integer, List<Highscore>> highscoreList) throws IOException {
     StringBuilder content = new StringBuilder();
 

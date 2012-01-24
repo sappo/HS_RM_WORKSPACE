@@ -17,10 +17,19 @@ public abstract class GameObject implements Figure {
 
   private Rectangle pictureBoundingBox;
 
+  /**
+   * Create a new GameObject.
+   * @param pictureBoundingBox the bounding box for this object
+   */
   public GameObject(Rectangle pictureBoundingBox) {
     this.pictureBoundingBox = pictureBoundingBox;
   }
 
+  /**
+   * Create a new GameObject.
+   * @param pictureBoundingBox the bounding box for this object
+   * @param image the image to be drawn by this object.
+   */
   public GameObject(Rectangle pictureBoundingBox, Image image) {
     this.image = image;
     this.pictureBoundingBox = pictureBoundingBox;
@@ -35,7 +44,7 @@ public abstract class GameObject implements Figure {
   }
 
   /**
-   * @inherited
+   * {@inherited}
    * This implementation draws a gameobjects image is available.
    * In case there is no image the picture bounding box is drawn.
    */
@@ -73,6 +82,9 @@ public abstract class GameObject implements Figure {
     pictureBoundingBox.move();
   }
 
+  /**
+   * Moves an GameObject into the parameter direction.
+   */
   public void move(Vector direction) {
     pictureBoundingBox.move(direction);
   }
@@ -86,8 +98,7 @@ public abstract class GameObject implements Figure {
   }
 
   /**
-   * Get the basePoint of the pictureBoundingBox
-   * @return 
+   * {@inheritDoc}
    */
   @Override
   public Vector getBasePoint() {
@@ -99,8 +110,7 @@ public abstract class GameObject implements Figure {
   }
 
   /**
-   * Get the acceleration of the pictureBoundingBox
-   * @return Acceleration
+   * {@inheritDoc}
    */
   @Override
   public Vector getAcceleration() {
@@ -111,14 +121,16 @@ public abstract class GameObject implements Figure {
     pictureBoundingBox.setAcceleration(acceleration);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public double getMass() {
     return pictureBoundingBox.getMass();
   }
 
   /**
-   * Get the pictureBoundingBox
-   * @return the BoudingBox
+   * {@inheritDoc}
    */
   @Override
   public BoundingBox getBoundingBox() {

@@ -4,12 +4,12 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import javax.swing.JComponent;
 
 /**
+ * The TransparentBox is a JComponent to represent a transparent rectangle.
  *
- * @author Kevin Sapper 2011
+ * @author Kevin Sapper 2012
  */
 public class TransparentBox extends JComponent {
 
@@ -23,6 +23,16 @@ public class TransparentBox extends JComponent {
 
   private int height;
 
+  /**
+   * Creates a new TransparentBox.
+   *
+   * @param alpha the transparancy level of the image. Has to be between 0 and
+   * 1.
+   * @param x base point x value
+   * @param y base point y value
+   * @param width width of the box
+   * @param height height of the box
+   */
   public TransparentBox(float alpha, int x, int y, int width, int height) {
     super();
     this.alpha = alpha;
@@ -34,6 +44,9 @@ public class TransparentBox extends JComponent {
     setOpaque(true);
   }
 
+  /**
+   * {@inheritDoc}
+w   */
   @Override
   protected void paintComponent(Graphics g) {
     Graphics2D g2D = (Graphics2D) g;

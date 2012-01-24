@@ -23,112 +23,127 @@ import org.ks.frogger.manager.HighscoreManager;
 import org.ks.sf.math.Vector;
 
 /**
+ * Manages the creation and handling of the stage actions during the game.
  *
  * @author Kevin Sapper 2011
  */
 @ApplicationScoped
 public class StageManager implements ActionListener {
 
-    @Inject
-    private GameObjectContainer gameObjectContainer;
-    
-    @Inject
-    private HighscoreManager highscoreManager;
+  @Inject
+  private GameObjectContainer gameObjectContainer;
 
-    private Set<Stage> stages;
+  @Inject
+  private HighscoreManager highscoreManager;
 
-    private Stage currentStage;
+  private Set<Stage> stages;
 
-    private Timer timer;
+  private Stage currentStage;
 
-    @PostConstruct
-    public void initialize() {
-        timer = new Timer(50, this);
-        stages = new ArraySet<Stage>();
+  private Timer timer;
+
+  @PostConstruct
+  public void initialize() {
+    timer = new Timer(50, this);
+    stages = new ArraySet<Stage>();
+  }
+
+  /**
+   * Setup all stages
+   */
+  public void setupStages() {
+    setupAutobahnStage(ImageHelper.load("/pictures/stages/stage1.png"));
+  }
+
+  public void setupAutobahnStage(Image stageImage) {
+    MobileGameObject greenCar = MobileGameObject.GREENCAR;
+
+    Stage autobahn = new Stage.Builder(1, GameMode.TIME).setStageName(
+            "Autobahn").
+            setStageObjective("Save as many frogs as possible in 1 Minute!").
+            addStageImage(stageImage).
+            setPlayerLives(5).
+            setTimeout(100000).
+            addHighscore(highscoreManager.getHighestScore(1)).
+            setGoldMedalEffort(10).
+            setSilverMedalEffort(7).
+            setBronzeMedalEffort(5).
+            setFroggerStartPos(new Vector(215, 510)).
+            addStageRow(new StageRow(0, 0, null, ImmobileGameObject.TARGETSTRIP)).
+            addStageRow(new StageRow(1, 1, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(2, 3, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(3, -1, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(4, -2, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(5, 0, null, ImmobileGameObject.GRASSSTRIP)).
+            addStageRow(new StageRow(6, 1, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(7, 2, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(8, -1, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(9, -3, greenCar, ImmobileGameObject.STREET)).
+            addStageRow(new StageRow(10, 0, null, ImmobileGameObject.GRASSSTRIP)).
+            build();
+
+    stages.add(autobahn);
+    currentStage = autobahn;
+  }
+
+  /**
+   * On game start initialize the current stage and pass the game objects to the
+   * container.
+   */
+  public void initializeCurrentStage() {
+    gameObjectContainer.addFrogger(GameObjectFactory.createNewFroggerAt(
+            currentStage.getFroggerStartPos()));
+
+    for (StageRow stageRow : currentStage.getStageRowList()) {
+      if (stageRow.getImmobileGameObjectType() != null) {
+        gameObjectContainer.addImmobileGameobject(GameObjectFactory.
+                createImmobileGameObject(stageRow.getImmobileGameObjectType(),
+                stageRow.getRowLevel()));
+      }
     }
 
-    public void setupStages(Component component) {
-        setupAutobahnStage(ImageHelper.load("/pictures/stages/stage1.png"));
-    }
+    timer.start();
+  }
 
-    public void setupAutobahnStage(Image stageImage) {
-        MobileGameObject greenCar = MobileGameObject.GREENCAR;
-
-        Stage autobahn = new Stage.Builder(1, GameMode.TIME).setStageName(
-                "Autobahn").
-                setStageObjective("Save as many frogs as possible in 1 Minute!").
-                addStageImage(stageImage).
-                setPlayerLives(5).
-                setTimeout(100000).
-                addHighscore(highscoreManager.getHighestScore(1)).
-                setGoldMedalEffort(10).
-                setSilverMedalEffort(7).
-                setBronzeMedalEffort(5).
-                setFroggerStartPos(new Vector(215, 510)).
-                addStageRow(new StageRow(0, 0, null, ImmobileGameObject.TARGETSTRIP)).
-                addStageRow(new StageRow(1, 1, greenCar, ImmobileGameObject.STREET)).
-                addStageRow(new StageRow(2, 3, greenCar, ImmobileGameObject.STREET)).
-                addStageRow(new StageRow(3, -1, greenCar, ImmobileGameObject.STREET)).
-                addStageRow(new StageRow(4, -2, greenCar, ImmobileGameObject.STREET)).
-                addStageRow(new StageRow(5, 0, null, ImmobileGameObject.GRASSSTRIP)).
-                addStageRow(new StageRow(6, 1, greenCar, ImmobileGameObject.STREET)).
-                addStageRow(new StageRow(7, 2, greenCar, ImmobileGameObject.STREET)).
-                addStageRow(new StageRow(8, -1, greenCar, ImmobileGameObject.STREET)).
-                addStageRow(new StageRow(9, -3, greenCar, ImmobileGameObject.STREET)).
-                addStageRow(new StageRow(10, 0, null, ImmobileGameObject.GRASSSTRIP)).
-                build();
-
-        stages.add(autobahn);
-        currentStage = autobahn;
-    }
-
-    public void initializeCurrentStage() {
-        gameObjectContainer.addFrogger(GameObjectFactory.createNewFroggerAt(
-                currentStage.getFroggerStartPos()));
-
-        for (StageRow stageRow : currentStage.getStageRowList()) {
-            if (stageRow.getImmobileGameObjectType() != null) {
-                gameObjectContainer.addImmobileGameobject(GameObjectFactory.
-                        createImmobileGameObject(stageRow.
-                        getImmobileGameObjectType(),
-                        stageRow.getRowLevel()));
-            }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    for (StageRow stageRow : currentStage.getStageRowList()) {
+      if (stageRow.getMobileGameObjectType() != null) {
+        int accleration = Math.abs(stageRow.getGameObjectAcceleration());
+        double movementFactor = stageRow.getMobileGameObjectSize().
+                getX() / accleration;
+        long timePuffer = (int) movementFactor * 50;
+        if (stageRow.getLastObjectAdded() + timePuffer < System.
+                currentTimeMillis()) {
+          Random random = new Random();
+          int randomNo = random.nextInt(100);
+          if (randomNo == 1) {
+            GameObject mobileGameObject = GameObjectFactory.
+                    createMobileGameObject(
+                    stageRow.getMobileGameObjectType(), stageRow.getRowLevel(),
+                    stageRow.getGameObjectAcceleration());
+            gameObjectContainer.addMobileGameObject(mobileGameObject);
+            stageRow.setLastObjectAdded(System.currentTimeMillis());
+          }
         }
-
-        timer.start();
+      }
     }
+  }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        for (StageRow stageRow : currentStage.getStageRowList()) {
-            if (stageRow.getMobileGameObjectType() != null) {
-                int accleration = Math.abs(stageRow.getGameObjectAcceleration());
-                double movementFactor = stageRow.getMobileGameObjectSize().
-                        getX() / accleration;
-                long timePuffer = (int) movementFactor * 50;
-                if (stageRow.getLastObjectAdded() + timePuffer < System.
-                        currentTimeMillis()) {
-                    Random random = new Random();
-                    int randomNo = random.nextInt(100);
-                    if (randomNo == 1) {
-                        GameObject mobileGameObject = GameObjectFactory.
-                                createMobileGameObject(
-                                stageRow.getMobileGameObjectType(), stageRow.
-                                getRowLevel(),
-                                stageRow.getGameObjectAcceleration());
-                        gameObjectContainer.addMobileGameObject(mobileGameObject);
-                        stageRow.setLastObjectAdded(System.currentTimeMillis());
-                    }
-                }
-            }
-        }
-    }
+  /**
+   * Listen to an CDI-Event that has the Long parameter and the classifier
+   * @GameOver.
+   *
+   * @param score CDI-Event
+   */
+  public void listenToGameOver(@Observes @GameOver Long score) {
+    timer.stop();
+  }
 
-    public void listenToGameOver(@Observes @GameOver Long score) {
-        timer.stop();
-    }
-
-    public Stage getCurrentStage() {
-        return currentStage;
-    }
+  public Stage getCurrentStage() {
+    return currentStage;
+  }
 }

@@ -1,6 +1,7 @@
 package org.ks.frogger.events;
 
 /**
+ * The time data object wraps the max and current time for a JProgressBar
  *
  * @author Kevin Sapper 2011
  */

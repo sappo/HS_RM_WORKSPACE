@@ -15,17 +15,15 @@ import org.ks.frogger.events.LifeUpdate;
 import org.ks.frogger.events.TimeOut;
 import org.ks.frogger.factory.GameObjectFactory;
 import org.ks.frogger.gameobjects.FrogNest;
-import org.ks.frogger.gameobjects.Frogger;
 import org.ks.frogger.gameobjects.GameObject;
 import org.ks.frogger.gameobjects.GameObjectContainer;
 import org.ks.frogger.stages.GameMode;
 import org.ks.frogger.stages.Stage;
-import org.ks.sf.math.Vector;
-import org.ks.sf.shape.Rectangle;
 
 /**
+ * Starts, ends and delegates lives and scores
  *
- * @author Kevin Sapper
+ * @author Kevin Sapper 2011
  */
 @ApplicationScoped
 public class GameManager implements KeyListener {
@@ -70,13 +68,10 @@ public class GameManager implements KeyListener {
 
   private boolean running = false;
 
-  @PostConstruct
-  public void initialize() {
-  }
-
   /**
    * Starts a new game.
-   *  @param frame the frame to start the game on
+   *
+   * @param frame the frame to start the game on
    */
   public KeyListener startGame(Dimension gamePanelSize) {
     gameObjectContainer.addBorder(gamePanelSize.height, gamePanelSize.width);
@@ -124,6 +119,12 @@ public class GameManager implements KeyListener {
     timeManager.restartTimer(currentLevel);
   }
 
+  /**
+   * Listen to an CDI-Event that has the FroggerDeath parameter Decrements the
+   * remaining lives.
+   *
+   * @param death CDI-Event
+   */
   public void listenToFroggerDeath(@Observes FroggerDeath death) {
     if (running) {
       if (--remainingLives > 0) {
@@ -138,6 +139,13 @@ public class GameManager implements KeyListener {
     }
   }
 
+  /**
+   * Listen to an CDI-Event that has the FroggerDeath parameter and the
+   * classifier @TimeOut. Act according to game mode.
+   *
+   * @param death CDI-Event
+   * {@link TimeOut}
+   */
   public void listenToFroggerDeathByTimeOut(
           @Observes @TimeOut FroggerDeath death) {
     if (running) {
@@ -152,6 +160,12 @@ public class GameManager implements KeyListener {
     }
   }
 
+  /**
+   * Listen to an CDI-Event that has the FroggerDeath parameter Decrements the
+   * remaining lives.
+   *
+   * @param triggeringObject CDI-Event
+   */
   public void listenToFroggerAtGoal(@Observes GameObject triggeringObject) {
     savedFroggers++;
     switch (gameMode) {
@@ -217,6 +231,7 @@ public class GameManager implements KeyListener {
 
   /**
    * Checks if the game is currently running
+   *
    * @return true if running, else false
    */
   public boolean isRunning() {

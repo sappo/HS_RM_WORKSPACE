@@ -16,7 +16,7 @@ import org.ks.sf.shape.FigureContainer;
 import org.ks.sf.shape.Rectangle;
 
 /**
- *
+ * Wrapper for all GameObjects that act on the current stage.
  * @author Kevin Sapper 2011
  */
 @ApplicationScoped
@@ -39,6 +39,9 @@ public class GameObjectContainer {
   @ObjectiveReached
   private Event<GameObject> objectiveReachedEvent;
 
+  /**
+   * Executed after objects creation.
+   */
   @PostConstruct
   public void initialize() {
     this.border = new FigureContainer<GameObject>();
@@ -49,7 +52,7 @@ public class GameObjectContainer {
 
   /**
    * Add a frogger if null, else ignores the add.
-   * @param frogger 
+   * @param frogger the frogger to add
    */
   public void addFrogger(Frogger frogger) {
     if (frogger != null) {
@@ -57,6 +60,11 @@ public class GameObjectContainer {
     }
   }
 
+  /**
+   * Add a new Border
+   * @param height the height of the game panel
+   * @param width the width of the game panel
+   */
   public void addBorder(int height, int width) {
     // insert left border
     border.add(new BorderObject(new Rectangle(new Vector(0, 0), new Vector(0,
@@ -74,7 +82,7 @@ public class GameObjectContainer {
 
   /**
    * Add a gameobject which can be moved.
-   * @param gameObject 
+   * @param gameObject the mobile game object to add
    */
   public void addMobileGameObject(GameObject gameObject) {
     mobileGameObjectList.add(gameObject);
@@ -82,17 +90,24 @@ public class GameObjectContainer {
 
   /**
    * Adds a gameobject which should not be moved.
-   * @param gameObject 
+   * @param gameObject the immobile game object to add
    */
   public void addImmobileGameobject(GameObject gameObject) {
     immobileFigureList.add(gameObject);
   }
 
+  /**
+   * Add the Frogger of this container to a nest.
+   * @param frogNest the nest to add to
+   */
   public void addFroggerNest(FrogNest frogNest) {
     frogNestList.add(frogNest);
     immobileFigureList.add(frogNest);
   }
 
+  /**
+   * Draw all objects.
+   */
   public void draw(Graphics g) {
     border.draw(g);
     immobileFigureList.draw(g);
@@ -102,6 +117,9 @@ public class GameObjectContainer {
     mobileGameObjectList.draw(g);
   }
 
+  /**
+   * Clear all GameObjects from all containers and references.
+   */
   public void clear() {
     removeFrogger();
     border.clear();
@@ -119,10 +137,16 @@ public class GameObjectContainer {
     }
   }
 
+  /**
+   * Remove the frogger.
+   */
   public void removeFrogger() {
     frogger = null;
   }
 
+  /**
+   * Move all figures.
+   */
   public void moveFigures() {
     if (frogger.isCarried()) {
       frogger.move();
@@ -132,6 +156,9 @@ public class GameObjectContainer {
     checkFroggerIntersection();
   }
 
+  /**
+   * Move frogger the the left.
+   */
   public void moveFroggerLeft() {
     if (frogger.isCarried()) {
       frogger.jumpOff();
@@ -140,6 +167,9 @@ public class GameObjectContainer {
     checkFroggerIntersection();
   }
 
+  /**
+   * Move frogger the the right.
+   */
   public void moveFroggerRight() {
     if (frogger.isCarried()) {
       frogger.jumpOff();
@@ -148,6 +178,9 @@ public class GameObjectContainer {
     checkFroggerIntersection();
   }
 
+  /**
+   * Move frogger the the up.
+   */
   public void moveFroggerUp() {
     if (frogger.isCarried()) {
       frogger.jumpOff();
@@ -156,6 +189,9 @@ public class GameObjectContainer {
     checkFroggerIntersection();
   }
 
+  /**
+   * Move frogger the the down.
+   */
   public void moveFroggerDown() {
     if (frogger.isCarried()) {
       frogger.jumpOff();
@@ -164,6 +200,9 @@ public class GameObjectContainer {
     checkFroggerIntersection();
   }
 
+  /**
+   * Check if the Frogger intersects with other game objects.
+   */
   public void checkFroggerIntersection() {
     //Prioritise object intersection
     //1st Priority - Border

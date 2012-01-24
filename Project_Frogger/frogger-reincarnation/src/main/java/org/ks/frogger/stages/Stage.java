@@ -6,8 +6,8 @@ import java.util.List;
 import org.ks.sf.math.Vector;
 
 /**
- *
- * @author Kevin Sapper 2011
+ * Holds data necessary to run a stage
+ * @author Kevin Sapper 2012
  */
 public class Stage {
 
@@ -189,6 +189,11 @@ public class Stage {
 
     private Vector froggerStartPos;
 
+    /**
+     * Builder to create a new stage.
+     * @param stageNo
+     * @param gameMode 
+     */
     public Builder(int stageNo, GameMode gameMode) {
       this.stageNo = stageNo;
       this.gameMode = gameMode;

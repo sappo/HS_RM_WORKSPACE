@@ -16,7 +16,7 @@ import org.ks.frogger.events.TimeOut;
 import org.ks.frogger.events.TimeUpdate;
 
 /**
- *
+ * Manages the game time.
  * @author Kevin Sapper 2011
  */
 @ApplicationScoped
@@ -54,6 +54,10 @@ public class TimeManager implements ActionListener {
     timeUpdateTimer.setActionCommand(ActionCommand.TIMEUPDATE.getCommand());
   }
 
+  /**
+   * Start the timer with a trigger delay
+   * @param triggerDelay 
+   */
   public void startTimer(long triggerDelay) {
     if (!timer.isRunning()) {
       timer.setInitialDelay((int) triggerDelay);
@@ -66,9 +70,8 @@ public class TimeManager implements ActionListener {
   }
 
   /**
-   * 
-   * @param actionListener
-   * @param level 
+   * Start the timer by passing the current level
+   * @param level current level
    */
   public void startTimer(int level) {
     if (!timer.isRunning()) {
@@ -84,7 +87,7 @@ public class TimeManager implements ActionListener {
   }
 
   /**
-   * 
+   * Restart the timer.
    */
   public void restartTimer() {
     if (timer != null && timer.isRunning()) {
@@ -98,7 +101,7 @@ public class TimeManager implements ActionListener {
   }
 
   /**
-   * 
+   * Restart the timer for a new level
    * @param currentLevel 
    */
   public void restartTimer(int currentLevel) {
@@ -118,7 +121,7 @@ public class TimeManager implements ActionListener {
   }
 
   /**
-   * 
+   * Stop the timer.
    */
   public void stopTimer() {
     if (timer != null && timer.isRunning()) {
@@ -165,6 +168,9 @@ public class TimeManager implements ActionListener {
     return millis / 1000;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void actionPerformed(ActionEvent event) {
     switch (ActionCommand.getActionCommand(event.getActionCommand())) {

@@ -5,8 +5,9 @@ import org.ks.sf.math.Vector;
 import org.ks.sf.shape.Rectangle;
 
 /**
+ * This game objets represents a Frogger.
  *
- * @author Kevin Sapper
+ * @author Kevin Sapper 2011
  */
 public class Frogger extends GameObject {
 
@@ -26,6 +27,7 @@ public class Frogger extends GameObject {
 
   /**
    * Create a new Frogger at the given start position.
+   *
    * @param startPosition the Froggers start position
    */
   private Frogger(Rectangle startPosition) {
@@ -33,6 +35,16 @@ public class Frogger extends GameObject {
     this.startPosition = new Rectangle(startPosition);
   }
 
+  /**
+   * Create a new Frogger at the given start position.
+   *
+   * @param startPosition the Froggers start position
+   * @param pictureBoundingBox the bounding box of this object
+   * @param up image while walking up
+   * @param down image while walking down
+   * @param left image while walking left
+   * @param right image while walking right
+   */
   public Frogger(Rectangle startPosition, Image up, Image down, Image left,
           Image right) {
     super(startPosition, up);
@@ -83,6 +95,9 @@ public class Frogger extends GameObject {
     }
   }
 
+  /**
+   * Jumps off a carrier. If not carried this has no effect.
+   */
   public void jumpOff() {
     if (!sittingInNest) {
       this.carried = false;
@@ -91,7 +106,7 @@ public class Frogger extends GameObject {
   }
 
   /**
-   * Only works if not sitting in nest!
+   * Jumps onto a carrier. Only works if not sitting in nest!
    */
   public void jumpOn(GameObject carrier) {
     if (!sittingInNest) {
@@ -100,6 +115,11 @@ public class Frogger extends GameObject {
     }
   }
 
+  /**
+   * Check if the Frogger is carried by an carrier.
+   *
+   * @return true if carried, else false.
+   */
   public boolean isCarried() {
     return carried;
   }
@@ -111,6 +131,10 @@ public class Frogger extends GameObject {
     setPosition(new Rectangle(startPosition));
   }
 
+  /**
+   * {@inheritDoc} This implementation return CollusionAction.NOTHING or
+   * CollusionAction.KILL if sitting in nest.
+   */
   @Override
   public CollusionAction getCollusionAction() {
     CollusionAction action = CollusionAction.NOTHING;
@@ -122,6 +146,7 @@ public class Frogger extends GameObject {
 
   /**
    * Creates a new Frogger at the given start position.
+   *
    * @param startPosition position to draw the frogger.
    * @return a new Frogger
    */
@@ -130,8 +155,9 @@ public class Frogger extends GameObject {
   }
 
   /**
-   * Creates a new Frogger inside the given nest. Nest must be at least as 
-   * large as the Frogger
+   * Creates a new Frogger inside the given nest. Nest must be at least as large
+   * as the Frogger
+   *
    * @param the size of the frogger to place in the nest
    * @param nest the nest to place the frogger inside
    * @return a new Frogger

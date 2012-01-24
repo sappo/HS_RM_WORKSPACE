@@ -3,6 +3,7 @@ package org.ks.frogger.manager;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 /**
+ * Holds highscore data
  *
  * @author Kevin Sapper 2011
  */
@@ -15,6 +16,12 @@ public class Highscore implements Comparable<Highscore> {
   public Highscore() {
   }
 
+  /**
+   * Creates a new Highscore
+   *
+   * @param name of the player
+   * @param highscore of the player
+   */
   public Highscore(String name, long highscore) {
     this.name = name;
     this.highscore = highscore;
@@ -36,6 +43,9 @@ public class Highscore implements Comparable<Highscore> {
     this.highscore = highscore;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Highscore) {
@@ -48,6 +58,9 @@ public class Highscore implements Comparable<Highscore> {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int compareTo(Highscore that) {
     if (this.equals(that)) {

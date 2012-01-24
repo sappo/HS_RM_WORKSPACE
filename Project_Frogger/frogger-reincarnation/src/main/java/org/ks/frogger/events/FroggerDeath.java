@@ -1,6 +1,7 @@
 package org.ks.frogger.events;
 
 /**
+ * Administrate the different type a frog can die.
  *
  * @author Kevin Sapper 2011
  */
@@ -14,6 +15,10 @@ public class FroggerDeath {
 
   private String reason;
 
+  /**
+   * Create a new FroggerDeath by passing the reason.
+   * @param reason 
+   */
   public FroggerDeath(String reason) {
     this.reason = reason;
   }
