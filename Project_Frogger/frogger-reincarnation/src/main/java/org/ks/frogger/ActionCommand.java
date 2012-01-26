@@ -11,7 +11,7 @@ public enum ActionCommand {
 
   NEWGAME("newGame"), STOPGAME("stopGame"), EXIT("exit"), TIMEUP("timeUp"),
   TIMEUPDATE("timeUpdate"), SHOWHIGHSCORE("showHighscore"),
-  SHOWOPENING("showOpening"), SHOWSTAGES("showStages");
+  SHOWOPENING("showOpening"), SHOWSTAGES("showStages"), SHOWABOUT("showAbout");
 
   private String command;
 

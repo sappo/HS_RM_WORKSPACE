@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import org.ks.frogger.ActionCommand;
-import org.ks.frogger.Helper.ImageHelper;
 import org.ks.frogger.Helper.CardLayer;
+import org.ks.frogger.Helper.ImageHelper;
 import org.ks.frogger.cards.ui.ImageComponent;
 
 /**
@@ -51,6 +51,11 @@ public class OpeningCard extends javax.swing.JPanel {
     exitButton.addActionListener(actionListener);
     exitButton.setForeground(Color.BLACK);
     layers.setLayer(exitButton, CardLayer.CONTENT_LAYER);
+    
+    aboutButton.setActionCommand(ActionCommand.SHOWABOUT.getCommand());
+    aboutButton.addActionListener(actionListener);
+    aboutButton.setForeground(Color.BLACK);
+    layers.setLayer(aboutButton, CardLayer.CONTENT_LAYER);
   }
 
   /**
@@ -68,6 +73,7 @@ public class OpeningCard extends javax.swing.JPanel {
         stagesButton = new javax.swing.JButton();
         highscoreButton = new javax.swing.JButton();
         exitButton = new javax.swing.JButton();
+        aboutButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 255, 153));
         setAlignmentX(0.0F);
@@ -85,7 +91,7 @@ public class OpeningCard extends javax.swing.JPanel {
         layers.setMaximumSize(new java.awt.Dimension(500, 600));
         layers.setMinimumSize(new java.awt.Dimension(500, 600));
 
-        titleLabel1.setFont(new java.awt.Font("Kristen ITC", 1, 48));
+        titleLabel1.setFont(new java.awt.Font("Kristen ITC", 1, 48)); // NOI18N
         titleLabel1.setText("Frogger");
         titleLabel1.setBounds(150, 40, 195, 66);
         layers.add(titleLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -95,7 +101,7 @@ public class OpeningCard extends javax.swing.JPanel {
         titleLabel2.setBounds(70, 80, 368, 66);
         layers.add(titleLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        stagesButton.setFont(new java.awt.Font("Kristen ITC", 1, 60));
+        stagesButton.setFont(new java.awt.Font("Kristen ITC", 1, 60)); // NOI18N
         stagesButton.setText("Stages");
         stagesButton.setToolTipText("");
         stagesButton.setBorder(null);
@@ -113,7 +119,7 @@ public class OpeningCard extends javax.swing.JPanel {
         stagesButton.setBounds(150, 370, 209, 82);
         layers.add(stagesButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        highscoreButton.setFont(new java.awt.Font("Kristen ITC", 1, 60));
+        highscoreButton.setFont(new java.awt.Font("Kristen ITC", 1, 60)); // NOI18N
         highscoreButton.setText("Highscore");
         highscoreButton.setBorder(null);
         highscoreButton.setBorderPainted(false);
@@ -130,7 +136,7 @@ public class OpeningCard extends javax.swing.JPanel {
         highscoreButton.setBounds(80, 450, 327, 82);
         layers.add(highscoreButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        exitButton.setFont(new java.awt.Font("Kristen ITC", 1, 36));
+        exitButton.setFont(new java.awt.Font("Kristen ITC", 1, 36)); // NOI18N
         exitButton.setText("Exit");
         exitButton.setBorder(null);
         exitButton.setBorderPainted(false);
@@ -146,6 +152,23 @@ public class OpeningCard extends javax.swing.JPanel {
         });
         exitButton.setBounds(410, 540, 82, 49);
         layers.add(exitButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        aboutButton.setFont(new java.awt.Font("Kristen ITC", 1, 36)); // NOI18N
+        aboutButton.setText("About");
+        aboutButton.setBorder(null);
+        aboutButton.setBorderPainted(false);
+        aboutButton.setContentAreaFilled(false);
+        aboutButton.setFocusPainted(false);
+        aboutButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                aboutButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                aboutButtonMouseExited(evt);
+            }
+        });
+        aboutButton.setBounds(10, 540, 126, 49);
+        layers.add(aboutButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         add(layers, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -173,7 +196,17 @@ public class OpeningCard extends javax.swing.JPanel {
   private void stagesButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stagesButtonMouseExited
     stagesButton.setForeground(Color.BLACK);
   }//GEN-LAST:event_stagesButtonMouseExited
+
+  private void aboutButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutButtonMouseEntered
+    aboutButton.setForeground(Color.WHITE);
+  }//GEN-LAST:event_aboutButtonMouseEntered
+
+  private void aboutButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutButtonMouseExited
+    aboutButton.setForeground(Color.BLACK);
+  }//GEN-LAST:event_aboutButtonMouseExited
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton aboutButton;
     private javax.swing.JButton exitButton;
     private javax.swing.JButton highscoreButton;
     private javax.swing.JLayeredPane layers;

@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.event.Observes;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
@@ -127,9 +126,9 @@ public class Main extends JFrame implements ActionListener {
   }
 
   /**
-   * {@inheritDoc }
-   * This implementation evaluates the action commands for multiple components
-   * and acts according to their specification.
+   * {@inheritDoc } This implementation evaluates the action commands for
+   * multiple components and acts according to their specification.
+   *
    * @param event
    */
   @Override
@@ -149,6 +148,12 @@ public class Main extends JFrame implements ActionListener {
         break;
       case SHOWSTAGES:
         switchToCard(stagesCard);
+        break;
+      case SHOWABOUT:
+        JOptionPane.showMessageDialog(this,
+                "Frogger Reincarnation v.1.0.0\n Copyright © Kevin Sapper (2012)",
+                "About",
+                JOptionPane.INFORMATION_MESSAGE);
         break;
       case EXIT:
         System.exit(0);
