@@ -58,33 +58,21 @@ public class RectangleTest {
 
         testRectangle(bb, new Rectangle(new Vector(-2., 1.), new Vector(2.,
                 2.)), true);
-        testRectangle(bb, new Rectangle(new Vector(0., 3.), new Vector(-2.,
-                -2.)), true);
 
         testRectangle(bb, new Rectangle(new Vector(1., -3.), new Vector(1.,
                 3.)), true);
-        testRectangle(bb, new Rectangle(new Vector(2., 0.), new Vector(-1.,
-                -3.)), true);
 
         testRectangle(bb, new Rectangle(new Vector(-2., -1.), new Vector(2.,
                 1.)), true);
-        testRectangle(bb, new Rectangle(new Vector(0., 0.), new Vector(-2.,
-                -1.)), true);
 
         testRectangle(bb, new Rectangle(new Vector(2., 2.), new Vector(2.,
                 -1.)), true);
-        testRectangle(bb, new Rectangle(new Vector(0., 3.), new Vector(-2.,
-                1.)), true);
 
         testRectangle(bb, new Rectangle(new Vector(-2., -1.), new Vector(3.,
                 2.)), true);
-        testRectangle(bb, new Rectangle(new Vector(1., 1.), new Vector(-3.,
-                -2.)), true);
 
         testRectangle(bb, new Rectangle(new Vector(1., 2.), new Vector(2.,
                 3.)), true);
-        testRectangle(bb, new Rectangle(new Vector(3., 5.), new Vector(-2.,
-                -3.)), true);
 
         testRectangle(bb, bb, true);
 
@@ -92,16 +80,13 @@ public class RectangleTest {
                 .5)), true);
         testRectangle(bb, new Rectangle(new Vector(1.5, 1.5), new Vector(
                 -.5, -.5)), true);
-        
-        bb = new Rectangle(new Vector(50.0, 0.0), new Vector(10., 9.));
-        testRectangle(bb, new Rectangle(new Vector(800., 0.),new Vector(-800.,0)), true);
     }
 
     private static void testRectangle(Rectangle bb1, Rectangle bb2,
             boolean expectedResult) {
-//        Assert.assertEquals(bb1.toString() + " intersects " + bb2.toString(),
-//                expectedResult, bb1.intersects(bb2));
-//        Assert.assertEquals(bb2.toString() + " intersects " + bb1.toString(),
-//                expectedResult, bb2.intersects(bb1));
+        Assert.assertEquals(bb1.toString() + " intersects " + bb2.toString(),
+                expectedResult, bb1.intersects(bb2));
+        Assert.assertEquals(bb2.toString() + " intersects " + bb1.toString(),
+                expectedResult, bb2.intersects(bb1));
     }
 }

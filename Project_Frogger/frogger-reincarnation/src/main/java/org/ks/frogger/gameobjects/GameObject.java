@@ -52,7 +52,7 @@ public abstract class GameObject implements Figure {
     if (image == null) {
       pictureBoundingBox.draw(g);
     } else {
-//      pictureBoundingBox.draw(g);
+      pictureBoundingBox.draw(g);
       g.drawImage(image, (int) pictureBoundingBox.getBasePoint().
               getX(), (int) pictureBoundingBox.getBasePoint().
               getY(), null);
