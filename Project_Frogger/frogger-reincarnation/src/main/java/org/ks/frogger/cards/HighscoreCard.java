@@ -12,7 +12,7 @@ import org.ks.frogger.ActionCommand;
 import org.ks.frogger.Helper.CardLayer;
 import org.ks.frogger.Helper.ImageHelper;
 import org.ks.frogger.cards.ui.ImageComponent;
-import org.ks.frogger.cards.ui.TransparentBox;
+import org.ks.frogger.cards.ui.Chip;
 import org.ks.frogger.manager.Highscore;
 
 /**
@@ -40,7 +40,7 @@ public class HighscoreCard extends javax.swing.JPanel {
     ImageComponent background = new ImageComponent(backgroundImage);
     layers.add(background, CardLayer.BACKGROUND_LAYER);
 
-    TransparentBox box = new TransparentBox(0.4f, 30, 10, 410, 550);
+    Chip box = new Chip(0.4f, 30, 10, 410, 550);
     box.setBackground(Color.WHITE);
     layers.add(box, CardLayer.BOX_LAYER);
 

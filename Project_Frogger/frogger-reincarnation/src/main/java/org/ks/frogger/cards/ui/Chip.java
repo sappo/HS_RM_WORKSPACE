@@ -1,6 +1,7 @@
 package org.ks.frogger.cards.ui;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -11,7 +12,7 @@ import javax.swing.JComponent;
  *
  * @author Kevin Sapper 2012
  */
-public class TransparentBox extends JComponent {
+public class Chip extends JComponent {
 
   private float alpha;
 
@@ -33,7 +34,7 @@ public class TransparentBox extends JComponent {
    * @param width width of the box
    * @param height height of the box
    */
-  public TransparentBox(float alpha, int x, int y, int width, int height) {
+  public Chip(float alpha, int x, int y, int width, int height) {
     super();
     this.alpha = alpha;
     this.x = x;
@@ -54,7 +55,7 @@ w   */
             alpha);
     g2D.setComposite(ac);
 
-    g2D.setColor(getBackground());
+    g2D.setColor(Color.GREEN);
     g2D.fill(new Rectangle(x, y, width, height));
   }
 }

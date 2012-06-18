@@ -12,7 +12,7 @@ import org.ks.frogger.ActionCommand;
 import org.ks.frogger.Helper.CardLayer;
 import org.ks.frogger.Helper.ImageHelper;
 import org.ks.frogger.cards.ui.ImageComponent;
-import org.ks.frogger.cards.ui.TransparentBox;
+import org.ks.frogger.cards.ui.Chip;
 import org.ks.frogger.events.GameOver;
 import org.ks.frogger.stages.StageManager;
 
@@ -60,14 +60,14 @@ public class StagesCard extends javax.swing.JPanel {
     headerLabel.setForeground(Color.BLACK);
     layers.setLayer(headerLabel, CardLayer.CONTENT_LAYER);
 
-    TransparentBox headerBox = new TransparentBox(0.6f, 10, 5, 470, 75);
+    Chip headerBox = new Chip(0.6f, 10, 5, 470, 75);
     headerBox.setBackground(Color.WHITE);
     layers.add(headerBox, CardLayer.BOX_LAYER);
 
     objectiveLabel.setDisabledTextColor(Color.BLACK);
     layers.setLayer(objectivePane, CardLayer.CONTENT_LAYER);
 
-    TransparentBox objectiveBox = new TransparentBox(0.8f, 135, 120, 354, 279);
+    Chip objectiveBox = new Chip(0.8f, 135, 120, 354, 279);
     objectiveBox.setBackground(Color.DARK_GRAY);
     layers.add(objectiveBox, CardLayer.BOX_LAYER);
 
