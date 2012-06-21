@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public enum ActionCommand {
 
-  NEWGAME("newGame"), STOPGAME("stopGame"), EXIT("exit");
+  NEWGAME("newGame"), STOPGAME("stopGame"),SAVE("save"), LOAD("load"), EXIT("exit");
 
   private String command;
 

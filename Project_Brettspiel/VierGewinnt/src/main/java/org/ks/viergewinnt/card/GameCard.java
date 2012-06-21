@@ -33,8 +33,6 @@ public class GameCard extends javax.swing.JPanel implements MouseListener {
     @Inject
     private Event<Chip> refreshEvent;
     
-    @Inject
-    private Event<String> finishEvent;
 
     /**
      * Creates new form GamePanel
@@ -53,29 +51,18 @@ public class GameCard extends javax.swing.JPanel implements MouseListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCheckBox1 = new javax.swing.JCheckBox();
-
-        jCheckBox1.setText("jCheckBox1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addComponent(jCheckBox1)
-                .addContainerGap(472, Short.MAX_VALUE))
+            .addGap(0, 706, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(136, 136, 136)
-                .addComponent(jCheckBox1)
-                .addContainerGap(287, Short.MAX_VALUE))
+            .addGap(0, 447, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
     // End of variables declaration//GEN-END:variables
 
     public void refreshGameObjects() {
@@ -113,9 +100,6 @@ public class GameCard extends javax.swing.JPanel implements MouseListener {
                     manager.doMove(vierGewinntMove);
                     refreshGameObjects();
                     refreshEvent.fire(chip);
-                    if (manager.lastHasWon()) {
-                        finishEvent.fire(manager.isFirstPLayer() ? "Player 1" : "Player 2");
-                    }
                 }
             }
         }

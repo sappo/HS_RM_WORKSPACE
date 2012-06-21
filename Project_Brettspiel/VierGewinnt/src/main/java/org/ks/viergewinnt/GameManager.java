@@ -2,7 +2,10 @@ package org.ks.viergewinnt;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 import org.ks.viergewinnt.interfaces.Game;
 
 /**
@@ -12,7 +15,8 @@ import org.ks.viergewinnt.interfaces.Game;
 @ApplicationScoped
 public class GameManager implements Game<VierGewinntMove> {
 
-    private Collection<VierGewinntMove> moves;
+    @Inject
+    private Event<String> finishEvent;
 
     private byte board[][] = new byte[GameConstants.COLUMNS][GameConstants.ROWS];
 
@@ -22,31 +26,34 @@ public class GameManager implements Game<VierGewinntMove> {
 
     public void startGame() {
         resetBoard();
-        turn = GameConstants.FIRST_PLAYER;
-        isWon = false;
     }
 
-    public void resumeGame() {
-    }
-
-    public void endGame() {
+    public void resumeGame(byte[][] board, byte turn) {
+        resetBoard();
+        this.board = board;
+        this.turn = turn;
     }
 
     private void resetBoard() {
-        moves = new ArrayList<>();
         for (byte i = 0; i < GameConstants.COLUMNS; i++) {
-            moves.add(new VierGewinntMove(i));
             for (byte j = 0; j < GameConstants.ROWS; j++) {
                 board[i][j] = GameConstants.NO_PLAYER;
             }
         }
+        
+        turn = GameConstants.FIRST_PLAYER;
+        isWon = false;
     }
 
     @Override
-    public Collection<VierGewinntMove> moves() {
-        Collection<VierGewinntMove> copyMoves = new ArrayList<>();
-        copyMoves.addAll(moves);
-        return copyMoves;
+    public List<VierGewinntMove> moves() {
+        List<VierGewinntMove> moves = new ArrayList<>();
+        for (byte i = 0; i < GameConstants.COLUMNS; i++) {
+            if(board[i][0] == GameConstants.NO_PLAYER) {
+                moves.add(new VierGewinntMove(i));
+            }
+        }
+        return moves;
     }
 
     @Override
@@ -55,14 +62,12 @@ public class GameManager implements Game<VierGewinntMove> {
         for (byte i = GameConstants.ROWS - 1; i >= 0; i--) {
             if (isNoPlayer(move.getColumn(), i)) {
                 placeChip(move.getColumn(), i);
-                // remove move if row is filled
-                if (i == 0) {
-                    moves.remove(move);
-                }
                 break;
             }
         }
-        if (!isWon) {
+        if (otherPlayerHasWon()) {
+            finishEvent.fire(isFirstPLayer() ? "Player 1" : "Player 2");
+        } else {
             turn = isFirstPLayer() ? GameConstants.SECOND_PLAYER : GameConstants.FIRST_PLAYER;
         }
         return this;
@@ -74,7 +79,7 @@ public class GameManager implements Game<VierGewinntMove> {
     }
 
     @Override
-    public boolean lastHasWon() {
+    public boolean otherPlayerHasWon() {
         return isWon;
     }
 

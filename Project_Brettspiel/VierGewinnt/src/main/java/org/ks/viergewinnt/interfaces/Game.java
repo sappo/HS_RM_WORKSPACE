@@ -1,19 +1,19 @@
 package org.ks.viergewinnt.interfaces;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  *
- * @author Eric Panitz
+ * @author Sven Eric Panitz
  * @param <M>
  */
 public interface Game<M> {
 
-    Collection<M> moves();
+    List<M> moves();
 
     Game<M> doMove(M m);
 
     boolean isFirstPLayer();
 
-    boolean lastHasWon();
+    boolean otherPlayerHasWon();
 }
