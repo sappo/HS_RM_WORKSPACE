@@ -17,6 +17,7 @@ import org.apache.commons.lang.ArrayUtils;
 public class ZKFrame extends javax.swing.JFrame {
 
     private ZKClientStub clientStub;
+    private static int port;
 
     /**
      * Creates new form ZKFrame
@@ -24,7 +25,7 @@ public class ZKFrame extends javax.swing.JFrame {
     public ZKFrame() {
         initComponents();
         try {
-            InetSocketAddress address = new InetSocketAddress("localhost", 8080);
+            InetSocketAddress address = new InetSocketAddress("localhost", port);
             clientStub = new ZKClientStub(address);
 
             txtResult.setEditable(false);
@@ -207,6 +208,14 @@ public class ZKFrame extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        port = 8080;
+        if (args.length > 0) {
+            try {
+                port = Integer.valueOf(args[0]);
+            } catch (NumberFormatException ex) {
+            }
+        }
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
