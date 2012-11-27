@@ -1,7 +1,7 @@
-package com.ks.zk.zkserver;
+package com.ks.zkserver;
 
-import com.ks.zk.zkserver.util.ReflectionUtils;
-import com.ks.zk.zkserver.util.ServerMethod;
+import com.ks.zkinterface.ReflectionUtils;
+import com.ks.zkinterface.ServerMethod;
 import com.ks.zkinterface.ZKServer;
 import java.lang.reflect.Method;
 import org.apache.commons.lang.StringUtils;
@@ -14,11 +14,13 @@ import org.apache.commons.lang.StringUtils;
 public class ZKServerImpl implements ZKServer {
 
     @Override
+    @ServerMethod
     public String verdoppeln(String text, int quantity) {
         return StringUtils.repeat(text, quantity);
     }
 
     @Override
+    @ServerMethod
     public String zeichenweisesVerdoppeln(String text, int quantity) {
         StringBuffer sb = new StringBuffer(text.length() * quantity);
         for (int i = 0; i < text.length(); i++) {
@@ -30,11 +32,13 @@ public class ZKServerImpl implements ZKServer {
     }
 
     @Override
+    @ServerMethod
     public String spiegeln(String text) {
         return StringUtils.reverse(text);
     }
 
     @Override
+    @ServerMethod
     public int laenge(String text) {
         return StringUtils.length(text);
     }

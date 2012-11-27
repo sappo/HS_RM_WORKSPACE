@@ -1,4 +1,4 @@
-package com.ks.zk.zkserver.util;
+package com.ks.zkserver.util;
 
 /**
  *

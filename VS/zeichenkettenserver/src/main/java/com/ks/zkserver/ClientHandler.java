@@ -1,19 +1,19 @@
-package com.ks.zk.zkserver;
+package com.ks.zkserver;
 
-import com.ks.zk.zkserver.util.SocketStatus;
-import com.ks.zk.zkserver.util.HandlerStatus;
-import com.ks.zk.zkserver.util.ReflectionUtils;
-import com.ks.zk.zkserver.util.ServerMethod;
+import com.ks.zkinterface.ByteBufferUtil;
+import com.ks.zkserver.util.HandlerStatus;
+import com.ks.zkinterface.ReflectionUtils;
+import com.ks.zkinterface.ServerMethod;
 import com.ks.zkinterface.ZKServer;
+import com.ks.zkinterface.ZkService;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.ArrayUtils;
@@ -25,7 +25,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ClientHandler implements Runnable {
 
-    private Charset charset = Charset.forName("ISO-8859-1");
+    private final Charset charset;
+
+    private final char DELIMITER;
 
     private Socket client;
 
@@ -33,22 +35,19 @@ public class ClientHandler implements Runnable {
 
     private HandlerStatus status;
 
-    private SocketStatus socketStatus;
-
     private Method callMethod;
 
     private Class<?>[] methodParamsTypes;
 
     private Object[] methodParams;
 
-    private static final char DELIMITER = ';';
-
     public ClientHandler(Socket client, ZKServer server) {
         this.client = client;
         this.server = server;
         this.status = HandlerStatus.METHOD;
-        this.socketStatus = SocketStatus.READ;
-        methodParams = ArrayUtils.EMPTY_OBJECT_ARRAY;
+        this.methodParams = ArrayUtils.EMPTY_OBJECT_ARRAY;
+        this.charset = ZkService.charset;
+        this.DELIMITER = ZkService.DELIMITER;
     }
 
     @Override
@@ -62,10 +61,7 @@ public class ClientHandler implements Runnable {
                 byteBuffer.flip(); // switch buffer to read mode
 
                 do {
-                    read(paramBuffer, byteBuffer);
-                    // @todo: remove, this is test code for telnet
-                    paramBuffer = new StringBuffer(StringUtils.replace(paramBuffer.toString(), "\r\n", ""));
-                    if (SocketStatus.READ_DONE.equals(socketStatus)) {
+                    if (ByteBufferUtil.readChars(paramBuffer, byteBuffer, DELIMITER, charset)) {
                         switch (status) {
                             case METHOD:
                                 for (Method method : ReflectionUtils.getMethods(server, ServerMethod.class)) {
@@ -106,7 +102,6 @@ public class ClientHandler implements Runnable {
                             default:
                                 throw new IllegalStateException();
                         }
-                        socketStatus = SocketStatus.READ;
 
                         if (HandlerStatus.EXEC.equals(status)) {
                             try {
@@ -119,13 +114,11 @@ public class ClientHandler implements Runnable {
                                 if (result.getClass().equals(String.class)) {
                                     resultValue = (String) result;
                                 }
-                                // add line break for nicer client output
-                                resultValue += "\n";
+                                resultValue += DELIMITER;
                                 // write result
                                 ByteBuffer outBuffer = ByteBuffer.wrap(resultValue.getBytes(charset));
                                 socketChannel.write(outBuffer);
                             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                                socketStatus = SocketStatus.READ;
                                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {
                                 callMethod = null;
@@ -146,26 +139,9 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    /**
-     * Reads from byteBuffer char wise.
-     *
-     * @param buffer
-     * @param byteBuffer
-     *
-     */
-    private void read(StringBuffer buffer, ByteBuffer byteBuffer) {
-        try {
-            CharBuffer charBuffer = charset.newDecoder().decode(byteBuffer);
-            while(charBuffer.hasRemaining() && SocketStatus.READ.equals(socketStatus)) {
-                char c = charBuffer.get();
-                if (c != DELIMITER) {
-                    buffer.append(c);
-                } else {
-                    socketStatus = SocketStatus.READ_DONE;
-                }
-            }
-        } catch (CharacterCodingException ex) {
-            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    @Override
+    protected void finalize() throws Throwable {
+        client.close();
+        super.finalize();
     }
 }
