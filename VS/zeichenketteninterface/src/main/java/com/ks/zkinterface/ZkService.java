@@ -10,5 +10,5 @@ public class ZkService {
 
     public static final char DELIMITER = '\0';
 
-    public static final Charset charset = Charset.forName("UTF-8");
+    public static final Charset charset = Charset.forName("US-ASCII");
 }
