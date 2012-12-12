@@ -36,7 +36,8 @@ public class ZeichenketteImpl extends UnicastRemoteObject implements Zeichenkett
                 sb.append(inhalt.charAt(i));
             }
         }
-        return sb.toString();
+        inhalt = sb.toString();
+        return inhalt;
     }
 
     @Override
@@ -44,12 +45,14 @@ public class ZeichenketteImpl extends UnicastRemoteObject implements Zeichenkett
         if (anzahl <= 0) {
             throw new IllegalArgumentException();
         }
-        return StringUtils.repeat(inhalt, anzahl);
+        inhalt = StringUtils.repeat(inhalt, anzahl);
+        return inhalt;
     }
 
     @Override
     public String spiegeln() throws RemoteException {
-        return StringUtils.reverse(inhalt);
+        inhalt = StringUtils.reverse(inhalt);
+        return inhalt;
     }
 
     @Override
