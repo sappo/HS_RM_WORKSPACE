@@ -1,11 +1,9 @@
 package com.ks.rmizkserver;
 
+import com.ks.rmizkinterface.ZKManager;
 import java.io.Serializable;
 import java.rmi.RMISecurityManager;
-import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,14 +20,8 @@ public class ZKServerMain implements Serializable {
         }
 
         try { //special exception handler for registry creation
-            String rmiName = "zkManager";
-            ZKManagerImpl zKManager = new ZKManagerImpl();
-
-            Remote stub = UnicastRemoteObject.exportObject(zKManager, 6000);
-
-            Registry registry = LocateRegistry.createRegistry(6000);
-            registry.rebind(rmiName, stub);
-
+            LocateRegistry.createRegistry(6000);
+            ZKManager zk = new ZKManagerImpl();
         } catch (Exception ex) {
             Logger.getLogger(ZKServerMain.class.getName()).log(Level.SEVERE, null, ex);
         }

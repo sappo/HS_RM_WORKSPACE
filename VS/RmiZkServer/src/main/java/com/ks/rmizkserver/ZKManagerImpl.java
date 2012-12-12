@@ -4,9 +4,11 @@ import com.ks.rmizkinterface.ZKManager;
 import com.ks.rmizkinterface.Zeichenkette;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -24,11 +26,16 @@ public class ZKManagerImpl implements ZKManager {
     public ZKManagerImpl() throws RemoteException {
         super();
         zkMap = new HashMap<>();
+        String rmiName = "zkManager";
+
+        Remote stub = UnicastRemoteObject.exportObject(this, 6000);
+        Registry registry = LocateRegistry.getRegistry(6000);
+        registry.rebind(rmiName, stub);
     }
 
     @Override
     public Zeichenkette erzeugeZeichenkette(String id, String inhalt) throws RemoteException, IllegalArgumentException {
-        if(StringUtils.isEmpty(id) || StringUtils.isEmpty(inhalt)) {
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(inhalt)) {
             throw new IllegalArgumentException("Parameter null");
         }
         ZeichenketteImpl zk = new ZeichenketteImpl();
@@ -39,7 +46,7 @@ public class ZKManagerImpl implements ZKManager {
 
     @Override
     public void loescheZeichenkette(String id) throws RemoteException, IllegalArgumentException {
-        if(StringUtils.isEmpty(id)) {
+        if (StringUtils.isEmpty(id)) {
             throw new IllegalArgumentException("Parameter null");
         }
         zkMap.remove(id);
@@ -53,7 +60,7 @@ public class ZKManagerImpl implements ZKManager {
 
     @Override
     public Zeichenkette gibZeichenkette(String id) throws RemoteException, IllegalArgumentException {
-        if(StringUtils.isEmpty(id)) {
+        if (StringUtils.isEmpty(id)) {
             throw new IllegalArgumentException("Parameter null");
         }
         if (zkMap == null || zkMap.isEmpty()) {
@@ -65,7 +72,7 @@ public class ZKManagerImpl implements ZKManager {
 
     @Override
     public void exportZeichenkette(String id) throws RemoteException, IllegalArgumentException {
-        if(StringUtils.isEmpty(id)) {
+        if (StringUtils.isEmpty(id)) {
             throw new IllegalArgumentException("Parameter null");
         }
         try {
