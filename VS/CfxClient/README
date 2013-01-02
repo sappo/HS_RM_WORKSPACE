@@ -1,0 +1,12 @@
+Diese Projekt wurde mit maven3 gebaut.
+
+Falls die dependencies hier nicht für ihr System funktionieren können die mit folgendem Befehl nach installiert werden (vorausgesetzt maven3 ist auf ihrem System installiert):
+
+mvn clean package
+
+Zum Ausführen der verschiedenen Clients benutzen Sie bitte die beiden run Skripte:
+
+./runClient1.sh
+./runClient2.sh
+
+!!! Die gesendeten und empfangen "SOAP Envelope's" werden auf der Kommandozeile ausgegen.
