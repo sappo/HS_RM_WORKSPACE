@@ -3,16 +3,22 @@ package com.ks.cfxclient;
 import com.ks.cfxinterface.ReflectionUtils;
 import com.ks.cfxinterface.ServerMethod;
 import com.ks.cfxinterface.ZKServer;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.endpoint.Endpoint;
+import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
+import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
+import org.apache.ws.security.handler.WSHandlerConstants;
 
 /**
  *
@@ -21,6 +27,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 public class ZKFrame extends javax.swing.JFrame {
 
     private ZKServer server;
+
     private static int port;
 
     /**
@@ -35,7 +42,37 @@ public class ZKFrame extends javax.swing.JFrame {
         factory.setAddress("http://localhost:9000/zkserver");
         server = (ZKServer) factory.create();
 
-//        String reply = client.sayHi("HI");s
+        // configure endpoint
+        Client client = ClientProxy.getClient(server);
+        Endpoint clientEndpoint = client.getEndpoint();
+
+        // verify signature and decrypt message
+        Map<String, Object> inProps = new HashMap<>();
+        inProps.put(WSHandlerConstants.ACTION,
+                WSHandlerConstants.TIMESTAMP + " "
+                + WSHandlerConstants.SIGNATURE + " "
+                + WSHandlerConstants.ENCRYPT);
+        inProps.put(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordCallbackHandler.class.getName());
+        inProps.put(WSHandlerConstants.DEC_PROP_FILE, "client.properties");
+        inProps.put(WSHandlerConstants.SIG_PROP_FILE, "client.properties");
+
+        WSS4JInInterceptor wssIn = new WSS4JInInterceptor(inProps);
+        clientEndpoint.getInInterceptors().add(wssIn);
+
+        // sign and encrypte message
+        Map<String, Object> outProps = new HashMap<>();
+        outProps.put(WSHandlerConstants.ACTION,
+                WSHandlerConstants.TIMESTAMP + " "
+                + WSHandlerConstants.SIGNATURE + " "
+                + WSHandlerConstants.ENCRYPT);
+        outProps.put(WSHandlerConstants.USER, "client");
+        outProps.put(WSHandlerConstants.ENCRYPTION_USER, "server");
+        outProps.put(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordCallbackHandler.class.getName());
+        outProps.put(WSHandlerConstants.ENC_PROP_FILE, "client_sign.properties");
+        outProps.put(WSHandlerConstants.SIG_PROP_FILE, "client_sign.properties");
+
+        WSS4JOutInterceptor wssOut = new WSS4JOutInterceptor(outProps);
+        clientEndpoint.getOutInterceptors().add(wssOut);
 
         txtResult.setEditable(false);
         initMethods();
