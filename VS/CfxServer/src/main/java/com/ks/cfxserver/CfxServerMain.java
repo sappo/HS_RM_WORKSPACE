@@ -19,6 +19,7 @@ import org.apache.ws.security.handler.WSHandlerConstants;
 public class CfxServerMain {
 
     public static void main(String[] args) {
+        // create new web server
         System.out.println("Starting Server");
         ZKServerImpl implementor = new ZKServerImpl();
         JaxWsServerFactoryBean svrFactory = new JaxWsServerFactoryBean();
@@ -51,10 +52,12 @@ public class CfxServerMain {
                 + WSHandlerConstants.SIGNATURE + " "
                 + WSHandlerConstants.ENCRYPT);
         outProps.put(WSHandlerConstants.USER, "server");
-        outProps.put(WSHandlerConstants.ENCRYPTION_USER, "useReqSigCert");
+        outProps.put(WSHandlerConstants.ENCRYPTION_USER, "useReqSigCert"); // dynamically find certificate for encryption
         outProps.put(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordCallbackHandler.class.getName());
         outProps.put(WSHandlerConstants.ENC_PROP_FILE, "server_sign.properties");
         outProps.put(WSHandlerConstants.SIG_PROP_FILE, "server_sign.properties");
+        // only encrypte the content of the result
+        outProps.put(WSHandlerConstants.ENCRYPTION_PARTS, "{Content}{http://cfxinterface.ks.com/params}result");
 
         WSS4JOutInterceptor wssOut = new WSS4JOutInterceptor(outProps);
         cxfEndpoint.getOutInterceptors().add(wssOut);
