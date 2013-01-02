@@ -1,0 +1,11 @@
+Diese Projekt wurde mit maven3 gebaut.
+
+Falls die dependencies hier nicht für ihr System funktionieren können die mit folgendem Befehl nach installiert werden (vorausgesetzt maven3 ist auf ihrem System installiert):
+
+mvn clean package
+
+Zum Ausführen der Server benutzen Sie folgendes run Skript:
+
+./runServer.sh
+
+!!! Die gesendeten und empfangen "SOAP Envelope's" werden auf der Kommandozeile ausgegen.
