@@ -19,7 +19,7 @@ public class PasswordCallbackHandler implements CallbackHandler {
         int usage = pwcb.getUsage();
         if (usage == WSPasswordCallback.DECRYPT || usage == WSPasswordCallback.SIGNATURE) {
             // used to retrieve password for private key
-            pwcb.setPassword("client");
+            pwcb.setPassword(ZKFrame.clientUser);
         }
     }
 }

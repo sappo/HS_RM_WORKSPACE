@@ -29,7 +29,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.ks.cfxserver.CfxServerMain</mainClass>
+                            <mainClass>com.ks.cfxclient.ZKFrame</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

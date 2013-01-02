@@ -21,20 +21,22 @@ import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
 
 /**
- *
+ * 
  * @author Kevin Sapper (2012)
  */
 public class ZKFrame extends javax.swing.JFrame {
 
     private ZKServer server;
 
-    private static int port;
+    public static String clientUser;
 
     /**
      * Creates new form ZKFrame
      */
     public ZKFrame() {
         initComponents();
+
+        // connect to web service
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.getInInterceptors().add(new LoggingInInterceptor());
         factory.getOutInterceptors().add(new LoggingOutInterceptor());
@@ -53,8 +55,8 @@ public class ZKFrame extends javax.swing.JFrame {
                 + WSHandlerConstants.SIGNATURE + " "
                 + WSHandlerConstants.ENCRYPT);
         inProps.put(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordCallbackHandler.class.getName());
-        inProps.put(WSHandlerConstants.DEC_PROP_FILE, "client.properties");
-        inProps.put(WSHandlerConstants.SIG_PROP_FILE, "client.properties");
+        inProps.put(WSHandlerConstants.DEC_PROP_FILE, clientUser + ".properties");
+        inProps.put(WSHandlerConstants.SIG_PROP_FILE, clientUser + ".properties");
 
         WSS4JInInterceptor wssIn = new WSS4JInInterceptor(inProps);
         clientEndpoint.getInInterceptors().add(wssIn);
@@ -65,11 +67,13 @@ public class ZKFrame extends javax.swing.JFrame {
                 WSHandlerConstants.TIMESTAMP + " "
                 + WSHandlerConstants.SIGNATURE + " "
                 + WSHandlerConstants.ENCRYPT);
-        outProps.put(WSHandlerConstants.USER, "client");
+        outProps.put(WSHandlerConstants.USER, clientUser);
         outProps.put(WSHandlerConstants.ENCRYPTION_USER, "server");
         outProps.put(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordCallbackHandler.class.getName());
-        outProps.put(WSHandlerConstants.ENC_PROP_FILE, "client_sign.properties");
-        outProps.put(WSHandlerConstants.SIG_PROP_FILE, "client_sign.properties");
+        outProps.put(WSHandlerConstants.ENC_PROP_FILE, clientUser + "_sign.properties");
+        outProps.put(WSHandlerConstants.SIG_PROP_FILE, clientUser + "_sign.properties");
+        // only encrypt the content of string the be transfered
+        outProps.put(WSHandlerConstants.ENCRYPTION_PARTS, "{Content}{http://cfxinterface.ks.com/params}text");
 
         WSS4JOutInterceptor wssOut = new WSS4JOutInterceptor(outProps);
         clientEndpoint.getOutInterceptors().add(wssOut);
@@ -188,8 +192,10 @@ public class ZKFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExecActionPerformed
-        Method method = (Method) cmbMethods.getSelectedItem();
+        MethodItem methodItem = (MethodItem) cmbMethods.getSelectedItem();
+        Method method = methodItem.getMethod();
         Object[] params = ArrayUtils.EMPTY_OBJECT_ARRAY;
+        // set method parameter
         for (Class<?> paramClass : method.getParameterTypes()) {
             if (paramClass.equals(String.class)) {
                 params = ArrayUtils.add(params, txtText.getText());
@@ -198,6 +204,7 @@ public class ZKFrame extends javax.swing.JFrame {
                 params = ArrayUtils.add(params, param);
             }
         }
+        // invoke method
         try {
             Object result = method.invoke(server, params);
             String resultValue = null;
@@ -207,18 +214,14 @@ public class ZKFrame extends javax.swing.JFrame {
             if (result instanceof Integer) {
                 resultValue = String.valueOf(result);
             }
+            // set result
             txtResult.setText(resultValue);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ZKFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ZKFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(ZKFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnExecActionPerformed
 
     private void txtNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNumberActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtNumberActionPerformed
 
     /**
@@ -248,12 +251,9 @@ public class ZKFrame extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        port = 8080;
+        clientUser = "client2";
         if (args.length > 0) {
-            try {
-                port = Integer.valueOf(args[0]);
-            } catch (NumberFormatException ex) {
-            }
+            clientUser = args[0];
         }
 
         /* Create and display the form */
@@ -267,7 +267,24 @@ public class ZKFrame extends javax.swing.JFrame {
     private void initMethods() {
         cmbMethods.removeAllItems();
         for (Method method : ReflectionUtils.getMethods(ServerMethod.class)) {
-            cmbMethods.addItem(method);
+            cmbMethods.addItem(new MethodItem(method));
+        }
+    }
+
+    private class MethodItem {
+        private Method method;
+
+        public MethodItem(Method method) {
+            this.method = method;
+        }
+
+        public Method getMethod() {
+            return method;
+        }
+
+        @Override
+        public String toString() {
+            return method.getName();
         }
     }
 
