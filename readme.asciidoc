@@ -1,12 +1,6 @@
-Workspace for all Homework and Task at the Hochschule-Rheinmain
-========================
 
-Table of Contents
------------
+== Workspace for homework and Task at the Hochschule-Rheinmain
 
-OOSE - Objektorientierte Softwareentwicklung
+=== Table of Contents
 
-
-OOSE
------------
-@TODO
+* OOSE - Objektorientierte Softwareentwicklung
